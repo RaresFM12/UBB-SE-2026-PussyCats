@@ -26,6 +26,31 @@ namespace PussyCatsApp
         public MainWindow()
         {
             InitializeComponent();
+            Title = "PussyCats - User Profile Management";
+
+            // Navigate to ProfileForm page by default
+            ContentFrame.Navigate(typeof(views.ProfileFormPage));
+        }
+
+        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItemContainer != null)
+            {
+                var navItemTag = args.SelectedItemContainer.Tag.ToString();
+
+                switch (navItemTag)
+                {
+                    case "ProfileForm":
+                        ContentFrame.Navigate(typeof(views.ProfileFormPage));
+                        break;
+                    case "ViewProfile":
+                        // TODO: Navigate to profile view page
+                        break;
+                    case "Documents":
+                        // TODO: Navigate to documents page
+                        break;
+                }
+            }
         }
     }
 }
