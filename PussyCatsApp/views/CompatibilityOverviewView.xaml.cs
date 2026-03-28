@@ -45,10 +45,18 @@ namespace PussyCatsApp.views
 
             foreach (RoleResult result in results)
             {
+                string formattedName = "";
+                if (result.JobRole == JobRole.UIUXDesigner)
+                    formattedName = "UI/UX Designer";
+                else if (result.JobRole == JobRole.AIMLEngineer)
+                    formattedName = "AI/ML Engineer";
+                else
+                    formattedName = FormatRoleName(result.JobRole.ToString());
+
                 displayItems.Add(new
                 {
                     Result = result,
-                    DisplayName = FormatRoleName(result.JobRole.ToString()),
+                    DisplayName = FormatRoleName(formattedName),
                     DisplayScore = result.MatchScore == -1 ? 0 : result.MatchScore,
                     DisplayPercentage = result.MatchScore == -1
                         ? "Insufficient Data"
