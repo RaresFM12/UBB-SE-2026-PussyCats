@@ -70,29 +70,51 @@ namespace PussyCatsApp.services
             foreach (SkillGroup group in groups)
             {
                 double gj = ComputeGroupScore(group, userSkills);
-                if (gj < 0.5)
+                if (gj >= 0.5)
+                    continue;
+
+                Suggestion bestSuggestionForGroup = null;
+
+                foreach (string skill in group.Skills)
                 {
-                    foreach (string skill in group.Skills)
+                    bool userHasVerified = false;
+                    bool userHasUnverified = false;
+
+                    foreach (UserSkill userSkill in userSkills)
                     {
-                        bool userHasVerified = false;
-                        foreach (UserSkill userSkill in userSkills)
+                        if (userSkill.SkillName == skill)
                         {
-                            if (userSkill.SkillName == skill && userSkill.IsVerified)
-                            {
+                            if (userSkill.IsVerified)
                                 userHasVerified = true;
-                                break;
-                            }
-                        }
-                        if (!userHasVerified)
-                        {
-                            Suggestion suggestion = new Suggestion();
-                            suggestion.SkillName = skill;
-                            suggestion.GroupName = group.GroupName;
-                            suggestion.GainScore = ComputeGain(group, gj, totalWeight);
-                            suggestions.Add(suggestion);
+                            else
+                                userHasUnverified = true;
                         }
                     }
+
+                    if (userHasVerified)
+                        continue;
+
+                    double gain = ComputeGain(group, gj, totalWeight);
+
+                    Suggestion candidate = new Suggestion
+                    {
+                        SkillName = skill,
+                        GroupName = group.GroupName,
+                        GainScore = gain
+                    };
+
+                    if (bestSuggestionForGroup == null)
+                    {
+                        bestSuggestionForGroup = candidate;
+                    }
+                    else if (userHasUnverified && bestSuggestionForGroup.SkillName != null)
+                    {
+                        continue;
+                    }
                 }
+
+                if (bestSuggestionForGroup != null)
+                    suggestions.Add(bestSuggestionForGroup);
             }
 
             suggestions.Sort((a, b) => b.GainScore.CompareTo(a.GainScore));
