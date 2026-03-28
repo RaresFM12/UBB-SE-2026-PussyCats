@@ -103,6 +103,47 @@ namespace PussyCatsApp.services
             return suggestions;
         }
 
+        public RoleResult CalculateForRole(int userId, JobRole role)
+        {
+            List<UserSkill> userSkills = userSkillRepository.GetByUserId(userId);
+            List<SkillGroup> groups = skillGroupRepository.GetByRole(role);
 
+            int totalWeight = 0;
+            foreach (SkillGroup group in groups)
+                totalWeight += group.Weight;
+
+            List<double> groupScores = new List<double>();
+            foreach (SkillGroup group in groups)
+                groupScores.Add(ComputeGroupScore(group, userSkills));
+
+            double matchScore = ComputeMatchScore(groups, groupScores);
+
+            RoleResult result = new RoleResult();
+            result.JobRole = role;
+
+            if (matchScore == -1)
+            {
+                result.MatchScore = -1;
+                result.Suggestions = new List<Suggestion>();
+                return result;
+            }
+
+            result.MatchScore = matchScore;
+            result.Suggestions = IdentifyGaps(groups, userSkills, totalWeight);
+            return result;
+        }
+
+        public List<RoleResult> CalculateAll(int userId)
+        {
+            List<RoleResult> results = new List<RoleResult>();
+            foreach (JobRole role in Enum.GetValues(typeof(JobRole)))
+                results.Add(CalculateForRole(userId, role));
+            return results;
+        }
+
+        public List<Suggestion> GetSuggestions(RoleResult result)
+        {
+            return result.Suggestions;
+        }
     }
 }
