@@ -69,17 +69,17 @@ namespace PussyCatsApp.views
 
         private string FormatRoleName(string raw)
         {
-            var sb = new System.Text.StringBuilder();
+            var newString = new System.Text.StringBuilder();
 
             foreach (char c in raw)
             {
-                if (char.IsUpper(c) && sb.Length > 0)
-                    sb.Append(' ');
+                if (char.IsUpper(c) && newString.Length > 0)
+                    newString.Append(' ');
 
-                sb.Append(c);
+                newString.Append(c);
             }
 
-            return sb.ToString();
+            return newString.ToString();
         }
 
         private void lstRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)

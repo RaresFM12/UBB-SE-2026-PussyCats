@@ -69,8 +69,8 @@ namespace PussyCatsApp.services
 
             foreach (SkillGroup group in groups)
             {
-                double gj = ComputeGroupScore(group, userSkills);
-                if (gj > 0.5)
+                double groupScore = ComputeGroupScore(group, userSkills);
+                if (groupScore > 0.5)
                     continue;
 
                 Suggestion bestSuggestionForGroup = null;
@@ -94,7 +94,7 @@ namespace PussyCatsApp.services
                     if (userHasVerified)
                         continue;
 
-                    double gain = ComputeGain(group, gj, totalWeight);
+                    double gain = ComputeGain(group, groupScore, totalWeight);
 
                     Suggestion candidate = new Suggestion
                     {

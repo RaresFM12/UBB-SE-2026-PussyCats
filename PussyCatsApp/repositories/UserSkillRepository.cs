@@ -29,13 +29,13 @@ namespace PussyCatsApp.repositories
 
         private void GetVerifiedSkills(int userId, List<UserSkill> skills)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
+                connection.Open();
                 string query = "SELECT name, score FROM Skills WHERE userId = @UserId";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@UserId", userId);
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@UserId", userId);
+                SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     UserSkill skill = new UserSkill();
@@ -49,13 +49,13 @@ namespace PussyCatsApp.repositories
 
         private void GetUnverifiedSkillsFromCV(int userId, List<UserSkill> skills)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
+                connection.Open();
                 string query = "SELECT ParsedCV FROM Users WHERE userID = @UserId";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@UserId", userId);
-                object result = cmd.ExecuteScalar();
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@UserId", userId);
+                object result = command.ExecuteScalar();
 
                 if (result == null || result == DBNull.Value)
                     return;
