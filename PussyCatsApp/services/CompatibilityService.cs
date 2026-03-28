@@ -57,5 +57,52 @@ namespace PussyCatsApp.services
 
             return weightedSum * 100 / totalWeight;
         }
+
+        private double ComputeGain(SkillGroup group, double gj, int totalWeight)
+        {
+            return 100.0 * group.Weight * (0.8 - gj) / totalWeight;
+        }
+
+        private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
+        {
+            List<Suggestion> suggestions = new List<Suggestion>();
+
+            foreach (SkillGroup group in groups)
+            {
+                double gj = ComputeGroupScore(group, userSkills);
+                if (gj < 0.5)
+                {
+                    foreach (string skill in group.Skills)
+                    {
+                        bool userHasVerified = false;
+                        foreach (UserSkill userSkill in userSkills)
+                        {
+                            if (userSkill.SkillName == skill && userSkill.IsVerified)
+                            {
+                                userHasVerified = true;
+                                break;
+                            }
+                        }
+                        if (!userHasVerified)
+                        {
+                            Suggestion suggestion = new Suggestion();
+                            suggestion.SkillName = skill;
+                            suggestion.GroupName = group.GroupName;
+                            suggestion.GainScore = ComputeGain(group, gj, totalWeight);
+                            suggestions.Add(suggestion);
+                        }
+                    }
+                }
+            }
+
+            suggestions.Sort((a, b) => b.GainScore.CompareTo(a.GainScore));
+
+            if (suggestions.Count > 3)
+                suggestions = suggestions.GetRange(0, 3);
+
+            return suggestions;
+        }
+
+
     }
 }
