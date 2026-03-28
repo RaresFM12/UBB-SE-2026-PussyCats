@@ -112,10 +112,31 @@ namespace PussyCatsApp.repositories
 
         public void updateProfileLastModified(int userId, DateTime timestamp)
         {
+            //TODO : implementation in feature 12
         }
 
         public void updateProfilePicture(int userId, string picturePath)
         {
+            this.sqlConnection = new SqlConnection("Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True");
+
+            SqlCommand updatePictureCommand = new SqlCommand("UPDATE Users SET profilePicture = @path WHERE userID = @userId", sqlConnection);
+
+            updatePictureCommand.Parameters.AddWithValue("@path", (object)picturePath ?? DBNull.Value);
+            updatePictureCommand.Parameters.AddWithValue("@userId", userId);
+
+            try
+            {
+                sqlConnection.Open();
+                updatePictureCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
         }
 
     }
