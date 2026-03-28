@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Shapes;
 using PussyCatsApp.models;
 using PussyCatsApp.repositories.personality_test_repo;
 using PussyCatsApp.services;
+using PussyCatsApp.views;
 using System;
 using System.Collections.Generic;
 using System.IO;

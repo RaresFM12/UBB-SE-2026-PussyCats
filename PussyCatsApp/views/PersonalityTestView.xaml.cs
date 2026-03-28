@@ -5,9 +5,6 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.repositories.personality_test_repo;
-using PussyCatsApp.services;
-using PussyCatsApp.views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,22 +12,20 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PussyCatsApp
+namespace PussyCatsApp.views
 {
     /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainWindow : Window
+    public sealed partial class PersonalityTestView : Page
     {
-        public MainWindow()
+        public PersonalityTestView()
         {
             InitializeComponent();
-            RootFrame.Navigate(typeof(UserProfileView), RootFrame);
         }
     }
 }
