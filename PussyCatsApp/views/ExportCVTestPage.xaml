@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PussyCatsApp.views.ExportCVTestPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Spacing="16" HorizontalAlignment="Center">
+
+            <TextBlock Text="CV Export Test"
+                       FontSize="24" FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+
+            <Button x:Name="ExportButton"
+                    Content="Download CV as PDF"
+                    HorizontalAlignment="Center"
+                    Width="220"
+                    Click="ExportButton_Click"/>
+
+            <ProgressRing x:Name="LoadingRing"
+                          IsActive="False"
+                          Width="32" Height="32"
+                          HorizontalAlignment="Center"/>
+
+            <TextBlock x:Name="StatusText"
+                       Text=""
+                       HorizontalAlignment="Center"
+                       Foreground="Gray"/>
+
+            <!--
+                Hidden WebView2 — never visible to the user.
+                It loads the CV template so PrintToPdfAsync can render it.
+                Width/Height must be > 0 or WebView2 won't initialise.
+            -->
+            <WebView2 x:Name="HiddenWebView"
+                      Width="1" Height="1"
+                      Opacity="0"/>
+
+        </StackPanel>
+    </Grid>
+
+</Page>

@@ -4,130 +4,66 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{FirstName}} {{LastName}} — CV</title>
-
-    <!-- html2pdf.js for client-side PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>CV</title>
     <link rel="stylesheet" href="CVCSSTemplate.css">
-    <script src="CVJSTemplate.js"></script>
 </head>
 
 <body>
-
-    <!-- ═══════════════════════════════════════════════════════════════
-     CV CONTENT  — everything inside #cv-content becomes the PDF
-    ═══════════════════════════════════════════════════════════════ -->
     <div id="cv-content">
 
-        <!-- ── HEADER ────────────────────────────────────────────────── -->
         <header class="cv-header">
             <div>
-                <h1>{{FirstName}} {{LastName}}</h1>
+                <h1 id="cv-name"></h1>
             </div>
             <div class="cv-contact">
-                <div>{{Email}}</div>
-                <div>{{PhoneNumber}}</div>
-                <div>{{City}}, {{Country}}</div>
-                {{#if GitHub}}<div><a href="{{GitHub}}">{{GitHub}}</a></div>{{/if}}
-                {{#if LinkedIn}}<div><a href="{{LinkedIn}}">{{LinkedIn}}</a></div>{{/if}}
+                <div id="cv-email"></div>
+                <div id="cv-phone"></div>
+                <div id="cv-location"></div>
+                <div id="cv-github" style="display:none;"><a href=""></a></div>
+                <div id="cv-linkedin" style="display:none;"><a href=""></a></div>
             </div>
         </header>
 
-        <!-- ── MAIN BODY ───────────────────────────────────────── -->
         <div class="cv-body">
 
-            <!-- EDUCATION -->
-            {{#if Education}}
-            <section class="cv-section">
+            <section id="section-education" class="cv-section" style="display:none;">
                 <h2>Education</h2>
-                {{#if EducationList}}
-                {{EducationList}}
-                {{else}}
-                <div class="entry edu-entry">
+                <div class="edu-entry">
                     <div class="edu-line">
-                        {{#if University}}<span class="edu-university">{{University}}</span>{{/if}}
+                        <span id="cv-university" class="edu-university"></span>
                         <span class="edu-divider"></span>
-                        <span class="edu-period">{{StartYear}} - {{EndYear}}</span>
+                        <span id="cv-graduation" class="edu-period"></span>
                     </div>
-                    {{#if ProgramName}}<div class="edu-program">{{ProgramName}}</div>{{/if}}
-                    {{#if Courses}}<p class="edu-courses"><span class="edu-label">Relevant Courses:</span> {{Courses}}</p>{{/if}}
-                    {{#if Description}}<p class="edu-description">{{Description}}</p>{{/if}}
                 </div>
-                {{/if}}
             </section>
-            {{/if}}
 
-            <!-- WORK EXPERIENCE -->
-            {{#if WorkExperience}}
-            <section class="cv-section">
+            <section id="section-work" class="cv-section" style="display:none;">
                 <h2>Work Experience</h2>
-                {{#if WorkExperienceList}}
-                {{WorkExperienceList}}
-                {{else}}
-                <div class="entry work-entry">
-                    <div class="work-line">
-                        {{#if Position}}<span class="work-role">{{Position}}</span>{{/if}}
-                        {{#if Company}}<span class="work-company">{{Company}}</span>{{/if}}
-                        <span class="work-divider"></span>
-                        <span class="work-period">{{WorkStartYear}} - {{WorkEndYear}}</span>
-                    </div>
-                    {{#if WorkDescription}}<p class="work-description">{{WorkDescription}}</p>{{/if}}
-                </div>
-                {{/if}}
+                <div id="work-list"></div>
             </section>
-            {{/if}}
 
-            <!-- PROJECTS -->
-            {{#if Projects}}
-            <section class="cv-section">
+            <section id="section-projects" class="cv-section" style="display:none;">
                 <h2>Projects</h2>
-                {{#if ProjectsList}}
-                {{ProjectsList}}
-                {{else}}
-                <div class="entry project-entry-custom">
-                    <div class="project-line">
-                        {{#if ProjectName}}<span class="project-title">{{ProjectName}}</span>{{/if}}
-                        <span class="project-divider"></span>
-                        <span class="project-period">{{ProjectStartYear}} - {{ProjectEndYear}}</span>
-                    </div>
-                    {{#if ProjectDescription}}<p class="project-description">{{ProjectDescription}}</p>{{/if}}
-                </div>
-                {{/if}}
+                <div id="projects-list"></div>
             </section>
-            {{/if}}
 
-            <!-- EXTRACURRICULAR -->
-            {{#if ExtraCurricular}}
-            <section class="cv-section">
+            <section id="section-extra" class="cv-section" style="display:none;">
                 <h2>Extracurricular Activities</h2>
-                {{ExtraCurricularList}}
+                <div id="extra-list"></div>
             </section>
-            {{/if}}
 
-
-            <!-- CERTIFICATIONS -->
-            {{#if Certificates}}
-            <section class="cv-section">
+            <section id="section-certs" class="cv-section" style="display:none;">
                 <h2>Certifications</h2>
-                <ul class="cert-list">
-                    {{CertificatesList}}
-                </ul>
+                <ul id="certs-list" class="cert-list"></ul>
             </section>
-            {{/if}}
 
-            <!-- SKILLS -->
-            {{#if Skills}}
-            <section class="cv-section">
+            <section id="section-skills" class="cv-section" style="display:none;">
                 <h2>Skills</h2>
-                {{SkillsList}}
+                <div id="skills-list"></div>
             </section>
-            {{/if}}
 
-        </div><!-- /.cv-body -->
-
-    </div><!-- /#cv-content -->
-
-    <!-- ── DOWNLOAD BUTTON (not included in PDF) ─────────────────── -->
+        </div>
+    </div>
     <div class="no-print">
         <button id="download-btn" onclick="generatePDF()">
             <span id="btn-spinner" class="spinner"></span>
@@ -135,6 +71,7 @@
         </button>
     </div>
 
+    <script src="CVGenerator.js"></script>
 </body>
 
 </html>

@@ -151,6 +151,13 @@ body {
     white-space: nowrap;
 }
 
+.edu-degree {
+    font-size: 8.5pt;
+    color: var(--accent2);
+    font-style: italic;
+    white-space: nowrap;
+}
+
 .edu-divider {
     flex: 1;
     border-bottom: 1px dashed var(--divider);

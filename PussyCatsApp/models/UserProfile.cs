@@ -19,6 +19,8 @@ namespace PussyCatsApp.models
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string University { get; set; } = string.Empty;
+        public string Degree { get; set; } = string.Empty;
+        public int UniversityStartYear { get; set; }
         public int ExpectedGraduationYear { get; set; }
 
         // Optional Fields from R16

@@ -22,8 +22,14 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
-
   <ItemGroup>
+ 	<Content Include="resources\**\*">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>
+
+
+	<ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -43,6 +49,11 @@
   <ItemGroup>
     <Folder Include="services\" />
     <Folder Include="viewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="views\ExportCVTestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="views\DocumentsPage.xaml">

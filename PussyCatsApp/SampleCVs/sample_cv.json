@@ -8,6 +8,8 @@
   "country": "Romania",
   "city": "Cluj-Napoca",
   "university": "Babes-Bolyai University",
+  "degree": "Faculty of Computer Science",
+  "universityStartYear": 2023,
   "expectedGraduationYear": 2026,
   "github": "github.com/ioanagavrila",
   "linkedin": "linkedin.com/in/ioanagavrila",
