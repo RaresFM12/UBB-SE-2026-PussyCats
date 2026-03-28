@@ -29,9 +29,16 @@ namespace PussyCatsApp.viewModels
 
         public string GetRoleName()
         {
-            string raw = currentResult.JobRole.ToString();
+            string formattedName = "";
+            if (currentResult.JobRole == JobRole.UIUXDesigner)
+                formattedName = "UI/UX Designer";
+            else if (currentResult.JobRole == JobRole.AIMLEngineer)
+                formattedName = "AI/ML Engineer";
+            else
+                 formattedName = currentResult.JobRole.ToString();
+
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            foreach (char c in raw)
+            foreach (char c in formattedName)
             {
                 if (char.IsUpper(c) && sb.Length > 0)
                     sb.Append(' ');
