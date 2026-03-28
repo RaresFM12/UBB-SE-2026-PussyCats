@@ -70,7 +70,7 @@ namespace PussyCatsApp.services
             foreach (SkillGroup group in groups)
             {
                 double gj = ComputeGroupScore(group, userSkills);
-                if (gj >= 0.5)
+                if (gj > 0.5)
                     continue;
 
                 Suggestion bestSuggestionForGroup = null;
