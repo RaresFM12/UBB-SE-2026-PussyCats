@@ -1,41 +1,37 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
 using PussyCatsApp.viewModels;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace PussyCatsApp.views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class CompatibilityOverviewView : Page
     {
         private CompatibilityOverviewViewModel viewModel;
 
-        public CompatibilityOverviewView(CompatibilityOverviewViewModel viewModel)
+        public CompatibilityOverviewView()
         {
             this.InitializeComponent();
-            this.viewModel = viewModel;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            viewModel = e.Parameter as CompatibilityOverviewViewModel;
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            if (viewModel == null)
+            {
+                await ShowError("CompatibilityOverviewViewModel was not provided.");
+                return;
+            }
+
             viewModel.LoadAllRoles();
 
             if (!string.IsNullOrEmpty(viewModel.GetErrorMessage()))
@@ -54,7 +50,9 @@ namespace PussyCatsApp.views
                     Result = result,
                     DisplayName = FormatRoleName(result.JobRole.ToString()),
                     DisplayScore = result.MatchScore == -1 ? 0 : result.MatchScore,
-                    DisplayPercentage = result.MatchScore == -1 ? "Insufficient Data" : Math.Round(result.MatchScore, 1) + "%"
+                    DisplayPercentage = result.MatchScore == -1
+                        ? "Insufficient Data"
+                        : Math.Round(result.MatchScore, 1) + "%"
                 });
             }
 
@@ -63,19 +61,23 @@ namespace PussyCatsApp.views
 
         private string FormatRoleName(string raw)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            var sb = new System.Text.StringBuilder();
+
             foreach (char c in raw)
             {
                 if (char.IsUpper(c) && sb.Length > 0)
                     sb.Append(' ');
+
                 sb.Append(c);
             }
+
             return sb.ToString();
         }
 
         private void lstRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lstRoles.SelectedItem == null) return;
+            if (lstRoles.SelectedItem == null || viewModel == null)
+                return;
 
             dynamic selected = lstRoles.SelectedItem;
             RoleResult result = selected.Result;
@@ -86,6 +88,9 @@ namespace PussyCatsApp.views
 
         private void NavigateToDetail(RoleResult result)
         {
+            if (result == null)
+                return;
+
             CompatibilityDetailViewModel detailVm = new CompatibilityDetailViewModel();
             detailVm.LoadResult(result);
             Frame.Navigate(typeof(CompatibilityDetailView), detailVm);
@@ -93,27 +98,33 @@ namespace PussyCatsApp.views
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            //Window window = (Window)this.XamlRoot.Content;
-            //window.Close();
+            if (Frame != null && Frame.CanGoBack)
+                Frame.GoBack();
         }
 
         public async Task ShowError(string message)
         {
-            ContentDialog dialog = new ContentDialog();
-            dialog.Title = "Error";
-            dialog.Content = message;
-            dialog.CloseButtonText = "OK";
-            dialog.XamlRoot = this.XamlRoot;
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = "Error",
+                Content = message,
+                CloseButtonText = "OK",
+                XamlRoot = this.XamlRoot
+            };
+
             await dialog.ShowAsync();
         }
 
         public async Task ShowMessage(string message)
         {
-            ContentDialog dialog = new ContentDialog();
-            dialog.Title = "Information";
-            dialog.Content = message;
-            dialog.CloseButtonText = "OK";
-            dialog.XamlRoot = this.XamlRoot;
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = "Information",
+                Content = message,
+                CloseButtonText = "OK",
+                XamlRoot = this.XamlRoot
+            };
+
             await dialog.ShowAsync();
         }
 

@@ -32,16 +32,16 @@ namespace PussyCatsApp.repositories
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT SkillName, Score FROM Skills WHERE UserId = @UserId";
+                string query = "SELECT name, score FROM Skills WHERE userId = @UserId";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@UserId", userId);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     UserSkill skill = new UserSkill();
-                    skill.SkillName = reader["SkillName"].ToString();
+                    skill.SkillName = reader["name"].ToString();
                     skill.IsVerified = true;
-                    skill.Score = (int)reader["Score"];
+                    skill.Score = (int)reader["score"];
                     skills.Add(skill);
                 }
             }
@@ -52,7 +52,7 @@ namespace PussyCatsApp.repositories
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT ParsedCV FROM Users WHERE Id = @UserId";
+                string query = "SELECT ParsedCV FROM Users WHERE userID = @UserId";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@UserId", userId);
                 object result = cmd.ExecuteScalar();
