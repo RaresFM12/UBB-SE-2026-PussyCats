@@ -8,24 +8,24 @@ namespace PussyCatsApp.repositories.personality_test_repo
 {
     internal class PersonalityTestRepository : IPersonalityTestRepository
     {
-        private string connectionString;
+        private string ConnectionString;
         
-        PersonalityTestRepository(String connectionString)
+        PersonalityTestRepository(String _ConnectionString)
         {
-            this.connectionString = connectionString;
+            this.ConnectionString = _ConnectionString;
         }
 
-        string IRepository<String>.load(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IRepository<String>.save(int id, String data)
+        public String load(int id)
         {
             throw new NotImplementedException();
         }
 
-        void IPersonalityTestRepository.UpdateSelectedRole(int userId, String personalityTestResult)
+        public void save(int id, string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateSelectedRole(int userId, string personalityTestResult)
         {
             throw new NotImplementedException();
         }

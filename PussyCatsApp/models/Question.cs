@@ -19,7 +19,7 @@ namespace PussyCatsApp.models
         private TraitType Trait { get; }
         private int SortOrder { get; set; }
 
-        Question(int id, string questionText, TraitType trait, int sortOrder)
+        public Question(int id, string questionText, TraitType trait, int sortOrder)
         {
             this.Id = id;
             this.QuestionText = questionText;
