@@ -1,0 +1,8 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(100,100)">
+    <polygon points="0,-80 22,-28 76,-25 34,14 46,68 0,42 -46,68 -34,14 -76,-25 -22,-28" fill="#CD7F32" stroke="#9A5A1A" stroke-width="2"/>
+    <circle cx="0" cy="0" r="44" fill="#E0953A" stroke="#9A5A1A" stroke-width="2"/>
+    <text x="0" y="-10" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="700" fill="#5A2D00">★</text>
+    <text x="0" y="16" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="600" fill="#5A2D00">BRONZE</text>
+  </g>
+</svg>
