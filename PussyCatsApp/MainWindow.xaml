@@ -14,6 +14,17 @@
     </Window.SystemBackdrop>
 
     <Grid>
+        <NavigationView x:Name="navView"
+                        PaneDisplayMode="Left"
+                        IsBackButtonVisible="Collapsed"
+                        SelectionChanged="NavigationView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Contact" Content="Profile Form" Tag="ProfileForm"/>
+                <NavigationViewItem Icon="People" Content="View Profile" Tag="ViewProfile"/>
+                <NavigationViewItem Icon="Document" Content="Documents" Tag="Documents"/>
+            </NavigationView.MenuItems>
 
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
     </Grid>
 </Window>

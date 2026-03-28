@@ -26,6 +26,37 @@ namespace PussyCatsApp
         public MainWindow()
         {
             InitializeComponent();
+            Title = "PussyCats - User Profile Management";
+
+            // Set a default window size
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            appWindow.Resize(new Windows.Graphics.SizeInt32(1200, 800));
+
+            // Navigate to ProfileForm page by default
+            ContentFrame.Navigate(typeof(views.ProfileFormPage));
+        }
+
+        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItemContainer != null)
+            {
+                var navItemTag = args.SelectedItemContainer.Tag.ToString();
+
+                switch (navItemTag)
+                {
+                    case "ProfileForm":
+                        ContentFrame.Navigate(typeof(views.ProfileFormPage));
+                        break;
+                    case "ViewProfile":
+                        ContentFrame.Navigate(typeof(views.ViewProfilePage));
+                        break;
+                    case "Documents":
+                        ContentFrame.Navigate(typeof(views.DocumentsPage));
+                        break;
+                }
+            }
         }
     }
 }
