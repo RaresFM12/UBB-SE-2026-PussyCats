@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace PussyCatsApp.services
@@ -29,9 +30,11 @@ namespace PussyCatsApp.services
                 }
                 else if (fileType.ToLower() == ".xml")
                 {
+                    var xDoc = XDocument.Parse(content);
+                    var rootName = xDoc.Root?.Name.LocalName ?? "CVData";
                     using (var reader = new StringReader(content))
                     {
-                        var serializer = new XmlSerializer(typeof(CVData));
+                        var serializer = new XmlSerializer(typeof(CVData), new XmlRootAttribute(rootName));
                         var cvData = (CVData)serializer.Deserialize(reader);
                         return MapCVDataToProfile(cvData);
                     }
@@ -39,7 +42,7 @@ namespace PussyCatsApp.services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to parse CV file: {ex.Message}", ex);
+                throw new Exception($"Failed to parse CV file: {ex.InnerException?.Message ?? ex.Message}", ex);
             }
 
             return profile;

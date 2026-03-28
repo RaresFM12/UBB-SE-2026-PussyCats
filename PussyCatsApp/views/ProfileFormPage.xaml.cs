@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -194,7 +195,7 @@ namespace PussyCatsApp.views
             picker.FileTypeFilter.Add(".xml");
 
             // Get the window handle
-            var window = (Application.Current as App)?.m_window as MainWindow;
+            var window = (Application.Current as App)?.MainWindow as MainWindow;
             if (window == null) return;
 
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
@@ -223,9 +224,11 @@ namespace PussyCatsApp.views
                 }
                 else if (file.FileType.ToLower() == ".xml")
                 {
+                    var xDoc = XDocument.Parse(content);
+                    var rootName = xDoc.Root?.Name.LocalName ?? "CVStructure";
                     using (var reader = new StringReader(content))
                     {
-                        var serializer = new XmlSerializer(typeof(CVStructure));
+                        var serializer = new XmlSerializer(typeof(CVStructure), new XmlRootAttribute(rootName));
                         cvData = (CVStructure)serializer.Deserialize(reader);
                     }
                 }
@@ -239,7 +242,8 @@ namespace PussyCatsApp.views
             }
             catch (Exception ex)
             {
-                ShowInfoBar($"Error processing CV file: {ex.Message}", InfoBarSeverity.Error);
+                var errorMsg = ex.InnerException?.Message ?? ex.Message;
+                ShowInfoBar($"Error processing CV file: {errorMsg}", InfoBarSeverity.Error);
             }
         }
 
@@ -587,8 +591,11 @@ namespace PussyCatsApp.views
 
                 ShowInfoBar("Profile saved successfully!", InfoBarSeverity.Success);
 
-                // Navigate back or to profile view
-                Frame.GoBack();
+                // Navigate to profile view
+                if (Frame.CanGoBack)
+                    Frame.GoBack();
+                else
+                    Frame.Navigate(typeof(ViewProfilePage), _userProfile);
             }
             catch (Exception ex)
             {
@@ -668,7 +675,10 @@ namespace PussyCatsApp.views
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.GoBack();
+            if (Frame.CanGoBack)
+                Frame.GoBack();
+            else
+                Frame.Navigate(typeof(ViewProfilePage));
         }
     }
 
