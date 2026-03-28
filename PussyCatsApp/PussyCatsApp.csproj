@@ -13,7 +13,12 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="views\CompatibilityDetailView.xaml" />
+	  <None Remove="views\CompatibilityOverviewView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Page Remove="views\CompatibilityDetailPage.xaml" />
+	  <Page Remove="views\CompatibilityOverviewPage.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -44,6 +49,15 @@
 	  <None Update="views\CompatibilityDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </None>
+	  <Page Update="views\CompatibilityDetailView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <None Update="views\CompatibilityOverviewPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	  <Page Update="views\CompatibilityOverviewView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
