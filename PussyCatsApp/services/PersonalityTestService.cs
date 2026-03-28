@@ -59,11 +59,42 @@ namespace PussyCatsApp.services
                 new(23, "I am comfortable working with data, probabilities, and logical frameworks.", TraitType.ABSTRACTION,  23),
                 new(24, "I prefer to understand the logic and first principles of a system rather than just knowing how to operate it.", TraitType.ABSTRACTION,  24),
             ];
+
+            //return questions.OrderBy(_ => Random.Shared.Next()).ToList
+            // TODO see what is the best way to shuffle a list in C#
         }
 
         public Dictionary<TraitType, double> CalculateTraitScores(Dictionary<Question, AnswerValue> answers)
         {
-            return new Dictionary<TraitType, double>();
+            var traitScores = new Dictionary<TraitType, double>();
+            var traitQuestionCounts = new Dictionary<TraitType, int>();
+
+            foreach (var answer in answers)
+            {
+                var trait = answer.Key.Trait;
+                if (!traitScores.ContainsKey(trait))
+                {
+                    traitScores[trait] = 0;
+                    traitQuestionCounts[trait] = 0;
+                }
+
+                traitScores[trait] += answer.Value switch
+                {
+                    AnswerValue.STRONGLY_DISAGREE => 1,
+                    AnswerValue.DISAGREE => 2,
+                    AnswerValue.NEUTRAL => 3,
+                    AnswerValue.AGREE => 4,
+                    AnswerValue.STRONGLY_AGREE => 5,
+                    _ => 0
+                };
+
+                ++traitQuestionCounts[trait];
+            }
+
+            foreach(var trait in traitScores.Keys)
+                traitScores[trait] /= traitQuestionCounts[trait];
+
+            return traitScores;
         }
 
         public Dictionary<JobRole, double> CalculateRoleScores(Dictionary<TraitType, double> traits)
@@ -71,7 +102,7 @@ namespace PussyCatsApp.services
             return new Dictionary<JobRole, double>();
         }
 
-        public List<JobRole> GetTopRoles(Dictionary<JobRole, double> scores, int n)
+        public List<JobRole> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
         {
             return new List<JobRole>();
         }

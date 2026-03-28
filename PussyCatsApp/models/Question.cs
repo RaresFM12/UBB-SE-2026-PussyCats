@@ -14,10 +14,10 @@ namespace PussyCatsApp.models
     public class Question
     {
 
-        private int Id { get; }
-        private String QuestionText { get; }
-        private TraitType Trait { get; }
-        private int SortOrder { get; set; }
+        public int Id { get; }
+        public String QuestionText { get; }
+        public TraitType Trait { get; }
+        public int SortOrder { get; set; }
 
         public Question(int id, string questionText, TraitType trait, int sortOrder)
         {
