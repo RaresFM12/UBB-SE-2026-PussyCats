@@ -10,7 +10,7 @@ namespace PussyCatsApp.repositories
     internal interface ISkillRepository:IRepository<Skill>
     {
         List<Skill> GetSkillsByUserId(int userId);
-        void UpdateSkillScore(int skillId, double score);
+        void UpdateSkillScore(int skillId, int score);
         void UpdateAchievedDate(int skillId, DateOnly date);
     }
 }

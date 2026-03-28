@@ -11,7 +11,7 @@ namespace PussyCatsApp.models
     {
         public int SkillId { get; }
         public string _name = string.Empty;
-        public double _score;
+        public int _score;
         public int UserId { get; }
         public DateOnly AchievedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public string Name
@@ -19,7 +19,7 @@ namespace PussyCatsApp.models
             get => _name;
             set => _name = value ?? throw new ArgumentNullException("Test name cannot be null");
         }
-        public double Score
+        public int Score
         {
             get => _score;
             set 
@@ -39,7 +39,7 @@ namespace PussyCatsApp.models
             Name = name;
         }
 
-        public Skill(int skillId, int userId, string name, double score)
+        public Skill(int skillId, int userId, string name, int score)
         {
             SkillId = skillId;
             UserId = userId;
@@ -47,7 +47,7 @@ namespace PussyCatsApp.models
             Score = score;
         }
 
-        public Skill (int skillId, int userId, string name, float score, DateOnly achievedDate)
+        public Skill (int skillId, int userId, string name, int score, DateOnly achievedDate)
         {
             SkillId = skillId;
             UserId = userId;

@@ -29,7 +29,7 @@ namespace PussyCatsApp.repositories
                     skillId: (int)reader["skillID"],
                     userId: (int)reader["userID"],
                     name: reader["name"].ToString(),
-                    score: Convert.ToSingle(reader["score"]),
+                    score: (int)reader["score"],
                     achievedDate: DateOnly.FromDateTime((DateTime)reader["lastAttemptDate"])
                 );
                 sqlConnection.Close();
@@ -66,7 +66,7 @@ namespace PussyCatsApp.repositories
                     skillId: (int)reader["skillID"],
                     userId: (int)reader["userID"],
                     name: reader["name"].ToString(),
-                    score: Convert.ToSingle(reader["score"]),
+                    score: (int)reader["score"],
                     achievedDate: DateOnly.FromDateTime((DateTime)reader["achievedDate"])
                 ));
             }
@@ -74,7 +74,7 @@ namespace PussyCatsApp.repositories
             return tests;
         }
 
-        public void UpdateSkillScore(int id, double score)
+        public void UpdateSkillScore(int id, int score)
         {
             string query = "UPDATE SKILLS SET score = @score WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
