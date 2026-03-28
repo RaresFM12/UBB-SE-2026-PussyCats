@@ -8,7 +8,5 @@ using Windows.System;
 namespace PussyCatsApp.repositories.personality_test_repo
 {
     internal interface IPersonalityTestRepository : IRepository<String>
-    {
-        public void UpdateSelectedRole(int userId, String personalityTestResult);
-    }
+    {}
 }

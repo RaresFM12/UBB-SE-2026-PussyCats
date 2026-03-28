@@ -10,11 +10,11 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace PussyCatsApp.services
 {
-    internal class PersonalityTestService
+    public class PersonalityTestService
     {
         private PersonalityTestRepository repository;
 
-        PersonalityTestService(PersonalityTestRepository repository)
+        public PersonalityTestService(PersonalityTestRepository repository)
         {
             this.repository = repository;
         }
@@ -66,19 +66,19 @@ namespace PussyCatsApp.services
             return new Dictionary<TraitType, double>();
         }
 
-        public Dictionary<RoleType, double> CalculateRoleScores(Dictionary<TraitType, double> traits)
+        public Dictionary<JobRole, double> CalculateRoleScores(Dictionary<TraitType, double> traits)
         {
-            return new Dictionary<RoleType, double>();
+            return new Dictionary<JobRole, double>();
         }
 
-        public List<RoleType> GetTopRoles(Dictionary<RoleType, double> scores, int n)
+        public List<JobRole> GetTopRoles(Dictionary<JobRole, double> scores, int n)
         {
-            return new List<RoleType>();
+            return new List<JobRole>();
         }
 
         public void SaveResult(int userId, string personalityTestResult)
         {
-            repository.UpdateSelectedRole(userId, personalityTestResult);
+            repository.save(userId, personalityTestResult);
         }
     }
 }

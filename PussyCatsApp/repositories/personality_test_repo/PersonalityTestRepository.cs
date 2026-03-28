@@ -1,33 +1,68 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PussyCatsApp.repositories.personality_test_repo
 {
-    internal class PersonalityTestRepository : IPersonalityTestRepository
+    public class PersonalityTestRepository : IPersonalityTestRepository
     {
         private string ConnectionString;
-        
-        PersonalityTestRepository(String _ConnectionString)
+        //private readonly string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
+
+        public PersonalityTestRepository(String _ConnectionString)
         {
             this.ConnectionString = _ConnectionString;
         }
 
-        public String load(int id)
+        public String? load(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("SELECT personalityTestResult FROM Users WHERE userID = @userID", connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                                return reader["personalityTestResult"].ToString();
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine($"Database error: {ex.Message}");
+                }
+            }
+
+            return null;
         }
 
-        public void save(int id, string data)
+        public void save(int id, string personalityTestResult)
         {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateSelectedRole(int userId, string personalityTestResult)
-        {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("UPDATE Users SET personalityTestResult = @personalityTestResult WHERE userID = @userID", connection))
+                    {
+                        command.Parameters.AddWithValue("@personalityTestResult", personalityTestResult);
+                        command.Parameters.AddWithValue("@userID", id);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine($"Database error: {ex.Message}");
+                }
+            }
         }
     }
 }

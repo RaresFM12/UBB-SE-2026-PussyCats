@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace PussyCatsApp.models
 {
     public enum TraitType {ABSTRACTION, VISIBILITY, INTERACTION, DEPTH, CREATIVITY, PACE }
-    public enum  RoleType { FRONTEND, BACKEND, UI_UX, DEVOPS, PM, DATA_ANALYST, CYBERSECURITY, AI_ML }
+    public enum  JobRole { FrontendDeveloper, BackendDeveloper, UIUXDesigner, DevOpsEngineer, ProjectManager, DataAnalyst, CybersecuritySpecialist, AIMLEngineer }
     public enum AnswerValue { STRONGLY_DISAGREE = 1, DISAGREE = 2, NEUTRAL = 3, AGREE = 4, STRONGLY_AGREE = 5 }
 
-    internal class Question
+    public class Question
     {
 
         private int Id { get; }
-        private string QuestionText { get; }
+        private String QuestionText { get; }
         private TraitType Trait { get; }
         private int SortOrder { get; set; }
 
