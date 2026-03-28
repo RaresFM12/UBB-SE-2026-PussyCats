@@ -13,10 +13,6 @@
     <Nullable>enable</Nullable>
 	<LangVersion>preview</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="views\PersonalityTestView.xaml" />
-    <None Remove="views\UserProfileView.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />

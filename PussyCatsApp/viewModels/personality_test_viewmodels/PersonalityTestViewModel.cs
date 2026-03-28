@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace PussyCatsApp.viewModels
 {
@@ -24,6 +22,10 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty]
         public partial RoleResultViewModel? SelectedRole { get; set; }
 
+        public bool CanSubmit => Questions.All(q => q.IsAnswered == true);
+
+        public bool CanSave => SelectedRole != null;
+
         public PersonalityTestViewModel(PersonalityTestService service, int userId)
         {
             PersonalityTestService = service;
@@ -34,24 +36,20 @@ namespace PussyCatsApp.viewModels
                 .ToList();
         }
 
-        public bool CanSubmit => Questions.All(q => q.IsAnswered == true);
-
-        public bool CanSave => SelectedRole != null;
-
         [RelayCommand]
-        private void Submit()
+        private void SubmitCommand()
         {
             // TODO
         }
 
         [RelayCommand]
-        private void SelectRole(RoleResultViewModel role)
+        private void SelectRoleCommand(RoleResultViewModel role)
         {
             // TODO
         }
 
         [RelayCommand]
-        private void SaveResult()
+        private void SaveResultCommand()
         {
             // TODO
         }
