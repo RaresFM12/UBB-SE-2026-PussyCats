@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.models;
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
@@ -34,24 +36,60 @@ namespace PussyCatsApp.viewModels
             Questions = PersonalityTestService.LoadQuestions()
                 .Select(question => new QuestionViewModel(question))
                 .ToList();
+
+            // Subscribe to answer changes to trigger CanSubmit validation
+            // WHEN to re-evaluate the CanSubmit condition
+            foreach (var question in Questions)
+            {
+                question.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(QuestionViewModel.SelectedAnswer))
+                    {
+                        SubmitCommand.NotifyCanExecuteChanged();
+                    }
+                };
+            }
+        }
+
+        [RelayCommand(CanExecute = nameof(CanSubmit))]
+        private void Submit()
+        {
+            // Collect answers from questions
+            var answers = new Dictionary<Question, AnswerValue>();
+            foreach (var questionVm in Questions)
+                answers[questionVm.Question] = (AnswerValue)questionVm.SelectedAnswer!;
+
+            // Calculate trait scores
+            var traitScores = PersonalityTestService.CalculateTraitScores(answers);
+
+            // Calculate role scores
+            var roleScores = PersonalityTestService.CalculateRoleScores(traitScores);
+
+            TopRoles = PersonalityTestService.GetTopRoles(roleScores, 3)
+                .Select(role => new RoleResultViewModel(role.Key, role.Value))
+                .ToList();
         }
 
         [RelayCommand]
-        private void SubmitCommand()
+        private void SelectRole(RoleResultViewModel role)
         {
-            // TODO
+            // Deselect all roles
+            foreach (var topRole in TopRoles)
+                topRole.IsSelected = false;
+
+            // Select the clicked role
+            role.IsSelected = true;
+            SelectedRole = role;
+
+            // Notify SaveResultCommand that it can execute
+            SaveResultCommand.NotifyCanExecuteChanged();
         }
 
-        [RelayCommand]
-        private void SelectRoleCommand(RoleResultViewModel role)
+        [RelayCommand(CanExecute = nameof(CanSave))]
+        private void SaveResult()
         {
-            // TODO
-        }
-
-        [RelayCommand]
-        private void SaveResultCommand()
-        {
-            // TODO
+            if (SelectedRole != null)
+                PersonalityTestService.SaveResult(UserId, SelectedRole.Role.ToString());
         }
     }
 

@@ -155,13 +155,12 @@ namespace PussyCatsApp.services
             return roleScores;
         }
 
-        public List<JobRole> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
-        { 
+        public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
+        {
             return roleScores
                 .OrderByDescending(kvp => kvp.Value)
                 .Take(length)
-                .Select(kvp => kvp.Key)
-                .ToList();
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         public void SaveResult(int userId, string personalityTestResult)

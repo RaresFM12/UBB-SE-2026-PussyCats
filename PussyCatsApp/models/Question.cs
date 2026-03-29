@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.models
 {
-    
-
     public class Question
     {
         public int Id { get; }
