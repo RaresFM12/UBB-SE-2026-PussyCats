@@ -9,11 +9,14 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.viewModels
 {
-    internal class UserProfileViewModel
+    public class UserProfileViewModel
     {
         private List<SkillTest> tests;
-          
-        private UserLevel currentLevel;
+
+        public UserLevel CurrentLevel { get; private set; }
+        public int TotalXP { get; private set; }
+
+        public event Action OnLevelUpdated;
         public void recalculateLevelCommand()
         {
             int totalXP = 0;
@@ -22,7 +25,9 @@ namespace PussyCatsApp.viewModels
                 totalXP += test.getXP();
             }
 
-            currentLevel = UserLevel.calculateLevel(totalXP);
+            CurrentLevel = UserLevel.calculateLevel(totalXP);
+
+            OnLevelUpdated?.Invoke();
         }
 
         public void LoadTests()

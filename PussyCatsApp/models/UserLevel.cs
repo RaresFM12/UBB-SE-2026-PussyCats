@@ -36,12 +36,12 @@ namespace PussyCatsApp.models
                 return new UserLevel(1, "Newcomer", 0, 100);
         }
 
-        public float getProgressPercent(int totalXP)
+        public int getProgressPercent(int totalXP)
         {
             if (NextLevelXP == 0)
-                return 100f;
+                return 100;
 
-            return (float)(totalXP - XpRequired) / (NextLevelXP - XpRequired) * 100f;
+            return (totalXP - XpRequired) / (NextLevelXP - XpRequired) * 100;
         }
 
         public int getXPToNextLevel()

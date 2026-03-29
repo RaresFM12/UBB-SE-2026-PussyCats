@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.services
 {
-    internal class UserProfileService
+    public class UserProfileService
     {
         SkillTestRepository skillTestRepository;
         private UserProfileRepository userProfileRepository;

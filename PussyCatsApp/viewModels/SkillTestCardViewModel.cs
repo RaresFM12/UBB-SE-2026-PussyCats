@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.viewModels
 {
-    internal class SkillTestCardViewModel
+    public class SkillTestCardViewModel
     {
         private SkillTest skillTest;
         private Badge badge;
@@ -62,10 +62,6 @@ namespace PussyCatsApp.viewModels
             badge = Badge.assignTier(skillTest.Score);
         }
 
-       /* public void onLevelUpdated()
-        {
-            userProfileViewModel.recalculateLevelCommand();
-        }*/
         private int GenerateRandomScore()
         {
             Random random = new Random();

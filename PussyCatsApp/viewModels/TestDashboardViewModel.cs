@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.viewModels
 {
-    internal class TestDashboardViewModel
+    public class TestDashboardViewModel
     {
         private List<SkillTest> tests;
         private SkillTestService skillTestService;
@@ -40,12 +40,12 @@ namespace PussyCatsApp.viewModels
 
         public void backCommand()
         {
-            // navigate back to main profile page
+
         }
 
         public void goToAllTestsCommand()
         {
-            // navigate to Powerpuff girls view listing all available tests
+
         }
     }
 }

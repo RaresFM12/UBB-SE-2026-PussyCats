@@ -9,7 +9,7 @@ using PussyCatsApp.models;
 
 namespace PussyCatsApp.services
 {
-    internal class SkillTestService
+    public class SkillTestService
     {
         private SkillTestRepository skillTestRepository;
 

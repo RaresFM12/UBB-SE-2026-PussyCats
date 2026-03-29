@@ -7,7 +7,7 @@ using System.Text;
 
 namespace PussyCatsApp.repositories
 {
-    internal class SkillTestRepository : ISkillTestRepository
+    public class SkillTestRepository : ISkillTestRepository
     {
         private SqlConnection sqlConnection;
 

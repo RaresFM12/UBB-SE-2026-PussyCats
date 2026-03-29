@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.repositories
 {
-    internal interface ISkillTestRepository:IRepository<SkillTest>
+    public interface ISkillTestRepository:IRepository<SkillTest>
     {
         List<SkillTest> GetSkillTestsByUserId(int userId);
         void UpdateSkillTestScore(int skillId, int score);
