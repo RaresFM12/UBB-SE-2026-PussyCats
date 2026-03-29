@@ -1,5 +1,4 @@
 /**
- * cv-generator.js
  * ─────────────────────────────────────────────────────────────────
  * Called by PdfExportService via ExecuteScriptAsync after the
  * template page has fully loaded in WebView2.
@@ -43,6 +42,19 @@ const CVGenerator = (() => {
         return Boolean(v);
     }
 
+    function formatDate(dateValue) {
+        if (!dateValue) return '';
+        // extract just the date part
+        if (typeof dateValue === 'string') {
+            return dateValue.split('T')[0];
+        }
+        // i it's a Date object, format it
+        if (dateValue instanceof Date) {
+            return dateValue.toISOString().split('T')[0];
+        }
+        return String(dateValue);
+    }
+
     // ── Renderers ─────────────────────────────────────────────────
 
     function renderWorkExperience(entries = []) {
@@ -52,7 +64,7 @@ const CVGenerator = (() => {
     <span class="work-role">${esc(w.jobTitle)}</span>
     <span class="work-company">${esc(w.company)}</span>
     <span class="work-divider"></span>
-    <span class="work-period">${esc(w.startDate)} – ${w.currentlyWorking || !w.endDate ? 'Present' : esc(w.endDate)}</span>
+    <span class="work-period">${formatDate(w.startDate)} – ${w.currentlyWorking || !w.endDate ? 'Present' : formatDate(w.endDate)}</span>
   </div>
   ${w.description ? `<p class="work-description">${esc(w.description)}</p>` : ''}
 </div>`).join('');
@@ -180,10 +192,11 @@ const CVGenerator = (() => {
             if (hasValue(profile.university)) {
                 eduSection.style.display = '';
                 setText('#cv-university', profile.university);
+                setText('#cv-degree', profile.degree || '');
                 setText('#cv-graduation',
-                    profile.expectedGraduationYear
-                        ? `Expected ${profile.expectedGraduationYear}`
-                        : '');
+                    profile.expectedGraduationYear ? profile.expectedGraduationYear : '');
+                setText('#cv-university-start',
+                    profile.universityStartYear ? profile.universityStartYear : '');
             } else {
                 eduSection.style.display = 'none';
             }

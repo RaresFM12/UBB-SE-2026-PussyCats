@@ -3,7 +3,9 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using PussyCatsApp.models;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PussyCatsApp.views
@@ -25,8 +27,6 @@ namespace PussyCatsApp.views
 
             // Map Assets/CvTemplate/ folder to http://assets.local/
             // so the WebView can load HTML, CSS and JS as if from a web server.
-            // All files must be in that folder:
-            //   CVHtmlTemplate.html, CVCSSTemplate.css, cv-generator.js
             var templateFolder = Path.Combine(
                 Windows.ApplicationModel.Package.Current.InstalledLocation.Path,
                 "resources");
@@ -50,7 +50,6 @@ namespace PussyCatsApp.views
                 return;
             }
 
-            // Loading state
             ExportButton.IsEnabled = false;
             LoadingRing.IsActive = true;
             StatusText.Text = "Generating PDF…";
@@ -59,7 +58,15 @@ namespace PussyCatsApp.views
             {
                 // ── Swap this for a real repository call on the actual profile page ──
                 // e.g.:  var profile = await _profileRepository.GetCurrentUserAsync();
-                var profile = BuildTestProfile();
+                var profile = await LoadProfileFromJsonAsync("../SampleCVs/sample_cv.json");
+
+                Debug.WriteLine($"[ExportCVTestPage] Loaded profile: {JsonSerializer.Serialize(profile)}");
+
+                if (profile == null)
+                {
+                    StatusText.Text = "sample_cv.json not found or invalid.";
+                    return;
+                }
 
                 await _pdfExportService.ExportAsync(profile);
 
@@ -80,7 +87,24 @@ namespace PussyCatsApp.views
             }
         }
 
+        private static async Task<UserProfile?> LoadProfileFromJsonAsync(string fileName)
+        {
+            var installedPath = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            var filePath = Path.Combine(installedPath, fileName);
+
+            if (!File.Exists(filePath))
+                return null;
+
+            using var stream = File.OpenRead(filePath);
+            return await JsonSerializer.DeserializeAsync<UserProfile>(stream, new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }); 
+        }
+
         // ── Hardcoded test data matching the real UserProfile model ──────
+
+
         private static UserProfile BuildTestProfile() => new UserProfile
         {
             FirstName = "Maria",
@@ -92,6 +116,8 @@ namespace PussyCatsApp.views
             GitHub = "https://github.com/mariaionescu",
             LinkedIn = "https://linkedin.com/in/mariaionescu",
             University = "Politehnica University of Bucharest",
+            Degree = "BSc Computer Science",
+            UniversityStartYear = 2022,
             ExpectedGraduationYear = 2025,
             Motivation = "Passionate about building scalable systems.",
             ActiveAccount = true,
