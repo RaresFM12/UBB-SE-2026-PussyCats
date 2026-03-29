@@ -39,17 +39,10 @@ namespace PussyCatsApp.viewModels
 
             try
             {
-                // Replace with a real repository call when moving to the profile page:
-                // var profile = await _profileRepository.GetCurrentUserAsync();
-                var profile = await LoadProfileFromJsonAsync("SampleCVs/sample_cv.json");
+                // The ViewModel delegates the entire operation to the service.
+                // Assuming ID 1 for testing purposes.
+                await _pdfExportService.ExportProfileToPdfAsync(1);
 
-                if (profile == null)
-                {
-                    StatusText = "sample_cv.json not found or invalid.";
-                    return;
-                }
-
-                await _pdfExportService.ExportProfileToPdfAsync(profile);
                 StatusText = "Downloaded successfully!";
             }
             catch (OperationCanceledException)
@@ -67,6 +60,7 @@ namespace PussyCatsApp.viewModels
         }
 
         // ── Data loading ──────────────────────────────────────────────
+        // in case we still need to process json files for mocks
 
         private static async Task<UserProfile?> LoadProfileFromJsonAsync(string relativePath)
         {

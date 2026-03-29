@@ -162,7 +162,7 @@ const CVGenerator = (() => {
         setText('#cv-name', `${profile.firstName || ''} ${profile.lastName || ''}`);
         setText('#cv-email', profile.email);
         setText('#cv-phone', profile.phoneNumber);
-        setText('#cv-location', `${profile.city || ''}, ${profile.country || ''}`);
+        setText('#cv-location', `${profile.city || ''} ${profile.country || ''}`);
 
         const githubEl = document.getElementById('cv-github');
         if (githubEl) {

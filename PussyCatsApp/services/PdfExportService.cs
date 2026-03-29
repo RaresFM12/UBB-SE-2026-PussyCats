@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using PussyCatsApp;
 using PussyCatsApp.models;
+using PussyCatsApp.repositories;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -10,14 +11,23 @@ using Windows.Storage.Pickers;
 public class PdfExportService
 {
     private readonly WebView2 _webView;
+    private readonly IUserProileRepository _profileRepository;
 
-    public PdfExportService(WebView2 webView)
+    // Inject the repository into the service
+    public PdfExportService(WebView2 webView, IUserProileRepository profileRepository)
     {
         _webView = webView;
+        _profileRepository = profileRepository;
     }
 
-    public async Task ExportProfileToPdfAsync(UserProfile profile)
+    public async Task ExportProfileToPdfAsync(int userId)
     {
+        // Fetch the data
+        var profile = _profileRepository.getProfileById(userId);
+
+        if (profile == null)
+            throw new InvalidOperationException("User profile not found in database.");
+
         _webView.Source = new Uri("http://assets.local/CVHtmlTemplate.html");
         await WaitForNavigationAsync();
 
