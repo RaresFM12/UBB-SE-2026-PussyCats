@@ -10,7 +10,8 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+	<WindowsSdkPackageVersion>10.0.19041.56</WindowsSdkPackageVersion>
+	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
@@ -48,13 +49,13 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
     <PackageReference Include="System.Text.Json" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="services\" />
-    <Folder Include="viewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="views\ExportCVTestPage.xaml">
