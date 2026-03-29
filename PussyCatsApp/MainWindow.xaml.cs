@@ -5,14 +5,11 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-<<<<<<< HEAD
 using PussyCatsApp.repositories.personality_test_repo;
 using PussyCatsApp.services;
-=======
 using PussyCatsApp.repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
->>>>>>> main
 using PussyCatsApp.views;
 using System;
 using System.Collections.Generic;
