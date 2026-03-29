@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace PussyCatsApp.models
 {
@@ -62,6 +63,21 @@ namespace PussyCatsApp.models
             if (dateNow.AddMonths(-3) <= AchievedDate)
                 return true;
             return false;     
+        }
+
+        public int getXP()
+        {
+
+            if (Score >= 90)
+                return 100;
+
+            if (Score >= 70)
+                return 60;
+
+            if (Score >= 50)
+                return 30;
+
+            return 10;
         }
 
     }

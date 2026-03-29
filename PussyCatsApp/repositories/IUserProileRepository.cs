@@ -14,5 +14,6 @@ namespace PussyCatsApp.repositories
         void updateAccountStatus(int userId, string status);
         void updateProfilePicture(int userId, string picturePath);
         void updateProfileLastModified(int userId, DateTime timestamp);
+
     }
 }
