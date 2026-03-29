@@ -9,9 +9,19 @@
     mc:Ignorable="d"
     Title="PussyCatsApp">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-        <TextBlock Text="IT Matchmaking Platform" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-        <Button x:Name="btnTestCompatibility" Content="Test Compatibility" HorizontalAlignment="Center" Click="btnTestCompatibility_Click"/>
-    </StackPanel>
+    <Grid>
+        <NavigationView x:Name="navView"
+                        PaneDisplayMode="Left"
+                        IsBackButtonVisible="Collapsed"
+                        SelectionChanged="NavigationView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Contact" Content="Profile Form" Tag="ProfileForm"/>
+                <NavigationViewItem Icon="People" Content="View Profile" Tag="ViewProfile"/>
+                <NavigationViewItem Icon="Document" Content="Documents" Tag="Documents"/>
+                <NavigationViewItem Icon="Print" Content="Export Profile" Tag="ExportProfile"/>
+            </NavigationView.MenuItems>
 
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+    </Grid>
 </Window>
