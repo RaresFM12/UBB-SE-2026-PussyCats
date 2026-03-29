@@ -7,11 +7,11 @@ using System.Xml.Linq;
 
 namespace PussyCatsApp.models
 {
-    public class Skill
+    public class SkillTest
     {
-        public int SkillId { get; }
+        public int SkillTestId { get; }
         public string _name = string.Empty;
-        public double _score;
+        public int _score;
         public int UserId { get; }
         public DateOnly AchievedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public string Name
@@ -19,7 +19,7 @@ namespace PussyCatsApp.models
             get => _name;
             set => _name = value ?? throw new ArgumentNullException("Test name cannot be null");
         }
-        public double Score
+        public int Score
         {
             get => _score;
             set 
@@ -32,24 +32,24 @@ namespace PussyCatsApp.models
         }
         public string AchievedDateFormatted => AchievedDate.ToString("dd.MM.yyyy");
 
-        public Skill(int skillId, int userId, string name)
+        public SkillTest(int skillId, int userId, string name)
         {
-            SkillId = skillId;
+            SkillTestId = skillId;
             UserId = userId;
             Name = name;
         }
 
-        public Skill(int skillId, int userId, string name, double score)
+        public SkillTest(int skillId, int userId, string name, int score)
         {
-            SkillId = skillId;
+            SkillTestId = skillId;
             UserId = userId;
             Name = name;
             Score = score;
         }
 
-        public Skill (int skillId, int userId, string name, float score, DateOnly achievedDate)
+        public SkillTest (int skillId, int userId, string name, int score, DateOnly achievedDate)
         {
-            SkillId = skillId;
+            SkillTestId = skillId;
             UserId = userId;
             Name = name;
             Score = score;
