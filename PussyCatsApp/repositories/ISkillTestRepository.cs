@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.repositories
 {
-    internal interface ISkillRepository:IRepository<Skill>
+    internal interface ISkillTestRepository:IRepository<SkillTest>
     {
-        List<Skill> GetSkillsByUserId(int userId);
-        void UpdateSkillScore(int skillId, int score);
+        List<SkillTest> GetSkillTestsByUserId(int userId);
+        void UpdateSkillTestScore(int skillId, int score);
         void UpdateAchievedDate(int skillId, DateOnly date);
     }
 }

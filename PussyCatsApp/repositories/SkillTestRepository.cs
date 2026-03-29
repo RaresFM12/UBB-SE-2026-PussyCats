@@ -7,16 +7,16 @@ using System.Text;
 
 namespace PussyCatsApp.repositories
 {
-    internal class SkillRepository : ISkillRepository
+    internal class SkillTestRepository : ISkillTestRepository
     {
         private SqlConnection sqlConnection;
 
-        public SkillRepository(SqlConnection connection)
+        public SkillTestRepository(SqlConnection connection)
         {
             sqlConnection = connection;
         }
 
-        public Skill load(int id)
+        public SkillTest load(int id)
         {
             string query = "SELECT * FROM SKILLS WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
@@ -25,7 +25,7 @@ namespace PussyCatsApp.repositories
             using SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                var test = new Skill(
+                var test = new SkillTest(
                     skillId: (int)reader["skillID"],
                     userId: (int)reader["userID"],
                     name: reader["name"].ToString(),
@@ -36,11 +36,11 @@ namespace PussyCatsApp.repositories
                 return test;
             }
             sqlConnection.Close();
-            throw new Exception($"Skill with ID {id} not found.");
+            throw new Exception($"SkillTest with ID {id} not found.");
         }
 
 
-        public void save(int id, Skill data)
+        public void save(int id, SkillTest data)
         {
             string query = "UPDATE SKILLS SET score = @score, achievedDate = @date WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
@@ -51,9 +51,9 @@ namespace PussyCatsApp.repositories
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
         }
-        public List<Skill> GetSkillsByUserId(int userId)
+        public List<SkillTest> GetSkillTestsByUserId(int userId)
         {
-            var tests = new List<Skill>();
+            var tests = new List<SkillTest>();
             string query = "SELECT * FROM SKILLS WHERE userID = @userId";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
             cmd.Parameters.AddWithValue("@userId", userId);
@@ -62,7 +62,7 @@ namespace PussyCatsApp.repositories
             using SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                tests.Add(new Skill(
+                tests.Add(new SkillTest(
                     skillId: (int)reader["skillID"],
                     userId: (int)reader["userID"],
                     name: reader["name"].ToString(),
@@ -74,7 +74,7 @@ namespace PussyCatsApp.repositories
             return tests;
         }
 
-        public void UpdateSkillScore(int id, int score)
+        public void UpdateSkillTestScore(int id, int score)
         {
             string query = "UPDATE SKILLS SET score = @score WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);

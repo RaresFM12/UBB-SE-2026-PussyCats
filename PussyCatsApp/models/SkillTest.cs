@@ -7,9 +7,9 @@ using System.Xml.Linq;
 
 namespace PussyCatsApp.models
 {
-    public class Skill
+    public class SkillTest
     {
-        public int SkillId { get; }
+        public int SkillTestId { get; }
         public string _name = string.Empty;
         public int _score;
         public int UserId { get; }
@@ -32,24 +32,24 @@ namespace PussyCatsApp.models
         }
         public string AchievedDateFormatted => AchievedDate.ToString("dd.MM.yyyy");
 
-        public Skill(int skillId, int userId, string name)
+        public SkillTest(int skillId, int userId, string name)
         {
-            SkillId = skillId;
+            SkillTestId = skillId;
             UserId = userId;
             Name = name;
         }
 
-        public Skill(int skillId, int userId, string name, int score)
+        public SkillTest(int skillId, int userId, string name, int score)
         {
-            SkillId = skillId;
+            SkillTestId = skillId;
             UserId = userId;
             Name = name;
             Score = score;
         }
 
-        public Skill (int skillId, int userId, string name, int score, DateOnly achievedDate)
+        public SkillTest (int skillId, int userId, string name, int score, DateOnly achievedDate)
         {
-            SkillId = skillId;
+            SkillTestId = skillId;
             UserId = userId;
             Name = name;
             Score = score;
