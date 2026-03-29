@@ -33,7 +33,7 @@ namespace PussyCatsApp.services
             return skill.isRetakeEligible();
         }
 
-        public Badge submitRetake(string testId, float newScore)
+        public Badge submitRetake(string testId, int newScore)
         {
             if (!canRetakeTest(testId))
                 throw new Exception("Test is not yet eligible for a retake. Action blocked at service layer.");
