@@ -45,7 +45,7 @@ namespace PussyCatsApp.views
         private void InitializeViewModel()
         {
             // TODO: Inject userId from app state or navigation context
-            // For now, using a placeholder userId of 1
+            // For now using a placeholder userId of 1
             int userId = 1;
 
             // TODO: Get connection string from app configuration

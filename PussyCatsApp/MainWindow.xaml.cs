@@ -30,7 +30,6 @@ namespace PussyCatsApp
         public MainWindow()
         {
             InitializeComponent();
-            RootFrame.Navigate(typeof(UserProfileView), RootFrame);
         }
     }
 }

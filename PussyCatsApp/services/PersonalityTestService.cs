@@ -14,11 +14,11 @@ namespace PussyCatsApp.services
 {
     public class PersonalityTestService
     {
-        private PersonalityTestRepository repository;
+        private PersonalityTestRepository Repository;
 
         public PersonalityTestService(PersonalityTestRepository repository)
         {
-            this.repository = repository;
+            this.Repository = repository;
         }
 
         public static List<Question> LoadQuestions()
@@ -165,7 +165,7 @@ namespace PussyCatsApp.services
 
         public void SaveResult(int userId, string personalityTestResult)
         {
-            repository.save(userId, personalityTestResult);
+            Repository.save(userId, personalityTestResult);
         }
     }
 }

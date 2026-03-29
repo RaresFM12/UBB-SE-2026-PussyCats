@@ -43,11 +43,6 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="views\UserProfileView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="views\PersonalityTestView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

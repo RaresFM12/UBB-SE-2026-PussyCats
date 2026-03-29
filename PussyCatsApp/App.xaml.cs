@@ -50,55 +50,6 @@ namespace PussyCatsApp
         {
             _window = new MainWindow();
             _window.Activate();
-
-            //String conStr = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
-            //var repo = new PersonalityTestRepository(conStr);
-
-            //var service = new PersonalityTestService(repo);
-
-            //var questions = PersonalityTestService.LoadQuestions();
-            //var testAnswers = new Dictionary<Question, AnswerValue>
-            //{
-            //    // Visibility
-            //    { questions[0],  AnswerValue.STRONGLY_AGREE },
-            //    { questions[1],  AnswerValue.AGREE },
-            //    { questions[2],  AnswerValue.STRONGLY_AGREE },
-            //    { questions[3],  AnswerValue.AGREE },
-
-            //    // Interaction
-            //    { questions[4],  AnswerValue.NEUTRAL },
-            //    { questions[5],  AnswerValue.DISAGREE },
-            //    { questions[6],  AnswerValue.NEUTRAL },
-            //    { questions[7],  AnswerValue.DISAGREE },
-
-            //    // Depth
-            //    { questions[8],  AnswerValue.AGREE },
-            //    { questions[9],  AnswerValue.STRONGLY_AGREE },
-            //    { questions[10], AnswerValue.AGREE },
-            //    { questions[11], AnswerValue.STRONGLY_AGREE },
-
-            //    // Creativity
-            //    { questions[12], AnswerValue.AGREE },
-            //    { questions[13], AnswerValue.STRONGLY_AGREE },
-            //    { questions[14], AnswerValue.AGREE },
-            //    { questions[15], AnswerValue.NEUTRAL },
-
-            //    // Pace
-            //    { questions[16], AnswerValue.NEUTRAL },
-            //    { questions[17], AnswerValue.DISAGREE },
-            //    { questions[18], AnswerValue.NEUTRAL },
-            //    { questions[19], AnswerValue.DISAGREE },
-
-            //    // Abstraction
-            //    { questions[20], AnswerValue.AGREE },
-            //    { questions[21], AnswerValue.STRONGLY_AGREE },
-            //    { questions[22], AnswerValue.AGREE },
-            //    { questions[23], AnswerValue.STRONGLY_AGREE },
-            //};
-
-            //var traitTypes = service.CalculateTraitScores(testAnswers);
-            //var roleScores = service.CalculateRoleScores(traitTypes);
-            //var topScores = service.GetTopRoles(roleScores, 3);
         }
     }
 }

@@ -11,11 +11,11 @@ namespace PussyCatsApp.repositories.personality_test_repo
     public class PersonalityTestRepository : IPersonalityTestRepository
     {
         private string ConnectionString;
-        //private readonly string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
+        //"Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
 
-        public PersonalityTestRepository(String _ConnectionString)
+        public PersonalityTestRepository(String ConnectionString)
         {
-            this.ConnectionString = _ConnectionString;
+            this.ConnectionString = ConnectionString;
         }
 
         public String? load(int id)
