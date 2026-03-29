@@ -9,10 +9,10 @@ namespace PussyCatsApp.models
     public enum TraitType
     {
         ABSTRACTION,
-        VISIBILITY, 
-        INTERACTION, 
-        DEPTH, 
-        CREATIVITY, 
-        PACE 
+        VISIBILITY,
+        INTERACTION,
+        DEPTH,
+        CREATIVITY,
+        PACE
     }
 }
