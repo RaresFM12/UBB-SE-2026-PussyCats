@@ -2,13 +2,15 @@
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PussyCatsApp.viewModels
 {
-    internal class UserProfileVIewModel
+    internal class UserProfileViewModel
     {
         private UserProfileService profileSerivice;
         private ImageStorageService imageStorageService;
@@ -16,15 +18,15 @@ namespace PussyCatsApp.viewModels
         private CvUploadService cvUploadService;
         private CompletenessService completenessService;
 
-        public UserProfile userProfile { get; set; }
+        public UserProfile? userProfile { get; set; }
         public bool isLoading { get; set; }
         public int CompletenessPercentage { get; set; }
-        public string NextEmptyFieldPrompt { get; set; }
+        public string NextEmptyFieldPrompt { get; set; } = "";
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
-        public string ErrorMessage { get; set; }
-        public string FreshnessText { get; set; }
+        public string ErrorMessage { get; set; } = "";
+        public string FreshnessText { get; set; } = "";
 
-        public UserProfileVIewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
+        public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
         {
             
             this.profileSerivice = userProfileService;
@@ -51,11 +53,46 @@ namespace PussyCatsApp.viewModels
             }
         }
 
+        public void ToggleAccountStatusCommand()
+        {
+            profileSerivice.ToggleAccountStatus(userProfile.userID, userProfile.accountStatus.ToString());
+
+        }
+
+        public void UploadAvatarCommand(Stream fileStream, string fileName)
+        {
+            try
+            {
+                string newPath = imageStorageService.SaveImage(fileStream, fileName);
+                profileSerivice.UpdateAvatarPath(userProfile.userID, newPath);
+                userProfile.profilePicture = newPath;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error uploading avatar: {ex.Message}";
+                return;
+            }
+            
+
+        }
+
+        public void RemoveAvatarCommand()
+        {
+            if(userProfile.profilePicture != null)
+            {
+                imageStorageService.DeleteImage(userProfile.profilePicture);
+                profileSerivice.RemoveAvatarPath(userProfile.userID);
+                userProfile.profilePicture = null;
+            }
+        }
 
 
 
 
 
 
-    }
+
+
+
+        }
 }
