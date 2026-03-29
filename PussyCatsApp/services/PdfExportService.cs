@@ -8,5 +8,6 @@ namespace PussyCatsApp.services
 {
     internal class PdfExportService
     {
+        public void export() { }
     }
 }

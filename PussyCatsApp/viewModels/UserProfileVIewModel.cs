@@ -86,9 +86,41 @@ namespace PussyCatsApp.viewModels
             }
         }
 
+        public void ExportToPdfCommand()
+        {
+            isLoading = true;
+            pdfExportService.export();
+            isLoading = false;
+        }
 
+        public string GetPersonalityButtonText()
+        {
+            if(string.IsNullOrEmpty(userProfile.personalityResult))
+                return "TAKE PERSONALITY TEST";
+            return "RETAKE PERSONALITY TEST";
 
+        }
 
+        public void EditProfileCommand()
+        {
+            //TODO
+        }
+        public void TakePersonalityTestCommand()
+        {
+            
+        }
+
+        public void ViewDocumentsCommand()
+        { 
+        }
+
+        public void MatchHistoryCommand()
+        {
+        }
+
+        public void GoToSkillTestCommand()
+        {
+        }
 
 
 
