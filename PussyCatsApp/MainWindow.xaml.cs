@@ -55,6 +55,9 @@ namespace PussyCatsApp
                     case "Documents":
                         ContentFrame.Navigate(typeof(views.DocumentsPage));
                         break;
+                    case "ExportProfile":
+                        ContentFrame.Navigate(typeof(views.ExportCVTestPage));
+                        break;
                 }
             }
         }

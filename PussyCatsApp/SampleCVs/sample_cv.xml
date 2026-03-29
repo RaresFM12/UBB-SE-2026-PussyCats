@@ -9,6 +9,8 @@
   <Country>Romania</Country>
   <City>Cluj-Napoca</City>
   <University>Babes-Bolyai University</University>
+  <Degree>Computer Science</Degree>
+  <UniversityStartYear>2023</UniversityStartYear>
   <ExpectedGraduationYear>2026</ExpectedGraduationYear>
   <GitHub>github.com/ioanagavrila</GitHub>
   <LinkedIn>linkedin.com/in/ioanagavrila</LinkedIn>

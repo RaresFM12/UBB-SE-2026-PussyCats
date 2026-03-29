@@ -21,9 +21,21 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="SampleCVs\sample_cv.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+ 	<Content Include="resources\**\*">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="SampleCVs\sample_cv.json" />
   </ItemGroup>
 
-  <ItemGroup>
+
+	<ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -43,6 +55,11 @@
   <ItemGroup>
     <Folder Include="services\" />
     <Folder Include="viewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="views\ExportCVTestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="views\DocumentsPage.xaml">
