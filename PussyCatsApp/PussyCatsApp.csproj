@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="views\" />
-    <Folder Include="viewModels\" />
   </ItemGroup>
 
   <!--
