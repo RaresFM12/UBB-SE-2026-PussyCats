@@ -5,6 +5,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.viewModels;
+using PussyCatsApp.services;
+using PussyCatsApp.repositories.personality_test_repo;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,13 +22,40 @@ using Windows.Foundation.Collections;
 namespace PussyCatsApp.views
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Personality Test page where users answer 24 questions to receive role recommendations.
     /// </summary>
     public sealed partial class PersonalityTestView : Page
     {
+        private PersonalityTestViewModel PersonalityTestViewModel;
+
         public PersonalityTestView()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+                InitializeViewModel();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"PersonalityTestView initialization error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            }
+        }
+
+        private void InitializeViewModel()
+        {
+            // TODO: Inject userId from app state or navigation context
+            // For now, using a placeholder userId of 1
+            int userId = 1;
+
+            // TODO: Get connection string from app configuration
+            string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
+
+            var repository = new PersonalityTestRepository(connectionString);
+            var service = new PersonalityTestService(repository);
+            PersonalityTestViewModel = new PersonalityTestViewModel(service, userId);
+
+            this.DataContext = PersonalityTestViewModel;
         }
     }
 }

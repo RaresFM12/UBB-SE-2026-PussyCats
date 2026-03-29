@@ -24,6 +24,9 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty]
         public partial RoleResultViewModel? SelectedRole { get; set; }
 
+        [ObservableProperty]
+        public partial bool IsTestSubmitted { get; set; }
+
         public bool CanSubmit => Questions.All(q => q.IsAnswered == true);
 
         public bool CanSave => SelectedRole != null;
@@ -68,6 +71,9 @@ namespace PussyCatsApp.viewModels
             TopRoles = PersonalityTestService.GetTopRoles(roleScores, 3)
                 .Select(role => new RoleResultViewModel(role.Key, role.Value))
                 .ToList();
+
+            // Mark test as submitted
+            IsTestSubmitted = true;
         }
 
         [RelayCommand]
