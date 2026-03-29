@@ -68,7 +68,7 @@ namespace PussyCatsApp.views
                     return;
                 }
 
-                await _pdfExportService.ExportAsync(profile);
+                await _pdfExportService.ExportProfileToPdfAsync(profile);
 
                 StatusText.Text = "Downloaded successfully!";
             }

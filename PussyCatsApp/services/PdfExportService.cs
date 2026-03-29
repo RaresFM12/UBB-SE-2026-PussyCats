@@ -16,7 +16,7 @@ public class PdfExportService
         _webView = webView;
     }
 
-    public async Task ExportAsync(UserProfile profile)
+    public async Task ExportProfileToPdfAsync(UserProfile profile)
     {
         _webView.Source = new Uri("http://assets.local/CVHtmlTemplate.html");
         await WaitForNavigationAsync();
@@ -34,7 +34,7 @@ public class PdfExportService
         // Save file picker
         var savePicker = new FileSavePicker();
         savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-        savePicker.SuggestedFileName = $"{profile.FirstName} {profile.LastName} CV";
+        savePicker.SuggestedFileName = BuildFileName(profile);
         savePicker.FileTypeChoices.Add("PDF Document", new[] { ".pdf" });
 
         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle((App.Current as App).MainWindow);
@@ -59,5 +59,12 @@ public class PdfExportService
         }
         _webView.NavigationCompleted += Handler;
         return tcs.Task;
+    }
+
+    private string BuildFileName(UserProfile profile)
+    {
+        var firstName = string.IsNullOrWhiteSpace(profile.FirstName) ? "FirstName" : profile.FirstName;
+        var lastName = string.IsNullOrWhiteSpace(profile.LastName) ? "LastName" : profile.LastName;
+        return $"{firstName}_{lastName}_CV.pdf";
     }
 }
