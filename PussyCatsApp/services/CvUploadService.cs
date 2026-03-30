@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.services
 {
-    internal class CvUploadService
+    public class CvUploadService
     {
     }
 }

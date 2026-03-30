@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PussyCatsApp.repositories;
@@ -12,23 +13,26 @@ namespace PussyCatsApp.views
     {
         private readonly UserProfileViewModel viewModel;
         private bool isBinding = false;
+        private SqlConnection connection;
 
         public UserProfileView()
         {
             this.InitializeComponent();
 
             var userProfileRepository = new UserProfileRepository();
-            var skillTestRepository = new SkillTestRepository();
+            var skillTestRepository = new SkillTestRepository(connection);
+            IUserProileRepository user = new UserProfileRepository();
+            WebView2 view = new WebView2();
 
             viewModel = new UserProfileViewModel(
                 new UserProfileService(userProfileRepository, skillTestRepository),
                 new ImageStorageService(),
-                new PdfExportService(),
+                new PdfExportService(view, user),
                 new CvUploadService(),
                 new CompletenessService()
             );
 
-            viewModel.OnLevelUpdated += RenderLevelDisplay;
+            
 
             BindData();
         }
@@ -49,42 +53,42 @@ namespace PussyCatsApp.views
 
             if (viewModel.userProfile != null)
             {
-                lblFirstName.Text = $"First Name: {viewModel.userProfile.firstName}";
-                lblLastName.Text = $"Last Name: {viewModel.userProfile.lastName}";
-                lblEmail.Text = $"Email: {viewModel.userProfile.emailAddress}";
-                lblPhone.Text = $"Phone: {viewModel.userProfile.phoneNumber}";
-                lblGithubAccount.Text = $"GitHub: {viewModel.userProfile.githubAccount}";
-                lblLinkedinAccount.Text = $"LinkedIn: {viewModel.userProfile.linkedinAccount}";
+                lblFirstName.Text = $"First Name: {viewModel.userProfile.FirstName}";
+                lblLastName.Text = $"Last Name: {viewModel.userProfile.LastName}";
+                lblEmail.Text = $"Email: {viewModel.userProfile.Email}";
+                lblPhone.Text = $"Phone: {viewModel.userProfile.PhoneNumber}";
+                lblGithubAccount.Text = $"GitHub: {viewModel.userProfile.GitHub}";
+                lblLinkedinAccount.Text = $"LinkedIn: {viewModel.userProfile.LinkedIn}";
 
                 string displayGender = "Not specified";
-                if (viewModel.userProfile.gender == 'M')
+                if (viewModel.userProfile.Gender == "M")
                 {
                     displayGender = "Male";
                 }
-                else if (viewModel.userProfile.gender == 'F')
+                else if (viewModel.userProfile.Gender == "F")
                 {
                     displayGender = "Female";
                 }
 
                 lblGender.Text = $"Gender: {displayGender}";
-                lblCountry.Text = $"Country: {viewModel.userProfile.country}";
-                lblCity.Text = $"City: {viewModel.userProfile.city}";
-                lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.graduationYear}";
+                lblCountry.Text = $"Country: {viewModel.userProfile.Country}";
+                lblCity.Text = $"City: {viewModel.userProfile.City}";
+                lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.ExpectedGraduationYear}";
 
-                chkAccountStatus.IsOn = viewModel.userProfile.accountStatus.ToString() == "ACTIVE";
+                chkAccountStatus.IsOn = viewModel.userProfile.ActiveAccount.ToString() == "ACTIVE";
 
-                if (!string.IsNullOrEmpty(viewModel.userProfile.profilePicture))
+                if (!string.IsNullOrEmpty(viewModel.userProfile.ProfilePicture))
                 {
                     pbAvatar.ProfilePicture =
                         new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
-                            new Uri(viewModel.userProfile.profilePicture));
+                            new Uri(viewModel.userProfile.ProfilePicture));
                 }
                 else
                 {
                     pbAvatar.ProfilePicture = null;
                 }
 
-                RenderLevelDisplay();
+                
             }
             else
             {
@@ -94,22 +98,7 @@ namespace PussyCatsApp.views
             isBinding = false;
         }
 
-        private void RenderLevelDisplay()
-        {
-            if (viewModel.CurrentLevel == null)
-                return;
-
-            LevelTitleText.Text =
-                $"Level {viewModel.CurrentLevel.LevelNumber} — {viewModel.CurrentLevel.Title}";
-
-            XpProgressBar.Value =
-                viewModel.CurrentLevel.getProgressPercent(viewModel.TotalXP);
-
-            int xpToNext = viewModel.CurrentLevel.getXPToNextLevel();
-            XpCountText.Text = xpToNext > 0
-                ? $"{viewModel.TotalXP} XP — {xpToNext} XP to {viewModel.CurrentLevel.Title}"
-                : $"{viewModel.TotalXP} XP — Max level reached!";
-        }
+        
 
         private async void OnAvatarUploadClick(object sender, RoutedEventArgs e)
         {

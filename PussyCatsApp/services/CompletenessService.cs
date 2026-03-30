@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.services
 {
-    internal class CompletenessService
+    public class CompletenessService
     {
     }
 }

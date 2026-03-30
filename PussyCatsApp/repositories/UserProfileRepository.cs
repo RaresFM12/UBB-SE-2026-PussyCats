@@ -37,7 +37,7 @@ namespace PussyCatsApp.repositories
         );
 
         private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
-
+        private SqlConnection sqlConnection;
 
         public UserProfile getProfileById(int userId)
         {

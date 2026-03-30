@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.viewModels
 {
-    internal class UserProfileViewModel
+    public class UserProfileViewModel
     {
         private UserProfileService profileSerivice;
         private ImageStorageService imageStorageService;
@@ -26,6 +26,8 @@ namespace PussyCatsApp.viewModels
         public string ErrorMessage { get; set; } = "";
         public string FreshnessText { get; set; } = "";
 
+        
+
         public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
         {
             
@@ -34,6 +36,11 @@ namespace PussyCatsApp.viewModels
             this.pdfExportService = pdfExportService;
             this.cvUploadService = cvUploadService;
             this.completenessService = completenessService;
+        }
+
+        public void recalculateLevelCommand()
+        {
+            
         }
 
         public async Task LoadUserAsync(int userId)
@@ -55,7 +62,7 @@ namespace PussyCatsApp.viewModels
 
         public void ToggleAccountStatusCommand()
         {
-            profileSerivice.ToggleAccountStatus(userProfile.userID, userProfile.accountStatus.ToString());
+            profileSerivice.ToggleAccountStatus(userProfile.UserId, userProfile.ActiveAccount.ToString());
 
         }
 
@@ -64,8 +71,8 @@ namespace PussyCatsApp.viewModels
             try
             {
                 string newPath = imageStorageService.SaveImage(fileStream, fileName);
-                profileSerivice.UpdateAvatarPath(userProfile.userID, newPath);
-                userProfile.profilePicture = newPath;
+                profileSerivice.UpdateAvatarPath(userProfile.UserId, newPath);
+                userProfile.ProfilePicture = newPath;
             }
             catch (Exception ex)
             {
@@ -78,24 +85,24 @@ namespace PussyCatsApp.viewModels
 
         public void RemoveAvatarCommand()
         {
-            if(userProfile.profilePicture != null)
+            if(userProfile.ProfilePicture != null)
             {
-                imageStorageService.DeleteImage(userProfile.profilePicture);
-                profileSerivice.RemoveAvatarPath(userProfile.userID);
-                userProfile.profilePicture = null;
+                imageStorageService.DeleteImage(userProfile.ProfilePicture);
+                profileSerivice.RemoveAvatarPath(userProfile.UserId);
+                userProfile.ProfilePicture = null;
             }
         }
 
         public void ExportToPdfCommand()
         {
             isLoading = true;
-            pdfExportService.export();
+            pdfExportService.ExportProfileToPdfAsync(userProfile.UserId);
             isLoading = false;
         }
 
         public string GetPersonalityButtonText()
         {
-            if(string.IsNullOrEmpty(userProfile.personalityResult))
+            if(string.IsNullOrEmpty(userProfile.PersonalityTestResult))
                 return "TAKE PERSONALITY TEST";
             return "RETAKE PERSONALITY TEST";
 
