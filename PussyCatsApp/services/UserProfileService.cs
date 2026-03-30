@@ -24,7 +24,7 @@ namespace PussyCatsApp.services
             if (userProfile == null)
                 throw new Exception($"No profile found for ID {userId}");
 
-            return userProfile.isActive();
+            return userProfile.ActiveAccount;
         }
     }
 }

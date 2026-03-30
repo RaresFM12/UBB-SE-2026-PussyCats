@@ -13,6 +13,8 @@ namespace PussyCatsApp.viewModels
     {
         private List<SkillTest> tests;
 
+        UserProfileService userProfileService;
+
         public UserLevel CurrentLevel { get; private set; }
         public int TotalXP { get; private set; }
 
@@ -30,9 +32,15 @@ namespace PussyCatsApp.viewModels
             OnLevelUpdated?.Invoke();
         }
 
+        public void LoadUser(UserProfileViewModel userProfileViewModel)
+        {
+            
+        }
+
         public void LoadTests()
         {
-            tests = UserProfileService.GetSkillTestsForUser(currentUserId);
+            int currentUserId = 0; // currentUserId should be defined somewhere in the class, maybe passed in the constructor
+            tests = userProfileService.GetSkillTestsForUser(currentUserId); 
         }
 
     }
