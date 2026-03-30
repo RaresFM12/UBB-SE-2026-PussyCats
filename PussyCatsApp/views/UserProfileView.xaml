@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PussyCatsApp.views.UserProfileView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PussyCatsApp.views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+
+        <!-- Level display section -->
+        <StackPanel Spacing="6" Margin="0,16,0,0">
+
+            <!-- Level number and title -->
+            <TextBlock x:Name="LevelTitleText"
+               Foreground="White"
+               FontSize="16"
+               FontWeight="Medium"/>
+
+            <!-- Progress bar -->
+            <ProgressBar x:Name="XpProgressBar"
+                 Minimum="0"
+                 Maximum="100"
+                 Height="12"
+                 CornerRadius="6"
+                 Foreground="#9B6BAE"
+                 Background="#6A3F80"/>
+
+            <!-- XP count -->
+            <TextBlock x:Name="XpCountText"
+               Foreground="#D4B8E0"
+               FontSize="12"/>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -13,6 +13,7 @@
 	<WindowsSdkPackageVersion>10.0.19041.56</WindowsSdkPackageVersion>
 	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <Nullable>enable</Nullable>
+    <WindowsSdkPackageVersion>10.0.19041.38</WindowsSdkPackageVersion>
 	<LangVersion>preview</LangVersion>
   </PropertyGroup>
 
