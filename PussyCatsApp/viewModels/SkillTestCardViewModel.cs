@@ -2,13 +2,15 @@
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PussyCatsApp.viewModels
 {
-    public class SkillTestCardViewModel
+    public class SkillTestCardViewModel : INotifyPropertyChanged
     {
         private SkillTest skillTest;
         private Badge badge;
@@ -16,10 +18,13 @@ namespace PussyCatsApp.viewModels
         private UserProfileViewModel userProfileViewModel;  
         private bool isRetakeEnabled;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         public SkillTest SkillTest => skillTest;
         public Badge Badge => badge;
         public bool IsRetakeEnabled => isRetakeEnabled;
-
         public SkillTestCardViewModel(SkillTest skillTest, SkillTestService skillTestService, UserProfileViewModel userProfileViewModel)
         {
             this.skillTest = skillTest;
@@ -52,8 +57,12 @@ namespace PussyCatsApp.viewModels
             skillTest.AchievedDate = DateOnly.FromDateTime(DateTime.Now);
             skillTest.Score = newScore;
 
+            CheckRetakeEligible();
             UpdateBadge();
 
+            OnPropertyChanged(nameof(Badge));
+            OnPropertyChanged(nameof(SkillTest));
+            OnPropertyChanged(nameof(IsRetakeEnabled));
             userProfileViewModel.recalculateLevelCommand();  
         }
 

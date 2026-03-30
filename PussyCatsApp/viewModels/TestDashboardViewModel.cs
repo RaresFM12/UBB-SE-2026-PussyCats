@@ -16,20 +16,19 @@ namespace PussyCatsApp.viewModels
 
         public List<SkillTestCardViewModel> TestCards { get; private set; } = new();
 
-        private int currentUserId;
+        //private int currentUserId = 1;
 
-        public TestDashboardViewModel(SkillTestService skillTestService, UserProfileViewModel userProfileViewModel, int currentUserId)
+        public TestDashboardViewModel(SkillTestService skillTestService, UserProfileViewModel userProfileViewModel)
         {
             this.skillTestService = skillTestService;
             this.userProfileViewModel = userProfileViewModel;
-            this.currentUserId = currentUserId;
+            //this.currentUserId = 1;
 
-            LoadTests();
         }
 
-        public void LoadTests()
+        public void LoadTests(UserProfile userProfile)
         {
-            tests = skillTestService.getTestsForUser(currentUserId);
+            tests = skillTestService.getTestsForUser(userProfile.UserId);
 
             TestCards = new List<SkillTestCardViewModel>();
             foreach (SkillTest test in tests)

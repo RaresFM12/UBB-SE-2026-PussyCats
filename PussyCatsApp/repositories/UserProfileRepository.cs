@@ -37,6 +37,8 @@ namespace PussyCatsApp.repositories
         );
 
         private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        private const string otherConnectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True";
+
         private SqlConnection sqlConnection;
 
         public UserProfile getProfileById(int userId)
@@ -141,7 +143,22 @@ namespace PussyCatsApp.repositories
 
         public void updateProfileLastModified(int userId, DateTime timestamp)
         {
-            //TODO : implementation in feature 12
+            using var connection = new SqlConnection(connectionString);
+            using var cmd = connection.CreateCommand();
+
+            cmd.CommandText = "UPDATE Users SET LastUpdated = @time WHERE userID = @userId";
+            cmd.Parameters.AddWithValue("@time", timestamp);
+            cmd.Parameters.AddWithValue("@userId", userId);
+
+            try
+            {
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error updating LastModified: {ex.Message}");
+            }
         }
 
         public void updateProfilePicture(int userId, string picturePath)
@@ -183,7 +200,7 @@ namespace PussyCatsApp.repositories
                        email, phone, github, linkedin, universityStartYear,
                        graduationYear, country, address,
                        personalityTestResult, activeAccount,
-                       profilePicture, university, degree, parsedCV
+                       profilePicture, university, degree, LastUpdated, parsedCV
                 FROM Users
                 WHERE userID = @id";
             cmd.Parameters.AddWithValue("@id", userId);
@@ -220,6 +237,7 @@ namespace PussyCatsApp.repositories
                 Degree = GetString(reader, "degree"),
                 PersonalityTestResult = GetString(reader, "personalityTestResult"),
                 ActiveAccount = reader.GetBoolean(reader.GetOrdinal("activeAccount")),
+                LastUpdated = reader.IsDBNull(reader.GetOrdinal("LastUpdated")) ? DateTime.Now : reader.GetDateTime(reader.GetOrdinal("LastUpdated")),
                 ProfilePicture = GetString(reader, "profilePicture"),
             };
         }

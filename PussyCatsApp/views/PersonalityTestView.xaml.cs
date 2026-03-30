@@ -9,6 +9,7 @@ using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
 using PussyCatsApp.repositories.personality_test_repo;
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,29 +34,76 @@ namespace PussyCatsApp.views
             try
             {
                 InitializeComponent();
-                InitializeViewModel();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"PersonalityTestView initialization error: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                Debug.WriteLine($"PersonalityTestView initialization error: {ex.Message}");
+                Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }
 
-        private void InitializeViewModel()
+        private void OnBackClick(object sender, RoutedEventArgs e)
         {
-            // TODO: Inject userId from app state or navigation context
-            // For now using a placeholder userId of 1
-            int userId = 1;
+            try
+            {
+                // Prefer using this page's Frame if it can go back
+                if (Frame != null && Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                    return;
+                }
 
+                // Otherwise, try the application's main window frame
+                if (App.MainAppWindow is MainWindow mainWindow && mainWindow.NavigationFrame != null)
+                {
+                    var navFrame = mainWindow.NavigationFrame;
+                    if (navFrame.CanGoBack)
+                    {
+                        navFrame.GoBack();
+                    }
+                    else
+                    {
+                        navFrame.Navigate(typeof(UserProfileView));
+                    }
+                    return;
+                }
+
+                // Fallback: navigate in this page's frame to the profile view
+                Frame?.Navigate(typeof(UserProfileView));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[PersonalityTestView] Back navigation error: " + ex);
+            }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            // Get userId from navigation parameter
+            int userId = 1; // Default value
+
+            if (e.Parameter is int passedUserId)
+                userId = passedUserId;
+
+            InitializeViewModel(userId);
+        }
+        private void InitializeViewModel(int userId)
+        {
             // TODO: Get connection string from app configuration
             string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
 
             var repository = new PersonalityTestRepository(connectionString);
             var service = new PersonalityTestService(repository);
-            PersonalityTestViewModel = new PersonalityTestViewModel(service, userId);
+            PersonalityTestViewModel persVM = new PersonalityTestViewModel(service, userId);
 
             this.DataContext = PersonalityTestViewModel;
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

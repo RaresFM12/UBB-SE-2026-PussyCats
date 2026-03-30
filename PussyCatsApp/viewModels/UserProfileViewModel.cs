@@ -2,8 +2,10 @@
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.models;
 using PussyCatsApp.services;
+using PussyCatsApp.views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -30,10 +32,11 @@ namespace PussyCatsApp.viewModels
         public int CompletenessPercentage { get; set; }
         public string NextEmptyFieldPrompt { get; set; } = "";
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
-        public string ErrorMessage = string.Empty;
-        public string FreshnessText = string.Empty;
+        public string ErrorMessage { get; set; } = "";
+        public string FreshnessText { get; set; } = "";
+        public int TotalXP { get; private set; } = 0;
 
-        public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService, PdfExportService pdfExportService, CvUploadService cvUploadService, CompletenessService completenessService)
+        public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
         {
             this.profileSerivice = userProfileService;
             this.imageStorageService = imageStorageService;
@@ -44,9 +47,24 @@ namespace PussyCatsApp.viewModels
             this.ExportVM = new ExportCVViewModel(pdfExportService);
         }
 
+        public event Action OnLevelUpdated;
         public void recalculateLevelCommand()
         {
+            if (userProfile == null) return;
+
+            try
+            {
+                TotalXP = profileSerivice.RecalculateLevel(userProfile); 
+                OnLevelUpdated?.Invoke();
+
+            }
+            catch(Exception ex)
+            {
+                ErrorMessage = $"Error recalculating user level: {ex.Message}";
+            }
+            
         }
+        
 
         public async Task LoadUserAsync(int userId)
         {
@@ -111,10 +129,37 @@ namespace PussyCatsApp.viewModels
             return "RETAKE PERSONALITY TEST";
         }
 
-        public void EditProfileCommand() { }
-        public void TakePersonalityTestCommand() { }
-        public void ViewDocumentsCommand() { }
-        public void MatchHistoryCommand() { }
-        public void GoToSkillTestCommand() { }
+        public void EditProfileCommand()
+        {
+            //TODO Navigations
+        }
+        public void TakePersonalityTestCommand()
+        {
+            if (App.MainAppWindow is MainWindow mainWindow)
+            {
+                // Use the NavigationFrame property to navigate
+                mainWindow.NavigationFrame.Navigate(typeof(PersonalityTestView), 1);
+                // hardcoded to userId 1 for testing, because right now the user is null
+            }
+        }
+
+        public void ViewDocumentsCommand()
+        { 
+        }
+
+        public void MatchHistoryCommand()
+        {
+        }
+
+        public void GoToSkillTestCommand()
+        {
+        }
+
+
+        public void GoToOldTestCommand()
+        {
+
+        }
+
     }
 }

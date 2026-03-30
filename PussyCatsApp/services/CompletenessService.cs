@@ -14,7 +14,6 @@ namespace PussyCatsApp.services
             ("Age",               p => p.Age > 0),
             ("Gender",            p => !string.IsNullOrWhiteSpace(p.Gender)),
             ("Country",           p => !string.IsNullOrWhiteSpace(p.Country)),
-            ("City",              p => !string.IsNullOrWhiteSpace(p.City)),
             ("Phone Number",      p => !string.IsNullOrWhiteSpace(p.PhoneNumber)),
             ("Email",             p => !string.IsNullOrWhiteSpace(p.Email)),
             ("University",        p => !string.IsNullOrWhiteSpace(p.University)),

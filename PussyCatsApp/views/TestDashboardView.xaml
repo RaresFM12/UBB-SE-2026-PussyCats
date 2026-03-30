@@ -15,8 +15,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <!-- Top bar -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -39,7 +37,6 @@
                     Click="GoToAllTestsButton_Click"/>
         </Grid>
 
-        <!-- Scrollable single-column card list -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel x:Name="TestCardsContainer" Spacing="14"/>
         </ScrollViewer>

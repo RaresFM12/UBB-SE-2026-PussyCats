@@ -28,19 +28,51 @@
                     </StackPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="20" VerticalAlignment="Center">
-                    <Border CornerRadius="12" Padding="20" MinWidth="220" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}">
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
-                            <TextBlock Text="Account Status" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" />
-                            <ToggleSwitch x:Name="chkAccountStatus" Toggled="OnStatusToggle" OnContent="Active" OffContent="Inactive" HorizontalAlignment="Center" />
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            Spacing="30"
+                            VerticalAlignment="Center">
+
+                    <Border Background="#9b72a8"
+                            CornerRadius="12"
+                            Padding="20"
+                            MinWidth="220"
+                            HorizontalAlignment="Left">
+                        <StackPanel VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Spacing="12">
+                            <TextBlock Text="Account Status"
+                                       Foreground="White"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            <ToggleSwitch x:Name="chkAccountStatus"
+                                          Toggled="OnStatusToggle"
+                                          OnContent="Active"
+                                          OffContent="Inactive"
+                                          Foreground="White"
+                                          HorizontalAlignment="Center" />
                         </StackPanel>
                     </Border>
 
-                    <StackPanel Spacing="6" Margin="0,16,0,0" MaxWidth="320">
-                        <TextBlock x:Name="LevelTitleText" FontSize="16" FontWeight="Medium" />
-                        <ProgressBar x:Name="XpProgressBar" Minimum="0" Maximum="100" Height="12" />
-                        <TextBlock x:Name="XpCountText" FontSize="12" Opacity="0.7" />
+                    <StackPanel Spacing="6"
+                                VerticalAlignment="Center"
+                                MaxWidth="320">
+                        <TextBlock x:Name="LevelTitleText"
+                                   Foreground="White"
+                                   FontSize="16"
+                                   FontWeight="Medium" />
+                        <ProgressBar x:Name="XpProgressBar"
+                                     Minimum="0"
+                                     Maximum="100"
+                                     Height="12"
+                                     Foreground="Green"
+                                     Background="Red" />
+                        <TextBlock x:Name="XpCountText"
+                                   Foreground="#D4B8E0"
+                                   FontSize="12" />
                     </StackPanel>
+
                 </StackPanel>
 
                 <TextBlock x:Name="lblFreshness" Grid.Column="1" Text="Profile last updated:..." HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.7" FontSize="13" />
@@ -52,19 +84,23 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="25" HorizontalAlignment="Left" Margin="20,0,0,0">
-                    <TextBlock x:Name="lblFirstName" Text="First Name: " FontSize="16" />
-                    <TextBlock x:Name="lblLastName" Text="Last Name: " FontSize="16" />
-                    <TextBlock x:Name="lblEmail" Text="Email: " FontSize="16" />
-                    <TextBlock x:Name="lblPhone" Text="Phone: " FontSize="16" />
-                    <TextBlock x:Name="lblGithubAccount" Text="GitHub: " FontSize="16" />
-                    <TextBlock x:Name="lblLinkedinAccount" Text="LinkedIn: " FontSize="16" />
-                    <TextBlock x:Name="lblGender" Text="Gender: " FontSize="16" />
-                    <TextBlock x:Name="lblUniversity" Text="University: " FontSize="16" />
-                    <TextBlock x:Name="lblCountry" Text="Country: " FontSize="16" />
-                    <TextBlock x:Name="lblAddress" Text="Address: " FontSize="16" />
-                    <TextBlock x:Name="lblGraduationYear" Text="Graduation Year: " FontSize="16" />
-                    <TextBlock x:Name="lblError" Foreground="Red" TextWrapping="Wrap" Margin="0,20,0,0" />
+                <StackPanel Grid.Column="0"
+                            Orientation="Vertical"
+                            Spacing="25"
+                            HorizontalAlignment="Left"
+                            Margin="20,0,0,0">
+                    <TextBlock x:Name="lblFirstName" Text="First Name: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblLastName" Text="Last Name: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblEmail" Text="Email: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblPhone" Text="Phone: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblGithubAccount" Text="GitHub: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblLinkedinAccount" Text="LinkedIn: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblGender" Text="Gender: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblUniversity" Text="University: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblCountry" Text="Country: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblAddress" Text="Address: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblGraduationYear" Text="Graduation Year: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblError" Foreground="#FFA0A0" TextWrapping="Wrap" Margin="0,20,0,0" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="25" HorizontalAlignment="Right" Width="300" Margin="0,0,75,0">
@@ -75,7 +111,7 @@
 
                     <Button x:Name="btnViewDocuments" Content="View Documents" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnMatchHistory" Content="Match History" HorizontalAlignment="Stretch" />
-                    <Button x:Name="btnRoleCompatibility" Content="Role Compatibility Analyzer" Click="OnCompatibilityAnalyzerClick"  HorizontalAlignment="Stretch" />
+                    <Button x:Name="btnRoleCompatibility" Content="Role Compatibility Analyzer" Click="OnCompatibilityAnalyzerClick" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnPublicProfile" Content="See Public Profile" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnOldTests" Content="Go to old tests" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnSkillTests" Content="Skill Tests" HorizontalAlignment="Stretch" />

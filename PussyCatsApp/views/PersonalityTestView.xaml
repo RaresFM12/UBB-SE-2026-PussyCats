@@ -18,15 +18,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Go Back Button (Top Right) -->
-        <Button 
+        <!-- Go Back Button (Top Left) -->
+        <Button x:Name="btnBack"
             Grid.Row="0"
             Content="← Back to Profile"
             HorizontalAlignment="Left"
             Background="Transparent"
-            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            Click="OnBackClick"/>
 
         <!-- Title -->
         <TextBlock 
@@ -221,6 +223,15 @@
             Visibility="{Binding SelectedRole, Converter={StaticResource ObjectToVisibilityConverter}}"
             Padding="20,8"
             FontSize="14"/>
+
+        <!-- Confirmation message shown after save -->
+        <TextBlock
+            Grid.Row="7"
+            Margin="0,12,0,0"
+            HorizontalAlignment="Center"
+            Foreground="{ThemeResource SystemControlHighlightAccentBrush}"
+            Text="{Binding SaveMessage}"
+            Visibility="{Binding SaveMessage, Converter={StaticResource ObjectToVisibilityConverter}}" />
     </Grid>
 </Page>
 

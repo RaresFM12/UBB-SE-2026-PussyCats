@@ -63,5 +63,23 @@ namespace PussyCatsApp.services
             userProfileRepository.save(userId, profile);
             userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
         }
+
+        public int RecalculateLevel(UserProfile profile)
+        {
+            if (profile == null) return 0;
+            int totalXP = 0;
+
+           
+            List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
+            foreach (SkillTest test in tests)
+            {
+                totalXP += test.getXP();
+            }
+
+            profile.UserLevel = UserLevel.calculateLevel(totalXP);
+
+            return totalXP;
+            
+        }
     }
 }
