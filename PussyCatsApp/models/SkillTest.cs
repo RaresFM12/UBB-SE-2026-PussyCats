@@ -60,7 +60,7 @@ namespace PussyCatsApp.models
         public bool isRetakeEligible()
         {
             var dateNow = DateOnly.FromDateTime(DateTime.Now);
-            if (dateNow.AddMonths(-3) <= AchievedDate)
+            if (dateNow.AddMonths(-3) >= AchievedDate)
                 return true;
             return false;     
         }

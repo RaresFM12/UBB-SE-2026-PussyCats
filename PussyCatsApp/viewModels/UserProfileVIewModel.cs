@@ -3,6 +3,7 @@ using PussyCatsApp.services;
 using PussyCatsApp.views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
@@ -26,8 +27,7 @@ namespace PussyCatsApp.viewModels
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
         public string ErrorMessage { get; set; } = "";
         public string FreshnessText { get; set; } = "";
-
-        
+        public int TotalXP { get; private set; } = 0;
 
         public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
         {
@@ -37,12 +37,27 @@ namespace PussyCatsApp.viewModels
             this.pdfExportService = pdfExportService;
             this.cvUploadService = cvUploadService;
             this.completenessService = completenessService;
+
         }
 
+        public event Action OnLevelUpdated;
         public void recalculateLevelCommand()
         {
+            if (userProfile == null) return;
+
+            try
+            {
+                TotalXP = profileSerivice.RecalculateLevel(userProfile); 
+                OnLevelUpdated?.Invoke();
+
+            }
+            catch(Exception ex)
+            {
+                ErrorMessage = $"Error recalculating user level: {ex.Message}";
+            }
             
         }
+        
 
         public async Task LoadUserAsync(int userId)
         {
@@ -50,8 +65,7 @@ namespace PussyCatsApp.viewModels
             try
             {
                 userProfile = await Task.Run(() => profileSerivice.GetProfile(userId));
-
-                FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(userProfile.LastUpdated);
+               
             }
             catch (Exception ex)
             {
@@ -65,11 +79,7 @@ namespace PussyCatsApp.viewModels
 
         public void ToggleAccountStatusCommand()
         {
-            string currentStatusStr = userProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
-
-            profileSerivice.ToggleAccountStatus(userProfile.UserId, currentStatusStr);
-
-            userProfile.ActiveAccount = !userProfile.ActiveAccount;
+            profileSerivice.ToggleAccountStatus(userProfile.UserId, userProfile.ActiveAccount.ToString());
 
         }
 
@@ -142,8 +152,10 @@ namespace PussyCatsApp.viewModels
         }
 
 
-
-
+        public void GoToOldTestCommand()
+        {
 
         }
+
+    }
 }

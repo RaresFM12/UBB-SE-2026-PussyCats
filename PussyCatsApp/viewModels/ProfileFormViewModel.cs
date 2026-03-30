@@ -110,7 +110,6 @@ namespace PussyCatsApp.viewModels
             Email = _userProfile.Email;
             GitHub = _userProfile.GitHub;
             LinkedIn = _userProfile.LinkedIn;
-            City = _userProfile.City;
             University = _userProfile.University;
             Address = _userProfile.Address;
             Motivation = _userProfile.Motivation;
@@ -271,7 +270,6 @@ namespace PussyCatsApp.viewModels
             _userProfile.GitHub = GitHub.Trim();
             _userProfile.LinkedIn = LinkedIn.Trim();
             _userProfile.Country = Country;
-            _userProfile.City = City.Trim();
             _userProfile.University = University.Trim();
             _userProfile.ExpectedGraduationYear = ExpectedGraduationYear;
             _userProfile.Address = Address.Trim();
@@ -314,7 +312,6 @@ namespace PussyCatsApp.viewModels
             if (!string.IsNullOrEmpty(parsed.GitHub)) GitHub = parsed.GitHub;
             if (!string.IsNullOrEmpty(parsed.LinkedIn)) LinkedIn = parsed.LinkedIn;
             if (!string.IsNullOrEmpty(parsed.Country)) Country = parsed.Country;
-            if (!string.IsNullOrEmpty(parsed.City)) City = parsed.City;
             if (!string.IsNullOrEmpty(parsed.University)) University = parsed.University;
             if (parsed.ExpectedGraduationYear > 0) ExpectedGraduationYear = parsed.ExpectedGraduationYear;
             if (!string.IsNullOrEmpty(parsed.Address)) Address = parsed.Address;

@@ -66,7 +66,6 @@ namespace PussyCatsApp.services
                 Email = SanitizeEmail(cvData.Email),
                 PhoneNumber = FormatPhoneNumber(cvData.PhoneNumber),
                 Country = SanitizeString(cvData.Country, 100),
-                City = SanitizeString(cvData.City, 100),
                 University = SanitizeString(cvData.University, 200),
                 ExpectedGraduationYear = ValidateGraduationYear(cvData.ExpectedGraduationYear),
 

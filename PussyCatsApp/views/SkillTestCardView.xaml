@@ -19,7 +19,7 @@
 
             <!-- Badge icon -->
             <Image x:Name="BadgeIcon" Grid.Column="0"
-                   Width="44" Height="44" VerticalAlignment="Center"/>
+                   Width="55" Height="55" VerticalAlignment="Center"/>
 
             <!-- Test info -->
             <StackPanel Grid.Column="1" Margin="16,0" Spacing="4" VerticalAlignment="Center">

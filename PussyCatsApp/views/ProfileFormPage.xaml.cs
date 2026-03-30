@@ -23,7 +23,7 @@ namespace PussyCatsApp.views
             this.InitializeComponent();
 
             var userProfileRepo = new UserProfileRepository();
-            var skillTestRepo = new SkillTestRepository(null);
+            var skillTestRepo = new SkillTestRepository();
             var profileService = new UserProfileService(userProfileRepo, skillTestRepo);
             var cvParsingService = new CVParsingService();
 

@@ -27,7 +27,10 @@ namespace PussyCatsApp.views
         {
             this.InitializeComponent();
             this.skillTestCardViewModel = viewModel;
-
+            this.DataContext = skillTestCardViewModel;
+            BadgeIcon.ImageFailed += (s, e) => {
+                System.Diagnostics.Debug.WriteLine($"IMAGE ERROR: {e.ErrorMessage}");
+            };
             loadCard();
         }
 
@@ -44,7 +47,22 @@ namespace PussyCatsApp.views
             
             if (skillTestCardViewModel.Badge != null && !string.IsNullOrEmpty(skillTestCardViewModel.Badge.IconPath))
             {
-                BadgeIcon.Source = new BitmapImage(new Uri($"ms-appx:///{skillTestCardViewModel.Badge.IconPath}"));
+                string path = skillTestCardViewModel.Badge.IconPath;
+
+                if (!path.StartsWith("ms-appx:///"))
+                {
+                    path = $"ms-appx:///{path.TrimStart('/')}";
+                }
+
+                var uri = new Uri(path);
+                System.Diagnostics.Debug.WriteLine($"FIXED URI: {uri}"); 
+
+                var svgSource = new SvgImageSource(uri);
+                svgSource.RasterizePixelWidth = 100;
+                svgSource.RasterizePixelHeight = 100;
+
+                BadgeIcon.Source = svgSource;
+
             }
 
            
