@@ -26,7 +26,8 @@
             Content="← Back to Profile"
             HorizontalAlignment="Left"
             Background="Transparent"
-            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            Command="{Binding GoBackCommand}"/>
 
         <!-- Title -->
         <TextBlock 

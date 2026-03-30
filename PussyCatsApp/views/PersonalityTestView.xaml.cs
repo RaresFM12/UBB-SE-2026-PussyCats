@@ -33,7 +33,6 @@ namespace PussyCatsApp.views
             try
             {
                 InitializeComponent();
-                InitializeViewModel();
             }
             catch (Exception ex)
             {
@@ -42,12 +41,20 @@ namespace PussyCatsApp.views
             }
         }
 
-        private void InitializeViewModel()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            // TODO: Inject userId from app state or navigation context
-            // For now using a placeholder userId of 1
-            int userId = 1;
+            base.OnNavigatedTo(e);
 
+            // Get userId from navigation parameter
+            int userId = 1; // Default value
+
+            if (e.Parameter is int passedUserId)
+                userId = passedUserId;
+
+            InitializeViewModel(userId);
+        }
+        private void InitializeViewModel(int userId)
+        {
             // TODO: Get connection string from app configuration
             string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
 
