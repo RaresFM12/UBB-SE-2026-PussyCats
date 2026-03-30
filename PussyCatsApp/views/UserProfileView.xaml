@@ -74,7 +74,7 @@
                     <Button x:Name="btnExportPdf" Content="Export to PDF" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnViewDocuments" Content="View Documents" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnMatchHistory" Content="Match History" HorizontalAlignment="Stretch" />
-                    <Button x:Name="btnRoleCompatibility" Content="Role Compatibility Analyzer" HorizontalAlignment="Stretch" />
+                    <Button x:Name="btnRoleCompatibility" Content="Role Compatibility Analyzer" Click="OnCompatibilityAnalyzerClick"  HorizontalAlignment="Stretch" />
                     <Button x:Name="btnPublicProfile" Content="See Public Profile" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnOldTests" Content="Go to old tests" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnSkillTests" Content="Skill Tests" HorizontalAlignment="Stretch" />
