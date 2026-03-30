@@ -79,7 +79,11 @@ namespace PussyCatsApp.viewModels
 
         public void ToggleAccountStatusCommand()
         {
-            profileSerivice.ToggleAccountStatus(userProfile.UserId, userProfile.ActiveAccount.ToString());
+            string currentStatusStr = userProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
+
+            profileSerivice.ToggleAccountStatus(userProfile.UserId, currentStatusStr);
+
+            userProfile.ActiveAccount = !userProfile.ActiveAccount;
 
         }
 
