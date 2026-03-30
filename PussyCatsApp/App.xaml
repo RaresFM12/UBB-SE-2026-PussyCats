@@ -5,13 +5,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PussyCatsApp"
     xmlns:converters="using:PussyCatsApp.converters">
-
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
+            <!-- Value Converters -->
+            <converters:ObjectToIntConverter x:Key="ObjectToIntConverter"/>
+            <converters:ListToVisibilityConverter x:Key="ListToVisibilityConverter"/>
+            <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+            <converters:JobRoleToDisplayNameConverter x:Key="JobRoleToDisplayNameConverter"/>
+            <converters:BoolToInvertedBoolConverter x:Key="BoolToInvertedBoolConverter"/>
+            <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+            <converters:BoolToAccentBrushConverter x:Key="BoolToAccentBrushConverter"/>
+            <converters:BoolToHighlightBackgroundConverter x:Key="BoolToHighlightBackgroundConverter"/>
             <converters:BoolNegationConverter x:Key="BoolNegationConverter"/>
             <!-- Other app resources here -->
         </ResourceDictionary>

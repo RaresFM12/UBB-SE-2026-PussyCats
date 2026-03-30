@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -13,7 +13,20 @@
 	<WindowsSdkPackageVersion>10.0.19041.56</WindowsSdkPackageVersion>
 	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <Nullable>enable</Nullable>
+	<LangVersion>preview</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="views\CompatibilityDetailView.xaml" />
+    <None Remove="views\CompatibilityOverviewView.xaml" />
+    <None Remove="SampleCVs\sample_cv.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="views\CompatibilityDetailPage.xaml" />
+    <Page Remove="views\CompatibilityOverviewPage.xaml" />
+  </ItemGroup>
+
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -26,44 +39,51 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
   <ItemGroup>
- 	<Content Include="resources\**\*">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="SampleCVs\sample_cv.json" />
+    <Content Include="resources\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
-
-	<ItemGroup>
+  <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
-  <!--
-    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
-    package has not yet been restored.
-  -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
     <PackageReference Include="System.Text.Json" Version="8.0.0" />
   </ItemGroup>
+
   <ItemGroup>
+    <Folder Include="views\" />
     <Folder Include="services\" />
   </ItemGroup>
+
   <ItemGroup>
+    <None Update="views\CompatibilityDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <Page Update="views\CompatibilityDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <None Update="views\CompatibilityOverviewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <Page Update="views\CompatibilityOverviewView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
     <Page Update="views\ExportCVTestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="views\DocumentsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -72,16 +92,10 @@
     </Page>
   </ItemGroup>
 
-  <!--
-    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
-    Explorer "Package and Publish" context menu entry to be enabled for this project even if
-    the Windows App SDK Nuget package has not yet been restored.
-  -->
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
-  <!-- Publish Properties -->
   <PropertyGroup>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
