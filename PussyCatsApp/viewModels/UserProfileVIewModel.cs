@@ -1,5 +1,6 @@
 ﻿using PussyCatsApp.models;
 using PussyCatsApp.services;
+using PussyCatsApp.views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -120,7 +121,12 @@ namespace PussyCatsApp.viewModels
         }
         public void TakePersonalityTestCommand()
         {
-            
+            if (App.MainAppWindow is MainWindow mainWindow)
+            {
+                // Use the NavigationFrame property to navigate
+                mainWindow.NavigationFrame.Navigate(typeof(PersonalityTestView), 1);
+                // hardcoded to userId 1 for testing, because right now the user is null
+            }
         }
 
         public void ViewDocumentsCommand()

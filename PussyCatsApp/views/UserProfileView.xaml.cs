@@ -168,5 +168,10 @@ namespace PussyCatsApp.views
 
             Frame.Navigate(typeof(CompatibilityOverviewView), vm);
         }
+
+        private void OnPersonalityTestClick(object sender, RoutedEventArgs e)
+        {
+            viewModel.TakePersonalityTestCommand();
+        }
     }
 }
