@@ -1,54 +1,64 @@
-﻿using PussyCatsApp.models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.models;
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.Marshalling;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PussyCatsApp.viewModels
 {
-    public class UserProfileViewModel
+    public partial class UserProfileViewModel : ObservableObject
     {
         private UserProfileService profileSerivice;
         private ImageStorageService imageStorageService;
-        private PdfExportService pdfExportService;
         private CvUploadService cvUploadService;
         private CompletenessService completenessService;
 
-        public UserProfile? userProfile { get; set; }
-        public bool isLoading { get; set; }
+        // Nested Export ViewModel
+        public ExportCVViewModel ExportVM { get; }
+
+        private UserProfile? __userProfile;
+        public UserProfile? _userProfile
+        {
+            get => __userProfile;
+            set => SetProperty(ref __userProfile, value);
+        }
+
+        public bool _isLoading { get; set; }
         public int CompletenessPercentage { get; set; }
         public string NextEmptyFieldPrompt { get; set; } = "";
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
-        public string ErrorMessage { get; set; } = "";
-        public string FreshnessText { get; set; } = "";
+        public string ErrorMessage = string.Empty;
+        public string FreshnessText = string.Empty;
 
-        
-
-        public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
+        public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService, PdfExportService pdfExportService, CvUploadService cvUploadService, CompletenessService completenessService)
         {
-            
             this.profileSerivice = userProfileService;
             this.imageStorageService = imageStorageService;
-            this.pdfExportService = pdfExportService;
             this.cvUploadService = cvUploadService;
             this.completenessService = completenessService;
+
+            // Initialize nested ViewModel
+            this.ExportVM = new ExportCVViewModel(pdfExportService);
         }
 
         public void recalculateLevelCommand()
         {
-            
         }
 
         public async Task LoadUserAsync(int userId)
         {
-            isLoading = true;
+            _isLoading = true;
             try
             {
-                userProfile = await Task.Run(() => profileSerivice.GetProfile(userId)); 
+                _userProfile = await Task.Run(() => profileSerivice.GetProfile(userId));
+
+                if (_userProfile != null)
+                {
+                    ExportVM.UserId = _userProfile.UserId;
+                }
             }
             catch (Exception ex)
             {
@@ -56,86 +66,55 @@ namespace PussyCatsApp.viewModels
             }
             finally
             {
-                isLoading = false;
+                _isLoading = false;
             }
         }
 
         public void ToggleAccountStatusCommand()
         {
-            string currentStatusStr = userProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
-
-            profileSerivice.ToggleAccountStatus(userProfile.UserId, currentStatusStr);
-
-            userProfile.ActiveAccount = !userProfile.ActiveAccount;
-
+            if (_userProfile == null) return;
+            string currentStatusStr = _userProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
+            profileSerivice.ToggleAccountStatus(_userProfile.UserId, currentStatusStr);
+            _userProfile.ActiveAccount = !_userProfile.ActiveAccount;
         }
 
         public void UploadAvatarCommand(Stream fileStream, string fileName)
         {
+            if (_userProfile == null) return;
             try
             {
                 string newPath = imageStorageService.SaveImage(fileStream, fileName);
-                profileSerivice.UpdateAvatarPath(userProfile.UserId, newPath);
-                userProfile.ProfilePicture = newPath;
+                profileSerivice.UpdateAvatarPath(_userProfile.UserId, newPath);
+                _userProfile.ProfilePicture = newPath;
             }
             catch (Exception ex)
             {
                 ErrorMessage = $"Error uploading avatar: {ex.Message}";
                 return;
             }
-            
-
         }
 
         public void RemoveAvatarCommand()
         {
-            if(userProfile.ProfilePicture != null)
+            if (_userProfile?.ProfilePicture != null)
             {
-                imageStorageService.DeleteImage(userProfile.ProfilePicture);
-                profileSerivice.RemoveAvatarPath(userProfile.UserId);
-                userProfile.ProfilePicture = null;
+                imageStorageService.DeleteImage(_userProfile.ProfilePicture);
+                profileSerivice.RemoveAvatarPath(_userProfile.UserId);
+                _userProfile.ProfilePicture = null;
             }
-        }
-
-        public void ExportToPdfCommand()
-        {
-            isLoading = true;
-            pdfExportService.ExportProfileToPdfAsync(userProfile.UserId);
-            isLoading = false;
         }
 
         public string GetPersonalityButtonText()
         {
-            if(string.IsNullOrEmpty(userProfile.PersonalityTestResult))
+            if (_userProfile != null && string.IsNullOrEmpty(_userProfile.PersonalityTestResult))
                 return "TAKE PERSONALITY TEST";
             return "RETAKE PERSONALITY TEST";
-
         }
 
-        public void EditProfileCommand()
-        {
-            //TODO Navigations
-        }
-        public void TakePersonalityTestCommand()
-        {
-            
-        }
-
-        public void ViewDocumentsCommand()
-        { 
-        }
-
-        public void MatchHistoryCommand()
-        {
-        }
-
-        public void GoToSkillTestCommand()
-        {
-        }
-
-
-
-
-
-        }
+        public void EditProfileCommand() { }
+        public void TakePersonalityTestCommand() { }
+        public void ViewDocumentsCommand() { }
+        public void MatchHistoryCommand() { }
+        public void GoToSkillTestCommand() { }
+    }
 }
