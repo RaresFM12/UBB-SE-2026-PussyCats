@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVData>
+  <FirstName>Ioana</FirstName>
+  <LastName>Gavrila</LastName>
+  <Age>22</Age>
+  <Gender>Female</Gender>
+  <Email>ioana.gavrila@student.ubbcluj.ro</Email>
+  <PhoneNumber>+40723456789</PhoneNumber>
+  <Country>Romania</Country>
+  <City>Cluj-Napoca</City>
+  <University>Babes-Bolyai University</University>
+  <Degree>Computer Science</Degree>
+  <UniversityStartYear>2023</UniversityStartYear>
+  <ExpectedGraduationYear>2026</ExpectedGraduationYear>
+  <GitHub>github.com/ioanagavrila</GitHub>
+  <LinkedIn>linkedin.com/in/ioanagavrila</LinkedIn>
+  <Address>Str. Universitatii, Nr. 1, Cluj-Napoca</Address>
+  <Motivation>I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.</Motivation>
+  <Skills>
+    <string>C#</string>
+    <string>JavaScript</string>
+    <string>React</string>
+    <string>ASP.NET Core</string>
+    <string>SQL Server</string>
+    <string>Git</string>
+    <string>Docker</string>
+    <string>Azure</string>
+    <string>WinUI 3</string>
+    <string>Entity Framework</string>
+    <string>REST API</string>
+    <string>Agile/Scrum</string>
+  </Skills>
+  <WorkExperiences>
+    <WorkExperience>
+      <Company>Tech Solutions SRL</Company>
+      <JobTitle>Junior Software Developer</JobTitle>
+      <StartDate>2024-06-01T00:00:00</StartDate>
+      <CurrentlyWorking>true</CurrentlyWorking>
+      <Description>Developing and maintaining web applications using ASP.NET Core and React. Participating in code reviews and contributing to architectural decisions.</Description>
+    </WorkExperience>
+    <WorkExperience>
+      <Company>StartUp Hub</Company>
+      <JobTitle>Software Development Intern</JobTitle>
+      <StartDate>2023-07-01T00:00:00</StartDate>
+      <EndDate>2023-09-30T00:00:00</EndDate>
+      <CurrentlyWorking>false</CurrentlyWorking>
+      <Description>Worked on a mobile application using React Native. Implemented features for user authentication and data synchronization.</Description>
+    </WorkExperience>
+  </WorkExperiences>
+  <Projects>
+    <Project>
+      <Name>PussyCats User Management System</Name>
+      <Description>A comprehensive user profile management system built with WinUI 3 and C#. Features include CV parsing, skill assessment, and profile completeness tracking.</Description>
+      <Technologies>
+        <string>C#</string>
+        <string>WinUI 3</string>
+        <string>SQL Server</string>
+        <string>Entity Framework</string>
+      </Technologies>
+      <Url>github.com/ioanagavrila/pussycats</Url>
+    </Project>
+    <Project>
+      <Name>E-Commerce Platform</Name>
+      <Description>Full-stack e-commerce solution with shopping cart, payment integration, and admin dashboard.</Description>
+      <Technologies>
+        <string>React</string>
+        <string>Node.js</string>
+        <string>MongoDB</string>
+        <string>Stripe API</string>
+      </Technologies>
+      <Url>github.com/ioanagavrila/ecommerce</Url>
+    </Project>
+    <Project>
+      <Name>Task Management Mobile App</Name>
+      <Description>Cross-platform mobile application for task management with real-time synchronization.</Description>
+      <Technologies>
+        <string>React Native</string>
+        <string>Firebase</string>
+        <string>Redux</string>
+      </Technologies>
+      <Url>github.com/ioanagavrila/taskmanager</Url>
+    </Project>
+  </Projects>
+  <ExtraCurricularActivities>
+    <ExtraCurricularActivity>
+      <ActivityName>Google Developer Student Club</ActivityName>
+      <Organization>Babes-Bolyai University</Organization>
+      <Role>Technical Lead</Role>
+      <Period>2024 - Present</Period>
+      <Description>Organizing workshops and hackathons for students interested in technology.</Description>
+    </ExtraCurricularActivity>
+    <ExtraCurricularActivity>
+      <ActivityName>Coding Competition</ActivityName>
+      <Organization>ACM ICPC</Organization>
+      <Role>Participant</Role>
+      <Period>2023 - 2024</Period>
+      <Description>Competed in regional programming contests, focusing on algorithm optimization.</Description>
+    </ExtraCurricularActivity>
+  </ExtraCurricularActivities>
+</CVData>

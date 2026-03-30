@@ -1,0 +1,38 @@
+<Page
+    x:Class="PussyCatsApp.views.ExportCVTestPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Spacing="16" HorizontalAlignment="Center">
+
+            <TextBlock Text="CV Export Test"
+                       FontSize="24" FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+
+            <Button Content="Download CV as PDF"
+                       Command="{Binding ExportCVCommand}"
+                       IsEnabled="{Binding IsLoading, Converter={StaticResource BoolNegationConverter}}"/>
+
+            <ProgressRing IsActive="{Binding IsLoading}"
+                      Width="32" Height="32"
+                      HorizontalAlignment="Center"/>
+
+            <TextBlock Text="{Binding StatusText}"
+                       HorizontalAlignment="Center"
+                       Foreground="Gray"/>
+
+            <!--
+                WebView2 cannot be databound — it requires imperative init.
+                Kept in the view, initialised in code-behind, then passed
+                into PdfExportService which is injected into the ViewModel.
+                Width/Height > 0 required or WebView2 will not initialise.
+            -->
+            <WebView2 x:Name="HiddenWebView"
+                      Width="1000" Height="1000"
+                      Opacity="1"/>
+
+        </StackPanel>
+    </Grid>
+
+</Page>

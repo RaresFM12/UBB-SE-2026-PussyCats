@@ -1,8 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using PussyCatsApp.repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
-using PussyCatsApp.repositories;
 using System;
 using System.IO;
 
@@ -10,26 +10,30 @@ namespace PussyCatsApp.views
 {
     public sealed partial class UserProfileView : Page
     {
-        private UserProfileViewModel viewModel;
+        private readonly UserProfileViewModel viewModel;
         private bool isBinding = false;
 
         public UserProfileView()
         {
             this.InitializeComponent();
 
-            var repository = new UserProfileRepository();
+            var userProfileRepository = new UserProfileRepository();
+            var skillTestRepository = new SkillTestRepository();
+
             viewModel = new UserProfileViewModel(
-                new UserProfileService(repository),
+                new UserProfileService(userProfileRepository, skillTestRepository),
                 new ImageStorageService(),
                 new PdfExportService(),
                 new CvUploadService(),
                 new CompletenessService()
             );
 
-            bindData();
+            viewModel.OnLevelUpdated += RenderLevelDisplay;
+
+            BindData();
         }
 
-        private async void bindData()
+        private async void BindData()
         {
             isBinding = true;
 
@@ -39,8 +43,10 @@ namespace PussyCatsApp.views
             if (!string.IsNullOrEmpty(viewModel.ErrorMessage))
             {
                 lblError.Text = viewModel.ErrorMessage;
+                isBinding = false;
                 return;
             }
+
             if (viewModel.userProfile != null)
             {
                 lblFirstName.Text = $"First Name: {viewModel.userProfile.firstName}";
@@ -50,7 +56,7 @@ namespace PussyCatsApp.views
                 lblGithubAccount.Text = $"GitHub: {viewModel.userProfile.githubAccount}";
                 lblLinkedinAccount.Text = $"LinkedIn: {viewModel.userProfile.linkedinAccount}";
 
-                string displayGender = "Not specified"; 
+                string displayGender = "Not specified";
                 if (viewModel.userProfile.gender == 'M')
                 {
                     displayGender = "Male";
@@ -61,27 +67,48 @@ namespace PussyCatsApp.views
                 }
 
                 lblGender.Text = $"Gender: {displayGender}";
-
                 lblCountry.Text = $"Country: {viewModel.userProfile.country}";
                 lblCity.Text = $"City: {viewModel.userProfile.city}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.graduationYear}";
 
-                chkAccountStatus.IsOn = (viewModel.userProfile.accountStatus.ToString() == "ACTIVE");
+                chkAccountStatus.IsOn = viewModel.userProfile.accountStatus.ToString() == "ACTIVE";
 
                 if (!string.IsNullOrEmpty(viewModel.userProfile.profilePicture))
                 {
-                    pbAvatar.ProfilePicture = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri(viewModel.userProfile.profilePicture));
+                    pbAvatar.ProfilePicture =
+                        new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
+                            new Uri(viewModel.userProfile.profilePicture));
                 }
                 else
                 {
                     pbAvatar.ProfilePicture = null;
                 }
+
+                RenderLevelDisplay();
             }
             else
             {
                 lblError.Text = "User profile not found.";
             }
+
             isBinding = false;
+        }
+
+        private void RenderLevelDisplay()
+        {
+            if (viewModel.CurrentLevel == null)
+                return;
+
+            LevelTitleText.Text =
+                $"Level {viewModel.CurrentLevel.LevelNumber} — {viewModel.CurrentLevel.Title}";
+
+            XpProgressBar.Value =
+                viewModel.CurrentLevel.getProgressPercent(viewModel.TotalXP);
+
+            int xpToNext = viewModel.CurrentLevel.getXPToNextLevel();
+            XpCountText.Text = xpToNext > 0
+                ? $"{viewModel.TotalXP} XP — {xpToNext} XP to {viewModel.CurrentLevel.Title}"
+                : $"{viewModel.TotalXP} XP — Max level reached!";
         }
 
         private async void OnAvatarUploadClick(object sender, RoutedEventArgs e)
@@ -102,7 +129,7 @@ namespace PussyCatsApp.views
                 using (var stream = await file.OpenStreamForReadAsync())
                 {
                     viewModel.UploadAvatarCommand(stream, file.Name);
-                    bindData();
+                    BindData();
                 }
             }
         }
@@ -110,17 +137,18 @@ namespace PussyCatsApp.views
         private void OnAvatarRemoveClick(object sender, RoutedEventArgs e)
         {
             viewModel.RemoveAvatarCommand();
-            bindData();
+            BindData();
         }
 
         private void OnStatusToggle(object sender, RoutedEventArgs e)
         {
-            if (isBinding) return;
+            if (isBinding)
+                return;
 
             if (viewModel.userProfile != null)
             {
                 viewModel.ToggleAccountStatusCommand();
-                bindData();
+                BindData();
             }
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Microsoft.IdentityModel.Tokens;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,6 +7,15 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using PussyCatsApp.models;
+using PussyCatsApp.repositories.personality_test_repo;
+using PussyCatsApp.services;
+using PussyCatsApp.views;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -28,6 +33,7 @@ namespace PussyCatsApp
     {
         public static Window MainAppWindow { get; private set; }
         private Window? _window;
+        public Window? MainWindow => _window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code

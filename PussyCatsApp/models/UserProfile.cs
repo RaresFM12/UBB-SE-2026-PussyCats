@@ -9,43 +9,76 @@ using Windows.System.Profile;
 
 namespace PussyCatsApp.models
 {
-    internal class UserProfile
+    public class UserProfile
     {
-        public int userID { get; set; }
-        public String firstName { get; set; }
-        public String lastName { get; set; }
-        public int age { get; set; }
-        public int graduationYear { get; set; }
-        public char gender { get; set; }
-        public String city { get; set; }
-        public String country { get; set; }
-        public String phoneNumber { get; set; }
-        public String emailAddress { get; set; }
-        public String motivation { get; set; }
-        public bool disability { get; set; }
-        public String sexualOrientation { get; set; }
-        public String githubAccount { get; set; }
-        public String linkedinAccount { get; set; }
-        public String personalityResult { get; set; }
-        public String profilePicture { get; set; }
-        public AccountStatus accountStatus { get; set; }
-        public DateTime lastUpdated { get; set; }
+        // Required Fields from R16
+        public int UserId { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public int Age { get; set; }
+        public string Gender { get; set; } = string.Empty; // Male, Female
+        public string Country { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string University { get; set; } = string.Empty;
+        public string Degree { get; set; } = string.Empty;
+        public int UniversityStartYear { get; set; }
+        public int ExpectedGraduationYear { get; set; }
 
-        public List<Education> educationHistory { get; set; }
-        public List<Work> workExperience { get; set; }
-        public List<Skill> skills { get; set; }
-        public List<Activity> extracurriculars { get; set; }
-        public List<Documents> documents { get; set; }
+        // Optional Fields from R16
+        public List<WorkExperience> WorkExperiences { get; set; } = new List<WorkExperience>();
+        public List<Project> Projects { get; set; } = new List<Project>();
+        public List<ExtraCurricularActivity> ExtraCurricularActivities { get; set; } = new List<ExtraCurricularActivity>();
+        public List<string> Skills { get; set; } = new List<string>();
+        public string Motivation { get; set; } = string.Empty;
+        public string Disabilities { get; set; } = string.Empty;
+        public string SexualOrientation { get; set; } = string.Empty;
+        public List<string> RelevantCertificates { get; set; } = new List<string>();
 
-        public UserProfile()
-        {
-            educationHistory = new List<Education>();
-            workExperience = new List<Work>();
-            skills = new List<Skill>();
-            extracurriculars = new List<Activity>();
-            documents = new List<Documents>();
-        }
+        // Additional profile fields from requirements
+        public string GitHub { get; set; } = string.Empty;
+        public string LinkedIn { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public bool ActiveAccount { get; set; } = true;
+        public string ProfilePicture { get; set; } = string.Empty;
+        public string PersonalityTestResult { get; set; } = string.Empty;
+        public string ParsedCV { get; set; } = string.Empty;
 
+        // Job preferences (R13-R15)
+        public List<string> PreferredJobRoles { get; set; } = new List<string>();
+        public string WorkModePreference { get; set; } = string.Empty; // Remote, Hybrid, On-site
+        public string LocationPreference { get; set; } = string.Empty;
 
+        // Timestamps
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+    }
+
+    public class WorkExperience
+    {
+        public string Company { get; set; } = string.Empty;
+        public string JobTitle { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; } // null if currently working
+        public string Description { get; set; } = string.Empty;
+        public bool CurrentlyWorking { get; set; }
+    }
+
+    public class Project
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public List<string> Technologies { get; set; } = new List<string>();
+        public string Url { get; set; } = string.Empty;
+    }
+
+    public class ExtraCurricularActivity
+    {
+        public string ActivityName { get; set; } = string.Empty;
+        public string Organization { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public string Period { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 }
