@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.converters;
 using PussyCatsApp.models;
 using PussyCatsApp.services;
 using System;
@@ -22,6 +23,9 @@ namespace PussyCatsApp.viewModels
 
         [ObservableProperty]
         public partial RoleResultViewModel? SelectedRole { get; set; }
+
+        [ObservableProperty]
+        public partial string? SaveMessage { get; set; }
 
         [ObservableProperty]
         public partial bool IsTestSubmitted { get; set; }
@@ -94,7 +98,17 @@ namespace PussyCatsApp.viewModels
         private void SaveResult()
         {
             if (SelectedRole != null)
+            {
                 PersonalityTestService.SaveResult(UserId, SelectedRole.Role.ToString());
+
+                // Convert role to a friendly display name using the existing converter
+                var converter = new JobRoleToDisplayNameConverter();
+                var displayNameObj = converter.Convert(SelectedRole.Role, typeof(string), null, "en-US");
+                var displayName = displayNameObj as string ?? SelectedRole.Role.ToString();
+
+                // Notify the view that the result was saved so it can display feedback
+                SaveMessage = $"Your personality test result has been updated to {displayName}.";
+            }
         }
     }
 
