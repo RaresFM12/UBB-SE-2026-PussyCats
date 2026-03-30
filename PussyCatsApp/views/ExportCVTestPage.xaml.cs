@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.IO;
@@ -11,8 +11,8 @@ namespace PussyCatsApp.views
 {
     public sealed partial class ExportCVTestPage : Page
     {
-        // Exposed as a property so the XAML {x:Bind ViewModel.xxx} works
         public ExportCVViewModel ViewModel { get; private set; }
+        private int _userId;
 
         public ExportCVTestPage()
         {
@@ -20,22 +20,42 @@ namespace PussyCatsApp.views
             this.Loaded += OnPageLoaded;
         }
 
+        // Catch the UserId when navigating here
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.Parameter is int passedUserId)
+            {
+                _userId = passedUserId;
+            }
+        }
+
+        private void OnBackClick(object sender, RoutedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
+        }
+
         private async void OnPageLoaded(object sender, RoutedEventArgs e)
         {
-            await HiddenWebView.EnsureCoreWebView2Async();
+            this.Loaded -= OnPageLoaded;
 
-            var templateFolder = Path.Combine(
-                Windows.ApplicationModel.Package.Current.InstalledLocation.Path,
-                "resources");
+            await CvWebView.EnsureCoreWebView2Async();
 
-            HiddenWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+            var templateFolder = Path.Combine(AppContext.BaseDirectory, "resources");
+
+            CvWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
                 "assets.local",
                 templateFolder,
                 CoreWebView2HostResourceAccessKind.Allow);
 
             var userRepository = new UserProfileRepository();
-            var pdfExportService = new PdfExportService(HiddenWebView, userRepository);
+            var pdfExportService = new PdfExportService(CvWebView, userRepository);
+
             ViewModel = new ExportCVViewModel(pdfExportService);
+            ViewModel.UserId = _userId; 
 
             this.DataContext = ViewModel;
         }

@@ -47,7 +47,7 @@ public class PdfExportService
         savePicker.SuggestedFileName = BuildFileName(profile);
         savePicker.FileTypeChoices.Add("PDF Document", new[] { ".pdf" });
 
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle((App.Current as App).MainWindow);
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainAppWindow);
         WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hwnd);
 
         var file = await savePicker.PickSaveFileAsync();
