@@ -1,4 +1,4 @@
-/*using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -96,7 +96,7 @@ namespace PussyCatsApp.views
 
             var repository = new PersonalityTestRepository(connectionString);
             var service = new PersonalityTestService(repository);
-            PersonalityTestViewModel = new PersonalityTestViewModel(service, userId);
+            PersonalityTestViewModel persVM = new PersonalityTestViewModel(service, userId);
 
             this.DataContext = PersonalityTestViewModel;
         }
@@ -107,4 +107,3 @@ namespace PussyCatsApp.views
         }
     }
 }
-*/
