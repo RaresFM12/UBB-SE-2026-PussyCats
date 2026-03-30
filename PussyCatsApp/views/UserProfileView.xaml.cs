@@ -155,5 +155,17 @@ namespace PussyCatsApp.views
                 Frame.Navigate(typeof(ProfileFormPage));
             }
         }
+
+        private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
+        {
+            string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+
+            UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
+            SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
+            CompatibilityService service = new CompatibilityService(userSkillRepo, skillGroupRepo);
+            CompatibilityOverviewViewModel vm = new CompatibilityOverviewViewModel(service, 2); // currentUserId
+
+            Frame.Navigate(typeof(CompatibilityOverviewView), vm);
+        }
     }
 }

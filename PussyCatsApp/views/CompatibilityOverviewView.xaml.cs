@@ -110,6 +110,12 @@ namespace PussyCatsApp.views
                 Frame.GoBack();
         }
 
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (Frame != null && Frame.CanGoBack)
+                Frame.GoBack();
+        }
+
         public async Task ShowError(string message)
         {
             ContentDialog dialog = new ContentDialog
