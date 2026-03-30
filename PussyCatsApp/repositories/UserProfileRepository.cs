@@ -48,6 +48,7 @@ namespace PussyCatsApp.repositories
             try
             {
                 connection.Open();
+                Debug.WriteLine("Database connection opened successfully.");
             } catch (Exception e) {
                 Debug.WriteLine($"Failed to connect to database.{e.Message}");
                 return null;

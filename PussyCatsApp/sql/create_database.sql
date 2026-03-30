@@ -88,6 +88,11 @@ ADD degree VARCHAR(200) NULL;
 ALTER TABLE Users
 ADD universityStartYear SMALLINT NULL;
 
+ALTER TABLE Users ADD LastUpdated DATETIME NULL;
+GO
+UPDATE Users SET LastUpdated = GETDATE() WHERE LastUpdated IS NULL;
+GO
+
 -- =============================================
 -- Indexes for common queries
 -- =============================================

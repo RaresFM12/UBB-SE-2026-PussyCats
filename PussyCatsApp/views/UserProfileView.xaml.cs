@@ -48,7 +48,7 @@ namespace PussyCatsApp.views
 
             btnOldTests.Click += OnGoToOldTestsClick;
 
-            BindData();
+            //BindData();
 
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -85,12 +85,12 @@ namespace PussyCatsApp.views
                     displayGender = "Not specified";
 
                 Debug.WriteLine($"[BindData] ErrorMessage: '{viewModel.ErrorMessage}'");
-                Debug.WriteLine($"[BindData] userProfile is null: {viewModel.userProfile == null}");
+                Debug.WriteLine($"[BindData] userProfile is null: {viewModel._userProfile == null}");
 
                 lblGender.Text = $"Gender: {displayGender}";
-                lblUniversity.Text = $"University: {viewModel.userProfile.University}";
-                lblCountry.Text = $"Country: {viewModel.userProfile.Country}";
-                lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.ExpectedGraduationYear}";
+                lblUniversity.Text = $"University: {viewModel._userProfile.University}";
+                lblCountry.Text = $"Country: {viewModel._userProfile.Country}";
+                lblGraduationYear.Text = $"Graduation Year: {viewModel._userProfile.ExpectedGraduationYear}";
                 lblFreshness.Text = viewModel.FreshnessText;
 
                 LevelTitleText.Text = "Level 2 - Apprentice";
@@ -119,22 +119,22 @@ namespace PussyCatsApp.views
             else
             {
                 // No user in DB — go straight to the profile form
-                Frame.Navigate(typeof(ProfileFormPage));
+                //Frame.Navigate(typeof(ProfileFormPage));
                 return;
             }
 
-            isBinding = false;
+            _isBinding = false;
         }
 
         private void renderLevelDisplay()
         {
-            if (viewModel.userProfile == null) return;          
-            if (viewModel.userProfile.UserLevel == null) return;
-            LevelTitleText.Text = $"Level {viewModel.userProfile.UserLevel.LevelNumber} — {viewModel.userProfile.UserLevel.Title}";
+            if (viewModel._userProfile == null) return;          
+            if (viewModel._userProfile.UserLevel == null) return;
+            LevelTitleText.Text = $"Level {viewModel._userProfile.UserLevel.LevelNumber} — {viewModel._userProfile.UserLevel.Title}";
 
-            XpProgressBar.Value = viewModel.userProfile.UserLevel.getProgressPercent(viewModel.TotalXP);
+            XpProgressBar.Value = viewModel._userProfile.UserLevel.getProgressPercent(viewModel.TotalXP);
 
-            int xpToNext = viewModel.userProfile.UserLevel.getXPToNextLevel(viewModel.TotalXP);
+            int xpToNext = viewModel._userProfile.UserLevel.getXPToNextLevel(viewModel.TotalXP);
             XpCountText.Text = xpToNext > 0
                 ? $"{viewModel.TotalXP} XP — {xpToNext} XP needed for next level"
                 : $"{viewModel.TotalXP} XP — Max level reached!";
@@ -202,10 +202,10 @@ namespace PussyCatsApp.views
 
         private void OnGoToOldTestsClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel.userProfile == null)
+            if (viewModel._userProfile == null)
                 return;
 
-            this.Frame.Navigate(typeof(TestDashboardView), viewModel.userProfile);
+            this.Frame.Navigate(typeof(TestDashboardView), viewModel._userProfile);
         }
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
