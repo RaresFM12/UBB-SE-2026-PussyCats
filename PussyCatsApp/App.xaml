@@ -11,7 +11,6 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-
             <!-- Value Converters -->
             <converters:ObjectToIntConverter x:Key="ObjectToIntConverter"/>
             <converters:ListToVisibilityConverter x:Key="ListToVisibilityConverter"/>
@@ -21,7 +20,7 @@
             <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
             <converters:BoolToAccentBrushConverter x:Key="BoolToAccentBrushConverter"/>
             <converters:BoolToHighlightBackgroundConverter x:Key="BoolToHighlightBackgroundConverter"/>
-
+            <converters:BoolNegationConverter x:Key="BoolNegationConverter"/>
             <!-- Other app resources here -->
         </ResourceDictionary>
     </Application.Resources>

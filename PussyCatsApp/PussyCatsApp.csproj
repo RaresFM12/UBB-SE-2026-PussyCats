@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -10,7 +10,8 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+	<WindowsSdkPackageVersion>10.0.19041.56</WindowsSdkPackageVersion>
+	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <Nullable>enable</Nullable>
 	<LangVersion>preview</LangVersion>
   </PropertyGroup>
@@ -64,7 +65,6 @@
   <ItemGroup>
     <Folder Include="views\" />
     <Folder Include="services\" />
-    <Folder Include="viewModels\" />
   </ItemGroup>
 
   <ItemGroup>
