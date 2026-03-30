@@ -113,14 +113,59 @@ namespace PussyCatsApp.repositories
 
         public void updateAccountStatus(int userId, string status)
         {
+            this.sqlConnection = new SqlConnection("Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True");
+            SqlCommand updateAccounStatusCommand = new SqlCommand("UPDATE Users SET activeAccount = @status WHERE userID = @userId", sqlConnection);
+
+            bool isActive = (status == "ACTIVE");
+            updateAccounStatusCommand.Parameters.AddWithValue("@status", isActive);
+            updateAccounStatusCommand.Parameters.AddWithValue("@userId", userId);
+            try
+            {
+                sqlConnection.Open();
+                int rowsAffected = updateAccounStatusCommand.ExecuteNonQuery();
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine($"No user found with ID {userId} to update account status");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+
         }
 
         public void updateProfileLastModified(int userId, DateTime timestamp)
         {
+            //TODO : implementation in feature 12
         }
 
         public void updateProfilePicture(int userId, string picturePath)
         {
+            this.sqlConnection = new SqlConnection("Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True");
+
+            SqlCommand updatePictureCommand = new SqlCommand("UPDATE Users SET profilePicture = @path WHERE userID = @userId", sqlConnection);
+
+            updatePictureCommand.Parameters.AddWithValue("@path", (object)picturePath ?? DBNull.Value);
+            updatePictureCommand.Parameters.AddWithValue("@userId", userId);
+
+            try
+            {
+                sqlConnection.Open();
+                updatePictureCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
         }
 
         /// <summary>
