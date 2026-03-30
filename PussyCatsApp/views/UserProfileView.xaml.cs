@@ -14,8 +14,8 @@ namespace PussyCatsApp.views
 {
     public sealed partial class UserProfileView : Page
     {
-        private readonly UserProfileViewModel viewModel;
-        private bool isBinding = false;
+        public UserProfileViewModel viewModel { get; private set; }
+        private bool _isBinding = false;
         private SqlConnection connection;
 
         public UserProfileView()
@@ -30,7 +30,7 @@ namespace PussyCatsApp.views
             viewModel = new UserProfileViewModel(
                 new UserProfileService(userProfileRepository, skillTestRepository),
                 new ImageStorageService(),
-                new PdfExportService(view, user),
+                null, // PdfExportService is now handled by the ExportCVTestPage
                 new CvUploadService(),
                 new CompletenessService()
             );
@@ -38,7 +38,12 @@ namespace PussyCatsApp.views
             viewModel.OnLevelUpdated += renderLevelDisplay;
 
 
-            // Wire up Edit button to navigate to ProfileFormPage
+            viewModel.OnLevelUpdated += renderLevelDisplay;
+
+
+            this.DataContext = viewModel;
+
+            // Wire up Edit button
             btnEdit.Click += OnEditProfileClick;
 
             btnOldTests.Click += OnGoToOldTestsClick;
@@ -54,7 +59,7 @@ namespace PussyCatsApp.views
 
         private async void BindData()
         {
-            isBinding = true;
+            _isBinding = true;
 
             int dummyUserId = 1;
             await viewModel.LoadUserAsync(dummyUserId);
@@ -62,20 +67,20 @@ namespace PussyCatsApp.views
             if (!string.IsNullOrEmpty(viewModel.ErrorMessage))
             {
                 lblError.Text = viewModel.ErrorMessage;
-                isBinding = false;
+                _isBinding = false;
                 return;
             }
 
-            if (viewModel.userProfile != null)
+            if (viewModel._userProfile != null)
             {
-                lblFirstName.Text = $"First Name: {viewModel.userProfile.FirstName}";
-                lblLastName.Text = $"Last Name: {viewModel.userProfile.LastName}";
-                lblEmail.Text = $"Email: {viewModel.userProfile.Email}";
-                lblPhone.Text = $"Phone: {viewModel.userProfile.PhoneNumber}";
-                lblGithubAccount.Text = $"GitHub: {viewModel.userProfile.GitHub}";
-                lblLinkedinAccount.Text = $"LinkedIn: {viewModel.userProfile.LinkedIn}";
+                lblFirstName.Text = $"First Name: {viewModel._userProfile.FirstName}";
+                lblLastName.Text = $"Last Name: {viewModel._userProfile.LastName}";
+                lblEmail.Text = $"Email: {viewModel._userProfile.Email}";
+                lblPhone.Text = $"Phone: {viewModel._userProfile.PhoneNumber}";
+                lblGithubAccount.Text = $"GitHub: {viewModel._userProfile.GitHub}";
+                lblLinkedinAccount.Text = $"LinkedIn: {viewModel._userProfile.LinkedIn}";
 
-                string displayGender = viewModel.userProfile.Gender;
+                string displayGender = viewModel._userProfile.Gender;
                 if (string.IsNullOrEmpty(displayGender) || (displayGender != "Male" && displayGender != "Female"))
                     displayGender = "Not specified";
 
@@ -93,13 +98,13 @@ namespace PussyCatsApp.views
                 XpProgressBar.Value = 150;
                 XpCountText.Text = "150 / 250 XP";
 
-                chkAccountStatus.IsOn = viewModel.userProfile.ActiveAccount;
+                chkAccountStatus.IsOn = viewModel._userProfile.ActiveAccount;
 
-                if (!string.IsNullOrEmpty(viewModel.userProfile.ProfilePicture))
+                if (!string.IsNullOrEmpty(viewModel._userProfile.ProfilePicture))
                 {
                     pbAvatar.ProfilePicture =
                         new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
-                            new Uri(viewModel.userProfile.ProfilePicture));
+                            new Uri(viewModel._userProfile.ProfilePicture));
                 }
                 else
                 {
@@ -166,10 +171,9 @@ namespace PussyCatsApp.views
 
         private void OnStatusToggle(object sender, RoutedEventArgs e)
         {
-            if (isBinding)
-                return;
+            if (_isBinding) return;
 
-            if (viewModel.userProfile != null)
+            if (viewModel?._userProfile != null)
             {
                 viewModel.ToggleAccountStatusCommand();
                 BindData();
@@ -178,13 +182,21 @@ namespace PussyCatsApp.views
 
         private void OnEditProfileClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel.userProfile != null)
+            if (viewModel._userProfile != null)
             {
-                Frame.Navigate(typeof(ProfileFormPage), viewModel.userProfile);
+                Frame.Navigate(typeof(ProfileFormPage), viewModel._userProfile);
             }
             else
             {
                 Frame.Navigate(typeof(ProfileFormPage));
+            }
+        }
+
+        private void OnPreviewCVClick(object sender, RoutedEventArgs e)
+        {
+            if (viewModel._userProfile != null)
+            {
+                Frame.Navigate(typeof(ExportCVTestPage), viewModel._userProfile.UserId);
             }
         }
 
@@ -203,7 +215,7 @@ namespace PussyCatsApp.views
             UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
             SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
             CompatibilityService service = new CompatibilityService(userSkillRepo, skillGroupRepo);
-            CompatibilityOverviewViewModel vm = new CompatibilityOverviewViewModel(service, 2); // currentUserId
+            CompatibilityOverviewViewModel vm = new CompatibilityOverviewViewModel(service, 2);
 
             Frame.Navigate(typeof(CompatibilityOverviewView), vm);
         }
