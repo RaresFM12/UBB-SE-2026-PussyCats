@@ -86,8 +86,14 @@ namespace PussyCatsApp.views
                 lblUniversity.Text = $"University: {viewModel.userProfile.University}";
                 lblCountry.Text = $"Country: {viewModel.userProfile.Country}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.ExpectedGraduationYear}";
+                lblFreshness.Text = viewModel.FreshnessText;
 
-                chkAccountStatus.IsOn = viewModel.userProfile.ActiveAccount.ToString() == "ACTIVE";
+                LevelTitleText.Text = "Level 2 - Apprentice";
+                XpProgressBar.Maximum = 250;
+                XpProgressBar.Value = 150;
+                XpCountText.Text = "150 / 250 XP";
+
+                chkAccountStatus.IsOn = viewModel.userProfile.ActiveAccount;
 
                 if (!string.IsNullOrEmpty(viewModel.userProfile.ProfilePicture))
                 {
@@ -188,6 +194,23 @@ namespace PussyCatsApp.views
                 return;
 
             this.Frame.Navigate(typeof(TestDashboardView), viewModel.userProfile);
+        }
+        
+        private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
+        {
+            string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+
+            UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
+            SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
+            CompatibilityService service = new CompatibilityService(userSkillRepo, skillGroupRepo);
+            CompatibilityOverviewViewModel vm = new CompatibilityOverviewViewModel(service, 2); // currentUserId
+
+            Frame.Navigate(typeof(CompatibilityOverviewView), vm);
+        }
+
+        private void OnPersonalityTestClick(object sender, RoutedEventArgs e)
+        {
+            viewModel.TakePersonalityTestCommand();
         }
     }
 }

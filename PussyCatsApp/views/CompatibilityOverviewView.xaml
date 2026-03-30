@@ -13,8 +13,8 @@
 
 		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
 			<TextBlock Text="Role Compatibility" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
-			
-		</StackPanel>
+            <Button Grid.Row="0" Content="Back" Click="btnBack_Click" Margin="15,15,0,16"/>
+        </StackPanel>
 
 		<ListView x:Name="lstRoles" Grid.Row="1" SelectionChanged="lstRoles_SelectionChanged">
 			<ListView.ItemTemplate>

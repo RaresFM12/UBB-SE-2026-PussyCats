@@ -1,5 +1,6 @@
 ﻿using PussyCatsApp.models;
 using PussyCatsApp.services;
+using PussyCatsApp.views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -101,11 +102,11 @@ namespace PussyCatsApp.viewModels
 
         public void RemoveAvatarCommand()
         {
-            if(userProfile.ProfilePicture != null)
+            if(!string.IsNullOrEmpty(userProfile.ProfilePicture))
             {
                 imageStorageService.DeleteImage(userProfile.ProfilePicture);
                 profileSerivice.RemoveAvatarPath(userProfile.UserId);
-                userProfile.ProfilePicture = null;
+                userProfile.ProfilePicture = string.Empty;
             }
         }
 
@@ -130,7 +131,12 @@ namespace PussyCatsApp.viewModels
         }
         public void TakePersonalityTestCommand()
         {
-            
+            if (App.MainAppWindow is MainWindow mainWindow)
+            {
+                // Use the NavigationFrame property to navigate
+                mainWindow.NavigationFrame.Navigate(typeof(PersonalityTestView), 1);
+                // hardcoded to userId 1 for testing, because right now the user is null
+            }
         }
 
         public void ViewDocumentsCommand()
