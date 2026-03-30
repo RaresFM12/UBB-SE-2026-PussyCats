@@ -37,5 +37,9 @@ namespace PussyCatsApp
             //Start from profile page
             this.Content = new PussyCatsApp.views.UserProfileView();
         }
+
+        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+        }
     }
 }
