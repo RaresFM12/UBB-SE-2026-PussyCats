@@ -8,7 +8,7 @@ using Windows.System.UserProfile;
 
 namespace PussyCatsApp.repositories
 {
-    internal interface IUserProileRepository : IRepository<UserProfile>
+    public interface IUserProileRepository : IRepository<UserProfile>
     {
         UserProfile getProfileById(int userId);
         void updateAccountStatus(int userId, string status);
