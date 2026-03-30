@@ -96,12 +96,6 @@ namespace PussyCatsApp.viewModels
             if (SelectedRole != null)
                 PersonalityTestService.SaveResult(UserId, SelectedRole.Role.ToString());
         }
-
-        [RelayCommand]
-        private void GoBack()
-        {
-
-        }
     }
 
 }

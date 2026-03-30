@@ -20,14 +20,14 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Go Back Button (Top Right) -->
-        <Button 
+        <!-- Go Back Button (Top Left) -->
+        <Button x:Name="btnBack"
             Grid.Row="0"
             Content="← Back to Profile"
             HorizontalAlignment="Left"
             Background="Transparent"
             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-            Command="{Binding GoBackCommand}"/>
+            Click="OnBackClick"/>
 
         <!-- Title -->
         <TextBlock 

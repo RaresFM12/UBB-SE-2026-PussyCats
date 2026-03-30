@@ -9,6 +9,7 @@ using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
 using PussyCatsApp.repositories.personality_test_repo;
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,8 +37,43 @@ namespace PussyCatsApp.views
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"PersonalityTestView initialization error: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                Debug.WriteLine($"PersonalityTestView initialization error: {ex.Message}");
+                Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            }
+        }
+
+        private void OnBackClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Prefer using this page's Frame if it can go back
+                if (Frame != null && Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                    return;
+                }
+
+                // Otherwise, try the application's main window frame
+                if (App.MainAppWindow is MainWindow mainWindow && mainWindow.NavigationFrame != null)
+                {
+                    var navFrame = mainWindow.NavigationFrame;
+                    if (navFrame.CanGoBack)
+                    {
+                        navFrame.GoBack();
+                    }
+                    else
+                    {
+                        navFrame.Navigate(typeof(UserProfileView));
+                    }
+                    return;
+                }
+
+                // Fallback: navigate in this page's frame to the profile view
+                Frame?.Navigate(typeof(UserProfileView));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[PersonalityTestView] Back navigation error: " + ex);
             }
         }
 
@@ -63,6 +99,11 @@ namespace PussyCatsApp.views
             PersonalityTestViewModel = new PersonalityTestViewModel(service, userId);
 
             this.DataContext = PersonalityTestViewModel;
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
