@@ -50,11 +50,11 @@ namespace PussyCatsApp.viewModels
         public event Action OnLevelUpdated;
         public void recalculateLevelCommand()
         {
-            if (_userProfile == null) return;
+            if (userProfile == null) return;
 
             try
             {
-                TotalXP = profileSerivice.RecalculateLevel(_userProfile); 
+                TotalXP = profileSerivice.RecalculateLevel(userProfile); 
                 OnLevelUpdated?.Invoke();
 
             }
