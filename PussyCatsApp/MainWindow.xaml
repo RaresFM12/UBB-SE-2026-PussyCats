@@ -9,19 +9,5 @@
     mc:Ignorable="d"
     Title="PussyCatsApp">
 
-    <Grid>
-        <NavigationView x:Name="navView"
-                        PaneDisplayMode="Left"
-                        IsBackButtonVisible="Collapsed"
-                        SelectionChanged="NavigationView_SelectionChanged">
-            <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Contact" Content="Profile Form" Tag="ProfileForm"/>
-                <NavigationViewItem Icon="People" Content="View Profile" Tag="ViewProfile"/>
-                <NavigationViewItem Icon="Document" Content="Documents" Tag="Documents"/>
-                <NavigationViewItem Icon="Print" Content="Export Profile" Tag="ExportProfile"/>
-            </NavigationView.MenuItems>
-
-            <Frame x:Name="ContentFrame" />
-        </NavigationView>
-    </Grid>
+    <Frame x:Name="ContentFrame" />
 </Window>

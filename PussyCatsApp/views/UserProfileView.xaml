@@ -11,6 +11,9 @@
 
     <ScrollViewer>
         <StackPanel>
+            <!-- R40 — Profile Completeness Meter (separate component) -->
+            <local:ProfileCompletenessBar x:Name="completenessBar" />
+
             <Grid Background="#c099cc" Padding="20,40,20,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -122,6 +125,7 @@
                     <TextBlock x:Name="lblGithubAccount" Text="GitHub: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblLinkedinAccount" Text="LinkedIn: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblGender" Text="Gender: " Foreground="White" FontSize="16" />
+                    <TextBlock x:Name="lblUniversity" Text="University: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblCountry" Text="Country: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblCity" Text="City: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblGraduationYear" Text="Graduation Year: " Foreground="White" FontSize="16" />
