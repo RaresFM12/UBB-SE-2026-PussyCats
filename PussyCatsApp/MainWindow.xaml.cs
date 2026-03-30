@@ -26,6 +26,9 @@ namespace PussyCatsApp
         public MainWindow()
         {
             InitializeComponent();
+
+            //Start from profile page
+            this.Content = new PussyCatsApp.views.UserProfileView();
         }
     }
 }

@@ -103,7 +103,7 @@ namespace PussyCatsApp.viewModels
 
         public void EditProfileCommand()
         {
-            //TODO
+            //TODO Navigations
         }
         public void TakePersonalityTestCommand()
         {

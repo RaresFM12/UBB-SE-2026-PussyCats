@@ -31,7 +31,7 @@ namespace PussyCatsApp.repositories
 
                     userProfile.lastName = reader.GetString(2);
 
-                    userProfile.gender = !reader.IsDBNull(3) ? reader.GetString(3)[0] : 'n';
+                    userProfile.gender = !reader.IsDBNull(3) ? reader.GetString(3)[0] : 'N';
 
                     userProfile.age = !reader.IsDBNull(4) ? reader.GetInt32(4) : 0;
 

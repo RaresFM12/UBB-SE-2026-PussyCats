@@ -14,55 +14,56 @@ namespace PussyCatsApp.services
 
         public ImageStorageService()
         {
-            string fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), basePath);
+            string fullDirectoryPath = Path.Combine(AppContext.BaseDirectory, basePath);
 
-            if(!Directory.Exists(fullDirectoryPath))
+            if (!Directory.Exists(fullDirectoryPath))
             {
                 Directory.CreateDirectory(fullDirectoryPath);
             }
-
-
         }
 
         public string SaveImage(Stream fileStream, string fileName)
         {
             string extension = Path.GetExtension(fileName).ToLowerInvariant();
-            if(extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
             {
                 throw new ArgumentException("Unsupported file type. Only .jpg, .jpeg, and .png are allowed.");
             }
 
-            if(fileStream.Length > 5 * 1024 * 1024)
+            if (fileStream.Length > 5 * 1024 * 1024)
             {
                 throw new Exception("File size exceeds the maximum limit of 5MB.");
             }
 
             string uniqueFileName = Guid.NewGuid().ToString() + extension;
 
-            string fullPath = Path.Combine(Directory.GetCurrentDirectory(),basePath, uniqueFileName);
+            string fullPath = Path.Combine(AppContext.BaseDirectory, basePath, uniqueFileName);
 
-            using( FileStream destinationStream = new FileStream(fullPath, FileMode.Create))
+            using (FileStream destinationStream = new FileStream(fullPath, FileMode.Create))
             {
-                if(fileStream.CanSeek)
+                if (fileStream.CanSeek)
                     fileStream.Position = 0;
 
                 fileStream.CopyTo(destinationStream);
             }
 
-            return Path.Combine(basePath, uniqueFileName);
+            return fullPath;
         }
 
         public void DeleteImage(string relativePath)
         {
             if (string.IsNullOrWhiteSpace(relativePath)) return;
 
-            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
+            string fullPath = relativePath;
+            if (!Path.IsPathRooted(fullPath))
+            {
+                fullPath = Path.Combine(AppContext.BaseDirectory, relativePath);
+            }
 
             if (File.Exists(fullPath))
             {
                 File.Delete(fullPath);
             }
-
         }
     }
 }
