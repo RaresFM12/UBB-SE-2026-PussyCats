@@ -68,10 +68,15 @@ namespace PussyCatsApp.views
                 lblGender.Text = $"Gender: {displayGender}";
                 lblUniversity.Text = $"University: {viewModel.userProfile.University}";
                 lblCountry.Text = $"Country: {viewModel.userProfile.Country}";
-                lblCity.Text = $"City: {viewModel.userProfile.City}";
+                lblAddress.Text = $"Address: {viewModel.userProfile.Address}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.ExpectedGraduationYear}";
 
-                chkAccountStatus.IsOn = viewModel.userProfile.ActiveAccount.ToString() == "ACTIVE";
+                LevelTitleText.Text = "Level 2 - Apprentice";
+                XpProgressBar.Maximum = 250;
+                XpProgressBar.Value = 150;
+                XpCountText.Text = "150 / 250 XP";
+
+                chkAccountStatus.IsOn = viewModel.userProfile.ActiveAccount;
 
                 if (!string.IsNullOrEmpty(viewModel.userProfile.ProfilePicture))
                 {
@@ -89,14 +94,14 @@ namespace PussyCatsApp.views
             else
             {
                 // No user in DB — go straight to the profile form
-                Frame.Navigate(typeof(ProfileFormPage));
+                //Frame.Navigate(typeof(ProfileFormPage));
                 return;
             }
 
             isBinding = false;
         }
 
-        
+
 
         private async void OnAvatarUploadClick(object sender, RoutedEventArgs e)
         {

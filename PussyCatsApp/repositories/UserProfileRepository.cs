@@ -36,7 +36,7 @@ namespace PussyCatsApp.repositories
             List<ExtraCurricularActivity> ExtraCurricularActivities
         );
 
-        private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
+        private const string connectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True";
         private SqlConnection sqlConnection;
 
         public UserProfile getProfileById(int userId)
@@ -181,7 +181,7 @@ namespace PussyCatsApp.repositories
             cmd.CommandText = @"
                 SELECT userID, firstName, lastName, gender, age,
                        email, phone, github, linkedin, universityStartYear,
-                       graduationYear, country, city, address,
+                       graduationYear, country, address,
                        personalityTestResult, activeAccount,
                        profilePicture, university, degree, parsedCV
                 FROM Users
@@ -215,7 +215,6 @@ namespace PussyCatsApp.repositories
                 UniversityStartYear = GetInt(reader, "universityStartYear"),
                 ExpectedGraduationYear = GetInt(reader, "graduationYear"),
                 Country = GetString(reader, "country"),
-                City = GetString(reader, "city"),
                 Address = GetString(reader, "address"),
                 University = GetString(reader, "university"),
                 Degree = GetString(reader, "degree"),
@@ -351,7 +350,6 @@ namespace PussyCatsApp.repositories
                         universityStartYear   = @universityStartYear,
                         graduationYear        = @graduationYear,
                         country               = @country,
-                        city                  = @city,
                         address               = @address,
                         university            = @university,
                         degree                = @degree,
@@ -363,12 +361,12 @@ namespace PussyCatsApp.repositories
                 ELSE
                     INSERT INTO Users (
                         firstName, lastName, gender, age, email, phone,
-                        github, linkedin, universityStartYear, graduationYear, country, city, address,
+                        github, linkedin, universityStartYear, graduationYear, country, address,
                         university, degree, personalityTestResult, activeAccount,
                         profilePicture, parsedCV
                     ) VALUES (
                         @firstName, @lastName, @gender, @age, @email, @phone,
-                        @github, @linkedin, @universityStartYear, @graduationYear, @country, @city, @address,
+                        @github, @linkedin, @universityStartYear, @graduationYear, @country, @address,
                         @university, @degree, @personalityTestResult, @activeAccount,
                         @profilePicture, @parsedCV
                     )";
@@ -393,7 +391,6 @@ namespace PussyCatsApp.repositories
             cmd.Parameters.AddWithValue("@universityStartYear", p.UniversityStartYear);
             cmd.Parameters.AddWithValue("@graduationYear", p.ExpectedGraduationYear);
             cmd.Parameters.AddWithValue("@country", (object)p.Country ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@city", (object)p.City ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@address", (object)p.Address ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@university", (object)p.University ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@degree", (object)p.Degree ?? DBNull.Value);
