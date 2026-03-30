@@ -10,10 +10,12 @@ namespace PussyCatsApp.repositories
     public class SkillTestRepository : ISkillTestRepository
     {
         private SqlConnection sqlConnection;
+        private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
 
-        public SkillTestRepository(SqlConnection connection)
+
+        public SkillTestRepository()
         {
-            sqlConnection = connection;
+            sqlConnection = new SqlConnection(connectionString);
         }
 
         public SkillTest load(int id)
@@ -30,7 +32,7 @@ namespace PussyCatsApp.repositories
                     userId: (int)reader["userID"],
                     name: reader["name"].ToString(),
                     score: (int)reader["score"],
-                    achievedDate: DateOnly.FromDateTime((DateTime)reader["lastAttemptDate"])
+                    achievedDate: DateOnly.FromDateTime((DateTime)reader["achievedDate"])
                 );
                 sqlConnection.Close();
                 return test;

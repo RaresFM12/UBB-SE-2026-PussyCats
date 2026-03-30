@@ -1,10 +1,13 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.models;
 using PussyCatsApp.repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace PussyCatsApp.views
@@ -20,7 +23,7 @@ namespace PussyCatsApp.views
             this.InitializeComponent();
 
             var userProfileRepository = new UserProfileRepository();
-            var skillTestRepository = new SkillTestRepository(connection);
+            var skillTestRepository = new SkillTestRepository();
             IUserProileRepository user = new UserProfileRepository();
             WebView2 view = new WebView2();
 
@@ -32,9 +35,20 @@ namespace PussyCatsApp.views
                 new CompletenessService()
             );
 
+            viewModel.OnLevelUpdated += renderLevelDisplay;
+
+
             // Wire up Edit button to navigate to ProfileFormPage
             btnEdit.Click += OnEditProfileClick;
 
+            btnOldTests.Click += OnGoToOldTestsClick;
+
+            BindData();
+
+        }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
             BindData();
         }
 
@@ -65,10 +79,12 @@ namespace PussyCatsApp.views
                 if (string.IsNullOrEmpty(displayGender) || (displayGender != "Male" && displayGender != "Female"))
                     displayGender = "Not specified";
 
+                Debug.WriteLine($"[BindData] ErrorMessage: '{viewModel.ErrorMessage}'");
+                Debug.WriteLine($"[BindData] userProfile is null: {viewModel.userProfile == null}");
+
                 lblGender.Text = $"Gender: {displayGender}";
                 lblUniversity.Text = $"University: {viewModel.userProfile.University}";
                 lblCountry.Text = $"Country: {viewModel.userProfile.Country}";
-                lblCity.Text = $"City: {viewModel.userProfile.City}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.ExpectedGraduationYear}";
 
                 chkAccountStatus.IsOn = viewModel.userProfile.ActiveAccount.ToString() == "ACTIVE";
@@ -85,6 +101,9 @@ namespace PussyCatsApp.views
                 }
 
                 completenessBar.Update(viewModel.CompletenessPercentage, viewModel.NextEmptyFieldPrompt);
+
+                viewModel.recalculateLevelCommand();
+                renderLevelDisplay();
             }
             else
             {
@@ -96,7 +115,19 @@ namespace PussyCatsApp.views
             isBinding = false;
         }
 
-        
+        private void renderLevelDisplay()
+        {
+            if (viewModel.userProfile == null) return;          
+            if (viewModel.userProfile.UserLevel == null) return;
+            LevelTitleText.Text = $"Level {viewModel.userProfile.UserLevel.LevelNumber} — {viewModel.userProfile.UserLevel.Title}";
+
+            XpProgressBar.Value = viewModel.userProfile.UserLevel.getProgressPercent(viewModel.TotalXP);
+
+            int xpToNext = viewModel.userProfile.UserLevel.getXPToNextLevel(viewModel.TotalXP);
+            XpCountText.Text = xpToNext > 0
+                ? $"{viewModel.TotalXP} XP — {xpToNext} XP needed for next level"
+                : $"{viewModel.TotalXP} XP — Max level reached!";
+        }
 
         private async void OnAvatarUploadClick(object sender, RoutedEventArgs e)
         {
@@ -149,6 +180,14 @@ namespace PussyCatsApp.views
             {
                 Frame.Navigate(typeof(ProfileFormPage));
             }
+        }
+
+        private void OnGoToOldTestsClick(object sender, RoutedEventArgs e)
+        {
+            if (viewModel.userProfile == null)
+                return;
+
+            this.Frame.Navigate(typeof(TestDashboardView), viewModel.userProfile);
         }
     }
 }

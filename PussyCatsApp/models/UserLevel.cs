@@ -21,6 +21,14 @@ namespace PussyCatsApp.models
             XpRequired = xpRequired;
             NextLevelXP = nextLevelXP;
         }
+        public UserLevel()
+        {
+            LevelNumber = 1;
+            Title = "Newcomer";
+            XpRequired = 0;
+            NextLevelXP = 100;
+        }
+
 
         public static UserLevel calculateLevel(int xp)
         {
@@ -41,15 +49,16 @@ namespace PussyCatsApp.models
             if (NextLevelXP == 0)
                 return 100;
 
-            return (totalXP - XpRequired) / (NextLevelXP - XpRequired) * 100;
+            double progress = (double)(totalXP - XpRequired) / (NextLevelXP - XpRequired) * 100;
+            return (int)progress;
         }
 
-        public int getXPToNextLevel()
+        public int getXPToNextLevel(int totalXP)
         {
             if (NextLevelXP == 0)
                 return 0;
 
-            return NextLevelXP - XpRequired;
+            return NextLevelXP - totalXP;
         }
     }
 }

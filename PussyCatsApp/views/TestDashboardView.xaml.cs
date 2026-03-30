@@ -5,6 +5,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.models;
+using PussyCatsApp.repositories;
+using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;
 using System.Collections.Generic;
@@ -24,25 +27,54 @@ namespace PussyCatsApp.views
     /// </summary>
     public sealed partial class TestDashboardView : Page
     {
-        private TestDashboardViewModel testDashboarddViewModel;
+        private TestDashboardViewModel testDashboardViewModel;
 
-        public TestDashboardView(TestDashboardViewModel testDashboarddViewModel)
+        public TestDashboardView()
         {
             this.InitializeComponent();
-            this.testDashboarddViewModel = testDashboarddViewModel;
+            var userProfileRepo = new UserProfileRepository();
+            var skillTestRepo = new SkillTestRepository();
+            var skillTestService = new SkillTestService(skillTestRepo);
+
+            IUserProileRepository user = new UserProfileRepository();
+            WebView2 view = new WebView2();
+            var userProfileViewModel = new UserProfileViewModel(
+                new UserProfileService(userProfileRepo, skillTestRepo),
+                new ImageStorageService(),
+                new PdfExportService(view, user),
+                new CvUploadService(),
+                new CompletenessService()
+            );
+
+            testDashboardViewModel = new TestDashboardViewModel(skillTestService, userProfileViewModel);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            testDashboarddViewModel.LoadTests();
-            renderTestCards();
+           // testDashboardViewModel.LoadTests();
+            
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.Parameter is UserProfile profile && profile.UserId != 0)
+            {
+                testDashboardViewModel.LoadTests(profile);
+                renderTestCards();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Warning: Navigated to Dashboard without a valid UserID.");
+
+            }
+        }
         private void renderTestCards()
         {
             TestCardsContainer.Children.Clear();
-
-            foreach (SkillTestCardViewModel cardViewModel in testDashboarddViewModel.TestCards)
+            
+           
+            foreach (SkillTestCardViewModel cardViewModel in testDashboardViewModel.TestCards)
             {
                 SkillTestCardView cardView = new SkillTestCardView(cardViewModel);
                 TestCardsContainer.Children.Add(cardView);
@@ -51,12 +83,13 @@ namespace PussyCatsApp.views
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            testDashboarddViewModel.backCommand();
+
+            this.Frame.Navigate(typeof(UserProfileView));
         }
 
         private void GoToAllTestsButton_Click(object sender, RoutedEventArgs e)
         {
-            testDashboarddViewModel.goToAllTestsCommand();
+            testDashboardViewModel.goToAllTestsCommand();
         }
     }
 }

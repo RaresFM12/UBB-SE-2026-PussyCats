@@ -49,53 +49,54 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"
-                            Orientation="Vertical"
-                            Spacing="20"
-                            VerticalAlignment="Center">
+            Orientation="Horizontal"
+            Spacing="30"
+            VerticalAlignment="Center">
 
+                    <!-- Account Status -->
                     <Border Background="#9b72a8"
-                            CornerRadius="12"
-                            Padding="20"
-                            MinWidth="220"
-                            HorizontalAlignment="Left">
+            CornerRadius="12"
+            Padding="20"
+            MinWidth="220"
+            HorizontalAlignment="Left">
                         <StackPanel VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    Spacing="12">
+                    HorizontalAlignment="Center"
+                    Spacing="12">
                             <TextBlock Text="Account Status"
-                                       Foreground="White"
-                                       FontSize="14"
-                                       FontWeight="Bold"
-                                       HorizontalAlignment="Center" />
-
+                       Foreground="White"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center" />
                             <ToggleSwitch x:Name="chkAccountStatus"
-                                          Toggled="OnStatusToggle"
-                                          OnContent="Active"
-                                          OffContent="Inactive"
-                                          Foreground="White"
-                                          HorizontalAlignment="Center" />
+                          Toggled="OnStatusToggle"
+                          OnContent="Active"
+                          OffContent="Inactive"
+                          Foreground="White"
+                          HorizontalAlignment="Center" />
                         </StackPanel>
                     </Border>
-
+                    
                     <StackPanel Spacing="6"
-                                Margin="0,16,0,0"
-                                MaxWidth="320">
+                VerticalAlignment="Center"
+                MaxWidth="320">
                         <TextBlock x:Name="LevelTitleText"
-                                   Foreground="White"
-                                   FontSize="16"
-                                   FontWeight="Medium" />
-
+                   Foreground="White"
+                   FontSize="16"
+                   FontWeight="Medium" />
                         <ProgressBar x:Name="XpProgressBar"
-                                     Minimum="0"
-                                     Maximum="100"
-                                     Height="12"
-                                     Foreground="#9B6BAE"
-                                     Background="#6A3F80" />
-
+                     Minimum="0"
+                     Maximum="100"
+                     Height="12"
+                     CornerRadius="6"
+                    Foreground="Green"
+                    Background="Red" />
                         <TextBlock x:Name="XpCountText"
-                                   Foreground="#D4B8E0"
-                                   FontSize="12" />
+                   Foreground="#D4B8E0"
+                   FontSize="12" />
                     </StackPanel>
+
                 </StackPanel>
+       
 
                 <TextBlock x:Name="lblFreshness"
                            Grid.Column="1"
@@ -127,7 +128,6 @@
                     <TextBlock x:Name="lblGender" Text="Gender: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblUniversity" Text="University: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblCountry" Text="Country: " Foreground="White" FontSize="16" />
-                    <TextBlock x:Name="lblCity" Text="City: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblGraduationYear" Text="Graduation Year: " Foreground="White" FontSize="16" />
                     <TextBlock x:Name="lblError" Foreground="#FFA0A0" TextWrapping="Wrap" Margin="0,20,0,0" />
                 </StackPanel>

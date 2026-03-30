@@ -37,7 +37,6 @@ namespace PussyCatsApp.views
             EmailText.Text = string.IsNullOrEmpty(_userProfile.Email) ? "\u2014" : _userProfile.Email;
             PhoneText.Text = string.IsNullOrEmpty(_userProfile.PhoneNumber) ? "\u2014" : _userProfile.PhoneNumber;
             CountryText.Text = string.IsNullOrEmpty(_userProfile.Country) ? "\u2014" : _userProfile.Country;
-            CityText.Text = string.IsNullOrEmpty(_userProfile.City) ? "\u2014" : _userProfile.City;
             UniversityText.Text = string.IsNullOrEmpty(_userProfile.University) ? "\u2014" : _userProfile.University;
             GraduationYearText.Text = _userProfile.ExpectedGraduationYear > 0 ? _userProfile.ExpectedGraduationYear.ToString() : "\u2014";
             AddressText.Text = string.IsNullOrEmpty(_userProfile.Address) ? "\u2014" : _userProfile.Address;

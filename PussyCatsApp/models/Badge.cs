@@ -22,15 +22,15 @@ namespace PussyCatsApp.models
         public static Badge assignTier(float score)
         {
             if (score >= 90)
-                return new Badge(BadgeTier.GOLD, "Assets/badges/gold.svg", 100);
+                return new Badge(BadgeTier.GOLD, "ms-appx:///Assets/badges/gold.svg", 100);
 
             if (score >= 70)
-                return new Badge(BadgeTier.SILVER, "Assets/badges/silver.svg", 60);
+                return new Badge(BadgeTier.SILVER, "ms-appx:///Assets/badges/silver.svg", 60);
 
             if (score >= 50)
-                return new Badge(BadgeTier.BRONZE, "Assets/badges/bronze.svg", 30);
+                return new Badge(BadgeTier.BRONZE, "ms-appx:///Assets/badges/bronze.svg", 30);
          
-            return new Badge(BadgeTier.PARTICIPANT, "Assets/badges/participant.svg", 10);
+            return new Badge(BadgeTier.PARTICIPANT, "ms-appx:///Assets/badges/participant.svg", 10);
         }
     }
 }

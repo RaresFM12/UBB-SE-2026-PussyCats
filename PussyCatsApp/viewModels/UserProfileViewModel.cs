@@ -2,6 +2,7 @@
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
@@ -25,8 +26,7 @@ namespace PussyCatsApp.viewModels
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
         public string ErrorMessage { get; set; } = "";
         public string FreshnessText { get; set; } = "";
-
-        
+        public int TotalXP { get; private set; } = 0;
 
         public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
         {
@@ -36,19 +36,35 @@ namespace PussyCatsApp.viewModels
             this.pdfExportService = pdfExportService;
             this.cvUploadService = cvUploadService;
             this.completenessService = completenessService;
+
         }
 
+        public event Action OnLevelUpdated;
         public void recalculateLevelCommand()
         {
+            if (userProfile == null) return;
+
+            try
+            {
+                TotalXP = profileSerivice.RecalculateLevel(userProfile); 
+                OnLevelUpdated?.Invoke();
+
+            }
+            catch(Exception ex)
+            {
+                ErrorMessage = $"Error recalculating user level: {ex.Message}";
+            }
             
         }
+        
 
         public async Task LoadUserAsync(int userId)
         {
             isLoading = true;
             try
             {
-                userProfile = await Task.Run(() => profileSerivice.GetProfile(userId)); 
+                userProfile = await Task.Run(() => profileSerivice.GetProfile(userId));
+               
             }
             catch (Exception ex)
             {
@@ -130,8 +146,10 @@ namespace PussyCatsApp.viewModels
         }
 
 
-
-
+        public void GoToOldTestCommand()
+        {
 
         }
+
+    }
 }
