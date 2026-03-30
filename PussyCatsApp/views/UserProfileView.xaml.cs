@@ -70,6 +70,7 @@ namespace PussyCatsApp.views
                 lblCountry.Text = $"Country: {viewModel.userProfile.Country}";
                 lblAddress.Text = $"Address: {viewModel.userProfile.Address}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.ExpectedGraduationYear}";
+                lblFreshness.Text = viewModel.FreshnessText;
 
                 LevelTitleText.Text = "Level 2 - Apprentice";
                 XpProgressBar.Maximum = 250;
@@ -94,7 +95,7 @@ namespace PussyCatsApp.views
             else
             {
                 // No user in DB — go straight to the profile form
-                //Frame.Navigate(typeof(ProfileFormPage));
+                Frame.Navigate(typeof(ProfileFormPage));
                 return;
             }
 
