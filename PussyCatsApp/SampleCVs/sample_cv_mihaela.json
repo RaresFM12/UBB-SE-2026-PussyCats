@@ -1,0 +1,70 @@
+{
+  "firstName": "Mihaela",
+  "lastName": "Popescu",
+  "age": 21,
+  "gender": "Female",
+  "email": "mihaela.popescu@student.ubbcluj.ro",
+  "phoneNumber": "+40734567890",
+  "country": "Romania",
+  "city": "Cluj-Napoca",
+  "github": "github.com/mihaelapopescu",
+  "linkedin": "linkedin.com/in/mihaelapopescu",
+  "address": "Str. Memorandumului, Nr. 28, Cluj-Napoca",
+  "university": "Babes-Bolyai University",
+  "expectedGraduationYear": 2027,
+  "motivation": "I am a passionate Computer Science student eager to build modern, user-centered applications. I enjoy tackling complex problems and learning new technologies to deliver clean, scalable solutions.",
+  "skills": [
+    "Python",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Node.js",
+    "PostgreSQL",
+    "Git",
+    "Docker",
+    "Figma",
+    "REST API",
+    "Agile/Scrum",
+    "Communication"
+  ],
+  "workExperiences": [
+    {
+      "company": "Endava",
+      "jobTitle": "Software Development Intern",
+      "startDate": "2025-07-01",
+      "endDate": null,
+      "currentlyWorking": true,
+      "description": "Developing microservices using Spring Boot and React. Writing unit tests and participating in daily stand-ups within an Agile team."
+    }
+  ],
+  "projects": [
+    {
+      "name": "Campus Events Platform",
+      "description": "Full-stack web application for managing university events with registration, notifications, and an admin dashboard.",
+      "technologies": ["React", "Node.js", "PostgreSQL", "Docker"],
+      "url": "github.com/mihaelapopescu/campus-events"
+    },
+    {
+      "name": "Budget Tracker App",
+      "description": "A personal finance tracking app with data visualization, built as a university project.",
+      "technologies": ["Python", "Flask", "SQLite", "Chart.js"],
+      "url": "github.com/mihaelapopescu/budget-tracker"
+    }
+  ],
+  "extraCurricularActivities": [
+    {
+      "activityName": "Women in Tech Cluj",
+      "organization": "Babes-Bolyai University",
+      "role": "Vice President",
+      "period": "2024 - Present",
+      "description": "Organizing mentorship programs and workshops to support women in the IT industry."
+    },
+    {
+      "activityName": "HackTM 2025",
+      "organization": "HackTM",
+      "role": "Participant",
+      "period": "March 2025",
+      "description": "48-hour hackathon — built a smart scheduling assistant using AI, placed in top 10."
+    }
+  ]
+}

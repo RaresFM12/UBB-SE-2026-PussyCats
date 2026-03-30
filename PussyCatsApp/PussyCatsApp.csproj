@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -39,6 +39,9 @@
     <Content Include="SampleCVs\sample_cv.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SampleCVs\sample_cv_mihaela.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -64,7 +67,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="views\" />
     <Folder Include="services\" />
   </ItemGroup>
 
@@ -76,6 +78,10 @@
     <None Update="views\CompatibilityDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+
+    <Page Update="views\ProfileCompletenessBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="views\CompatibilityDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -30,16 +30,14 @@ namespace PussyCatsApp
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public Frame NavigationFrame => ContentFrame;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            //Start from profile page
-            this.Content = new PussyCatsApp.views.UserProfileView();
-        }
-
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
+            // Start from profile page
+            ContentFrame.Navigate(typeof(PussyCatsApp.views.UserProfileView));
         }
     }
 }

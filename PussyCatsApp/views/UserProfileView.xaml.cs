@@ -32,7 +32,8 @@ namespace PussyCatsApp.views
                 new CompletenessService()
             );
 
-            
+            // Wire up Edit button to navigate to ProfileFormPage
+            btnEdit.Click += OnEditProfileClick;
 
             BindData();
         }
@@ -60,17 +61,12 @@ namespace PussyCatsApp.views
                 lblGithubAccount.Text = $"GitHub: {viewModel.userProfile.GitHub}";
                 lblLinkedinAccount.Text = $"LinkedIn: {viewModel.userProfile.LinkedIn}";
 
-                string displayGender = "Not specified";
-                if (viewModel.userProfile.Gender == "M")
-                {
-                    displayGender = "Male";
-                }
-                else if (viewModel.userProfile.Gender == "F")
-                {
-                    displayGender = "Female";
-                }
+                string displayGender = viewModel.userProfile.Gender;
+                if (string.IsNullOrEmpty(displayGender) || (displayGender != "Male" && displayGender != "Female"))
+                    displayGender = "Not specified";
 
                 lblGender.Text = $"Gender: {displayGender}";
+                lblUniversity.Text = $"University: {viewModel.userProfile.University}";
                 lblCountry.Text = $"Country: {viewModel.userProfile.Country}";
                 lblCity.Text = $"City: {viewModel.userProfile.City}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel.userProfile.ExpectedGraduationYear}";
@@ -88,11 +84,13 @@ namespace PussyCatsApp.views
                     pbAvatar.ProfilePicture = null;
                 }
 
-                
+                completenessBar.Update(viewModel.CompletenessPercentage, viewModel.NextEmptyFieldPrompt);
             }
             else
             {
-                lblError.Text = "User profile not found.";
+                // No user in DB — go straight to the profile form
+                Frame.Navigate(typeof(ProfileFormPage));
+                return;
             }
 
             isBinding = false;
@@ -138,6 +136,18 @@ namespace PussyCatsApp.views
             {
                 viewModel.ToggleAccountStatusCommand();
                 BindData();
+            }
+        }
+
+        private void OnEditProfileClick(object sender, RoutedEventArgs e)
+        {
+            if (viewModel.userProfile != null)
+            {
+                Frame.Navigate(typeof(ProfileFormPage), viewModel.userProfile);
+            }
+            else
+            {
+                Frame.Navigate(typeof(ProfileFormPage));
             }
         }
     }

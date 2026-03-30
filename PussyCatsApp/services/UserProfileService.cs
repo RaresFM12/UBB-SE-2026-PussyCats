@@ -57,5 +57,11 @@ namespace PussyCatsApp.services
             userProfileRepository.updateProfilePicture(userId, null);
             userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
         }
+
+        public void SaveProfile(int userId, UserProfile profile)
+        {
+            userProfileRepository.save(userId, profile);
+            userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
+        }
     }
 }

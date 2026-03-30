@@ -10,7 +10,9 @@
   "github": "github.com/ioanagavrila",
   "linkedin": "linkedin.com/in/ioanagavrila",
   "address": "Str. Universitatii, Nr. 1, Cluj-Napoca",
-  "motivation": "I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.",
+  "university": "Babes-Bolyai University",
+  "expectedGraduationYear": 2026,
+  "motivation":
   "skills": [
     "C#",
     "JavaScript",

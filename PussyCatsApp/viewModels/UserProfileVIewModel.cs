@@ -49,6 +49,7 @@ namespace PussyCatsApp.viewModels
             try
             {
                 userProfile = await Task.Run(() => profileSerivice.GetProfile(userId)); 
+                UpdateCompleteness();
             }
             catch (Exception ex)
             {
@@ -58,6 +59,19 @@ namespace PussyCatsApp.viewModels
             {
                 isLoading = false;
             }
+        }
+
+        public void UpdateCompleteness()
+        {
+            if (userProfile == null)
+            {
+                CompletenessPercentage = 0;
+                NextEmptyFieldPrompt = "";
+                return;
+            }
+
+            CompletenessPercentage = completenessService.CalculateCompleteness(userProfile);
+            NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(userProfile);
         }
 
         public void ToggleAccountStatusCommand()
@@ -110,7 +124,7 @@ namespace PussyCatsApp.viewModels
 
         public void EditProfileCommand()
         {
-            //TODO Navigations
+            // Navigation is handled by UserProfileView.OnEditProfileClick
         }
         public void TakePersonalityTestCommand()
         {

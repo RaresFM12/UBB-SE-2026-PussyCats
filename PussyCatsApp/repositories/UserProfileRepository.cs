@@ -36,7 +36,7 @@ namespace PussyCatsApp.repositories
             List<ExtraCurricularActivity> ExtraCurricularActivities
         );
 
-        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
         private SqlConnection sqlConnection;
 
         public UserProfile getProfileById(int userId)
@@ -113,7 +113,7 @@ namespace PussyCatsApp.repositories
 
         public void updateAccountStatus(int userId, string status)
         {
-            this.sqlConnection = new SqlConnection("Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True");
+            this.sqlConnection = new SqlConnection(connectionString);
             SqlCommand updateAccounStatusCommand = new SqlCommand("UPDATE Users SET activeAccount = @status WHERE userID = @userId", sqlConnection);
 
             bool isActive = (status == "ACTIVE");
@@ -146,7 +146,7 @@ namespace PussyCatsApp.repositories
 
         public void updateProfilePicture(int userId, string picturePath)
         {
-            this.sqlConnection = new SqlConnection("Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True");
+            this.sqlConnection = new SqlConnection(connectionString);
 
             SqlCommand updatePictureCommand = new SqlCommand("UPDATE Users SET profilePicture = @path WHERE userID = @userId", sqlConnection);
 
@@ -181,7 +181,7 @@ namespace PussyCatsApp.repositories
             cmd.CommandText = @"
                 SELECT userID, firstName, lastName, gender, age,
                        email, phone, github, linkedin, universityStartYear,
-                       graduationYear, country, address,
+                       graduationYear, country, city, address,
                        personalityTestResult, activeAccount,
                        profilePicture, university, degree, parsedCV
                 FROM Users
@@ -193,12 +193,20 @@ namespace PussyCatsApp.repositories
             using var reader = cmd.ExecuteReader();
             if (!reader.Read()) return null;
 
+            var genderChar = GetString(reader, "gender").Trim();
+            var genderDisplay = genderChar switch
+            {
+                "M" => "Male",
+                "F" => "Female",
+                _ => genderChar
+            };
+
             return new UserProfile
             {
                 UserId = reader.GetInt32(reader.GetOrdinal("userID")),
                 FirstName = GetString(reader, "firstName"),
                 LastName = GetString(reader, "lastName"),
-                Gender = GetString(reader, "gender"),
+                Gender = genderDisplay,
                 Age = GetInt(reader, "age"),
                 Email = GetString(reader, "email"),
                 PhoneNumber = GetString(reader, "phone"),
@@ -207,6 +215,7 @@ namespace PussyCatsApp.repositories
                 UniversityStartYear = GetInt(reader, "universityStartYear"),
                 ExpectedGraduationYear = GetInt(reader, "graduationYear"),
                 Country = GetString(reader, "country"),
+                City = GetString(reader, "city"),
                 Address = GetString(reader, "address"),
                 University = GetString(reader, "university"),
                 Degree = GetString(reader, "degree"),
@@ -342,6 +351,7 @@ namespace PussyCatsApp.repositories
                         universityStartYear   = @universityStartYear,
                         graduationYear        = @graduationYear,
                         country               = @country,
+                        city                  = @city,
                         address               = @address,
                         university            = @university,
                         degree                = @degree,
@@ -353,20 +363,28 @@ namespace PussyCatsApp.repositories
                 ELSE
                     INSERT INTO Users (
                         firstName, lastName, gender, age, email, phone,
-                        github, linkedin, universityStartYear, graduationYear, country, address,
+                        github, linkedin, universityStartYear, graduationYear, country, city, address,
                         university, degree, personalityTestResult, activeAccount,
                         profilePicture, parsedCV
                     ) VALUES (
                         @firstName, @lastName, @gender, @age, @email, @phone,
-                        @github, @linkedin, @universityStartYear, @graduationYear, @country, @address,
+                        @github, @linkedin, @universityStartYear, @graduationYear, @country, @city, @address,
                         @university, @degree, @personalityTestResult, @activeAccount,
                         @profilePicture, @parsedCV
                     )";
 
+            // Convert 'Male'/'Female' → 'M'/'F' for CHAR(1) DB column
+            var genderDb = p.Gender switch
+            {
+                "Male" => "M",
+                "Female" => "F",
+                _ => p.Gender
+            };
+
             cmd.Parameters.AddWithValue("@id", userId);
             cmd.Parameters.AddWithValue("@firstName", p.FirstName);
             cmd.Parameters.AddWithValue("@lastName", p.LastName);
-            cmd.Parameters.AddWithValue("@gender", (object)p.Gender ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@gender", (object)genderDb ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@age", p.Age);
             cmd.Parameters.AddWithValue("@email", p.Email);
             cmd.Parameters.AddWithValue("@phone", (object)p.PhoneNumber ?? DBNull.Value);
@@ -375,6 +393,7 @@ namespace PussyCatsApp.repositories
             cmd.Parameters.AddWithValue("@universityStartYear", p.UniversityStartYear);
             cmd.Parameters.AddWithValue("@graduationYear", p.ExpectedGraduationYear);
             cmd.Parameters.AddWithValue("@country", (object)p.Country ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@city", (object)p.City ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@address", (object)p.Address ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@university", (object)p.University ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@degree", (object)p.Degree ?? DBNull.Value);
