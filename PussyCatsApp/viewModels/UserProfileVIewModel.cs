@@ -48,7 +48,9 @@ namespace PussyCatsApp.viewModels
             isLoading = true;
             try
             {
-                userProfile = await Task.Run(() => profileSerivice.GetProfile(userId)); 
+                userProfile = await Task.Run(() => profileSerivice.GetProfile(userId));
+
+                FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(userProfile.LastUpdated);
             }
             catch (Exception ex)
             {
@@ -89,11 +91,11 @@ namespace PussyCatsApp.viewModels
 
         public void RemoveAvatarCommand()
         {
-            if(userProfile.ProfilePicture != null)
+            if(!string.IsNullOrEmpty(userProfile.ProfilePicture))
             {
                 imageStorageService.DeleteImage(userProfile.ProfilePicture);
                 profileSerivice.RemoveAvatarPath(userProfile.UserId);
-                userProfile.ProfilePicture = null;
+                userProfile.ProfilePicture = string.Empty;
             }
         }
 
