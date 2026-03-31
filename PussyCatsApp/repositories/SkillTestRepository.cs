@@ -10,7 +10,7 @@ namespace PussyCatsApp.repositories
     public class SkillTestRepository : ISkillTestRepository
     {
         private SqlConnection sqlConnection;
-        private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
+        private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
 
 
         public SkillTestRepository()

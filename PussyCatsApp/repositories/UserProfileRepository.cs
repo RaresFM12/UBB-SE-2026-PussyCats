@@ -66,7 +66,7 @@ namespace PussyCatsApp.repositories
                 profile.RelevantCertificates = LoadCertificates(connection, userId);
                 LoadPreferences(connection, userId, profile);
 
-                // WorkExperiences, Projects, ExtraCurricular live in parsedCV
+                //WorkExperiences, Projects, ExtraCurricular live in parsedCV
                 LoadParsedCV(connection, userId, profile);
 
                 return profile;
