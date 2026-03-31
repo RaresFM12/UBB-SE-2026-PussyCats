@@ -212,9 +212,9 @@ namespace PussyCatsApp.views
 
         private void OnSeePublicProfileClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel.userProfile == null)
-                return;
-            this.Frame.Navigate(typeof(PublicProfileView), viewModel.userProfile);
+            //if (viewModel.userProfile == null)
+              //  return;
+            //this.Frame.Navigate(typeof(PublicProfileView), viewModel.userProfile);
         }
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
