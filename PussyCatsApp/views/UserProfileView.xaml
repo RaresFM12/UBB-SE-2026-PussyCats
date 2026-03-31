@@ -59,17 +59,17 @@
                                 VerticalAlignment="Center"
                                 MaxWidth="320">
                         <TextBlock x:Name="LevelTitleText"
-                                   Foreground="White"
+                                   Foreground="Black"
                                    FontSize="16"
                                    FontWeight="Medium" />
                         <ProgressBar x:Name="XpProgressBar"
                                      Minimum="0"
                                      Maximum="100"
                                      Height="12"
-                                     Foreground="#9b72a8"
+                                     Foreground="Purple"
                                      Background="Black" />
                         <TextBlock x:Name="XpCountText"
-                                   Foreground="#D4B8E0"
+                                   Foreground="Black"
                                    FontSize="12" />
                     </StackPanel>
 
