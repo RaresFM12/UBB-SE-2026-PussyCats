@@ -124,6 +124,23 @@ ADD CONSTRAINT DF_Skills_Score DEFAULT 0 FOR score;
 ALTER TABLE SKILLS
 ALTER COLUMN achievedDate DATETIME NULL;
 
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns
+    WHERE object_id = OBJECT_ID('DOCUMENTS') AND name = 'FilePath'
+)
+BEGIN
+    ALTER TABLE DOCUMENTS ADD FilePath VARCHAR(MAX) NULL;
+END
+GO
+ 
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns
+    WHERE object_id = OBJECT_ID('DOCUMENTS') AND name = 'UploadDate'
+)
+BEGIN
+    ALTER TABLE DOCUMENTS ADD UploadDate DATETIME NULL;
+END
+GO
 
 -- =============================================
 -- Indexes for common queries

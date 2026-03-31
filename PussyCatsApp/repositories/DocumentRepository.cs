@@ -1,64 +1,113 @@
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Data.SqlClient;
 using PussyCatsApp.models;
+using System;
+using System.Collections.Generic;
 
 namespace PussyCatsApp.repositories
 {
-    internal class DocumentRepository : IDocumentRepository
+    public class DocumentRepository
     {
-        private readonly List<Document> _documents = new();
+        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
 
-        public Document load(int id)
+        // ── Retrieve all documents for a given user ──────────────────────────
+        public List<Document> getByUserId(int userId)
         {
-            return _documents.FirstOrDefault(d => d.DocumentId == id);
+            var documents = new List<Document>();
+
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            const string query = @"
+                SELECT dID         AS Id,
+                       userID      AS UserId,
+                       nameDocument AS DocumentName,
+                       FilePath,
+                       UploadDate
+                FROM   DOCUMENTS
+                WHERE  userID = @UserId";
+
+            using var cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@UserId", userId);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                documents.Add(MapRow(reader));
+            }
+
+            return documents;
         }
 
-        public void save(int id, Document data)
+        // ── Retrieve a single document by its primary key ────────────────────
+        public Document getById(int id)
         {
-            var existing = _documents.FirstOrDefault(d => d.DocumentId == id);
-            if (existing != null)
-            {
-                existing.StoredDocument = data.StoredDocument;
-                existing.NameDocument = data.NameDocument;
-                existing.UserId = data.UserId;
-            }
-            else
-            {
-                data.DocumentId = id;
-                _documents.Add(data);
-            }
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            const string query = @"
+                SELECT dID         AS Id,
+                       userID      AS UserId,
+                       nameDocument AS DocumentName,
+                       FilePath,
+                       UploadDate
+                FROM   DOCUMENTS
+                WHERE  dID = @Id";
+
+            using var cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+                return MapRow(reader);
+
+            return null;
         }
 
-        public List<Document> GetDocumentsByUserId(int userId)
+        // ── Insert a new document record ─────────────────────────────────────
+        public void add(Document doc)
         {
-            return _documents.Where(d => d.UserId == userId).ToList();
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            const string query = @"
+                INSERT INTO DOCUMENTS (userID, nameDocument, FilePath, UploadDate)
+                VALUES (@UserId, @DocumentName, @FilePath, @UploadDate)";
+
+            using var cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@UserId", doc.UserId);
+            cmd.Parameters.AddWithValue("@DocumentName", doc.DocumentName);
+            cmd.Parameters.AddWithValue("@FilePath", doc.FilePath ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@UploadDate", doc.UploadDate);
+
+            cmd.ExecuteNonQuery();
         }
 
-        public void AddDocument(Document document)
+        // ── Remove a document record by primary key ──────────────────────────
+        public void delete(int id)
         {
-            if (document.DocumentId == 0)
-            {
-                document.DocumentId = _documents.Count > 0 ? _documents.Max(d => d.DocumentId) + 1 : 1;
-            }
-            _documents.Add(document);
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            const string query = "DELETE FROM DOCUMENTS WHERE dID = @Id";
+
+            using var cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.ExecuteNonQuery();
         }
 
-        public void RemoveDocument(int documentId)
+        // ── Helper: map a data reader row to a Document object ───────────────
+        private static Document MapRow(SqlDataReader reader)
         {
-            var doc = _documents.FirstOrDefault(d => d.DocumentId == documentId);
-            if (doc != null)
+            return new Document
             {
-                _documents.Remove(doc);
-            }
-        }
-
-        public void RenameDocument(int documentId, string newName)
-        {
-            var doc = _documents.FirstOrDefault(d => d.DocumentId == documentId);
-            if (doc != null)
-            {
-                doc.NameDocument = newName;
-            }
+                Id = Convert.ToInt32(reader["Id"]),
+                UserId = Convert.ToInt32(reader["UserId"]),
+                DocumentName = reader["DocumentName"]?.ToString() ?? string.Empty,
+                FilePath = reader["FilePath"] == DBNull.Value ? null : reader["FilePath"].ToString(),
+                UploadDate = reader["UploadDate"] == DBNull.Value
+                                   ? DateTime.MinValue
+                                   : Convert.ToDateTime(reader["UploadDate"])
+            };
         }
     }
 }

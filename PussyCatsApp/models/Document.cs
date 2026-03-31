@@ -8,14 +8,14 @@ namespace PussyCatsApp.models
         private string filePath;
         private System.DateTime uploadDate;
 
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
-        public int UserId { get; private set; }
+        public int UserId { get; set; }
 
-        public string DocumentName { get; private set; }
+        public string DocumentName { get; set; }
 
-        public string FilePath { get; private set; }
+        public string FilePath { get; set; }
 
-        public System.DateTime UploadDate { get; private set; }
+        public System.DateTime UploadDate { get; set; }
     }
 }

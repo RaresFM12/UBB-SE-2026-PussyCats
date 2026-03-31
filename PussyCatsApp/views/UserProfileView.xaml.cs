@@ -39,6 +39,8 @@ namespace PussyCatsApp.views
             btnEdit.Click += OnEditProfileClick;
             btnOldTests.Click += OnGoToOldTestsClick;
             btnPublicProfile.Click += OnSeePublicProfileClick;
+            btnViewDocuments.Click += OnViewDocumentsClick;
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -223,6 +225,11 @@ namespace PussyCatsApp.views
         private void OnPersonalityTestClick(object sender, RoutedEventArgs e)
         {
             viewModel.TakePersonalityTestCommand();
+        }
+
+        private void OnViewDocumentsClick(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(DocumentsPage));
         }
     }
 }
