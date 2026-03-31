@@ -73,6 +73,7 @@ namespace PussyCatsApp.viewModels
             {
                 _userProfile = await Task.Run(() => profileSerivice.GetProfile(userId));
 
+                FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(_userProfile.LastUpdated);
                 if (_userProfile != null)
                 {
                     ExportVM.UserId = _userProfile.UserId;
