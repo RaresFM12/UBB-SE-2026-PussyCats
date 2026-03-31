@@ -8,8 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-
-    <Border Background="#6A3F80" CornerRadius="12" Padding="18,14">
+    <Border Background="#3D2E4D" CornerRadius="12" Padding="18,14">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -17,24 +16,21 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Badge icon -->
             <Image x:Name="BadgeIcon" Grid.Column="0"
                    Width="55" Height="55" VerticalAlignment="Center"/>
 
-            <!-- Test info -->
             <StackPanel Grid.Column="1" Margin="16,0" Spacing="4" VerticalAlignment="Center">
                 <TextBlock x:Name="TestNameText"
                            Foreground="White" FontSize="14" FontWeight="Medium"/>
                 <TextBlock x:Name="ScoreText"
-                           Foreground="#D4B8E0" FontSize="12"/>
+                           Foreground="#BDA4CC" FontSize="12"/>
                 <TextBlock x:Name="DateText"
-                           Foreground="#D4B8E0" FontSize="12"/>
+                           Foreground="#BDA4CC" FontSize="12"/>
             </StackPanel>
 
-            <!-- Retake button -->
             <Button x:Name="RetakeButton" Grid.Column="2"
                     Content="RETAKE"
-                    Background="#9B6BAE" Foreground="White"
+                    Background="#9A74B3" Foreground="White" 
                     BorderThickness="0" CornerRadius="6"
                     VerticalAlignment="Center"
                     Click="RetakeButton_Click"/>

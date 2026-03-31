@@ -66,8 +66,8 @@
                                      Minimum="0"
                                      Maximum="100"
                                      Height="12"
-                                     Foreground="Green"
-                                     Background="Red" />
+                                     Foreground="#9b72a8"
+                                     Background="Black" />
                         <TextBlock x:Name="XpCountText"
                                    Foreground="#D4B8E0"
                                    FontSize="12" />

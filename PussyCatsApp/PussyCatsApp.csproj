@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="views\PublicProfileView.xaml" />
     <None Remove="views\UserProfileView.xaml" />
     <None Remove="views\CompatibilityDetailView.xaml" />
     <None Remove="views\CompatibilityOverviewView.xaml" />
@@ -93,6 +94,10 @@
     <None Update="views\CompatibilityDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+
+    <Page Update="views\PublicProfileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
 
     <Page Update="views\ProfileCompletenessBar.xaml">
       <Generator>MSBuild:Compile</Generator>
