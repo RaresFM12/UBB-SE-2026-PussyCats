@@ -80,6 +80,7 @@ namespace PussyCatsApp.views
                 lblGender.Text = $"Gender: {displayGender}";
                 lblUniversity.Text = $"University: {viewModel._userProfile.University}";
                 lblCountry.Text = $"Country: {viewModel._userProfile.Country}";
+                lblAddress.Text = $"Address: {viewModel._userProfile.Address}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel._userProfile.ExpectedGraduationYear}";
                 lblFreshness.Text = viewModel.FreshnessText;
 
