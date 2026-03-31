@@ -11,7 +11,6 @@
 
     <ScrollViewer>
         <StackPanel>
-            <!-- R40 — Profile Completeness Meter (separate component) -->
             <local:ProfileCompletenessBar x:Name="completenessBar" />
 
             <Grid Padding="20,40,20,20">
@@ -106,8 +105,10 @@
 
                 <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="25" HorizontalAlignment="Right" Width="300" Margin="0,0,75,0">
                     <Button x:Name="btnEdit" Content="Edit Profile" HorizontalAlignment="Stretch" />
-                    <Button x:Name="btnPersonalityTest" Content="Take Personality Test" HorizontalAlignment="Stretch" Click="OnPersonalityTestClick"/>
-                    <Button x:Name="btnExportPdf" Content="Export to PDF" HorizontalAlignment="Stretch" />
+                    <Button x:Name="btnPersonalityTest" Content="Take Personality Test" HorizontalAlignment="Stretch" />
+
+                    <Button x:Name="btnPreviewCV" Content="Preview &amp; Export CV" Click="OnPreviewCVClick" HorizontalAlignment="Stretch" />
+
                     <Button x:Name="btnViewDocuments" Content="View Documents" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnMatchHistory" Content="Match History" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnRoleCompatibility" Content="Role Compatibility Analyzer" Click="OnCompatibilityAnalyzerClick" HorizontalAlignment="Stretch" />
