@@ -35,6 +35,8 @@ CREATE TABLE USERS (
 );
 GO
 
+SELECT * FROM users
+
 -- =============================================
 -- SKILLS table (FK -> USERS)
 -- =============================================
@@ -93,6 +95,36 @@ GO
 UPDATE Users SET LastUpdated = GETDATE() WHERE LastUpdated IS NULL;
 GO
 
+ALTER TABLE Users 
+ADD city VARCHAR(100) NULL;
+
+ALTER TABLE Users
+ADD motivation VARCHAR(1000) NULL;
+
+-- First, drop the default constraint on the score column if it exists
+-- (You may need to find the constraint name if it was auto-generated)
+-- Example for SQL Server:
+DECLARE @constraintName NVARCHAR(200);
+SELECT @constraintName = dc.name
+FROM sys.default_constraints dc
+JOIN sys.columns c ON c.default_object_id = dc.object_id
+WHERE c.object_id = OBJECT_ID('SKILLS') AND c.name = 'score';
+
+IF @constraintName IS NOT NULL
+    EXEC('ALTER TABLE SKILLS DROP CONSTRAINT ' + @constraintName);
+
+-- Alter the column type from FLOAT to INT
+ALTER TABLE SKILLS
+ALTER COLUMN score INT NULL;
+
+-- Optionally, set a new default if needed
+ALTER TABLE SKILLS
+ADD CONSTRAINT DF_Skills_Score DEFAULT 0 FOR score;
+
+ALTER TABLE SKILLS
+ALTER COLUMN achievedDate DATETIME NULL;
+
+
 -- =============================================
 -- Indexes for common queries
 -- =============================================
@@ -139,6 +171,13 @@ VALUES (
 UPDATE USERS 
 SET degree = 'Bachelor of Science in Computer Science', universityStartYear = 2023
 WHERE userID = 1;
+
+UPDATE USERS
+SET 
+    github = 'https://github.com/RaresFM12',
+    linkedin = 'https://www.linkedin.com/in/rare%C8%99fodorca/'
+WHERE userID = 1;
+
 
 DECLARE @newUserId INT = SCOPE_IDENTITY();
 

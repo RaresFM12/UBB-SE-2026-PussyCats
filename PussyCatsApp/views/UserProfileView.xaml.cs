@@ -208,7 +208,9 @@ namespace PussyCatsApp.views
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
         {
-            string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+            //string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+            string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+
 
             UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
             SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
