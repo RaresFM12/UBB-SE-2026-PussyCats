@@ -48,7 +48,9 @@ namespace PussyCatsApp.views
 
             btnOldTests.Click += OnGoToOldTestsClick;
 
-            //BindData();
+            btnPublicProfile.Click += OnSeePublicProfileClick;
+
+            BindData();
 
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -206,6 +208,13 @@ namespace PussyCatsApp.views
                 return;
 
             this.Frame.Navigate(typeof(TestDashboardView), viewModel._userProfile);
+        }
+
+        private void OnSeePublicProfileClick(object sender, RoutedEventArgs e)
+        {
+            if (viewModel.userProfile == null)
+                return;
+            this.Frame.Navigate(typeof(PublicProfileView), viewModel.userProfile);
         }
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
