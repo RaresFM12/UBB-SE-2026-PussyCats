@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/*namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.viewModels
 {
     public partial class PersonalityTestViewModel : ObservableObject
     {
@@ -19,20 +19,20 @@ using System.Threading.Tasks;
         public List<QuestionViewModel> Questions { get; }
 
         [ObservableProperty]
-        //public partial List<RoleResultViewModel> TopRoles { get; set; } = new();
+        public partial List<RoleResultViewModel> TopRoles { get; set; } = new();
 
-        //[ObservableProperty]
-        //public partial RoleResultViewModel? SelectedRole { get; set; }
+        [ObservableProperty]
+        public partial RoleResultViewModel? SelectedRole { get; set; }
 
-        //[ObservableProperty]
-        //public partial string? SaveMessage { get; set; }
+        [ObservableProperty]
+        public partial string? SaveMessage { get; set; }
 
-        //[ObservableProperty]
-        //public partial bool IsTestSubmitted { get; set; }
+        [ObservableProperty]
+        public partial bool IsTestSubmitted { get; set; }
 
-        //public bool CanSubmit => Questions.All(q => q.IsAnswered == true);
+        public bool CanSubmit => Questions.All(q => q.IsAnswered == true);
 
-        //public bool CanSave => SelectedRole != null;
+        public bool CanSave => SelectedRole != null;
 
         public PersonalityTestViewModel(PersonalityTestService service, int userId)
         {
@@ -112,4 +112,4 @@ using System.Threading.Tasks;
         }
     }
 
-}*/
+}
