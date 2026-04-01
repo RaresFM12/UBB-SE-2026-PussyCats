@@ -10,27 +10,21 @@ namespace PussyCatsApp.repositories
 {
     public class MatchRepository
     {
-        private readonly string _connectionString;
+        private readonly string _connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
 
-        // Constructor to receive and store the SQL connection string
-        public MatchRepository(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+        public MatchRepository()
+        {}
 
-        // Retrieves all matchmaking history for a specific user
         public List<Match> GetByUserId(int userId)
         {
             var matches = new List<Match>();
 
-            // The SQL query strictly matches the MATCHES table schema we created earlier
             string query = "SELECT id, userID, companyName, jobRole, matchDate FROM MATCHES WHERE userID = @UserId ORDER BY matchDate DESC";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    // Using parameters prevents SQL injection attacks
                     cmd.Parameters.AddWithValue("@UserId", userId);
 
                     conn.Open();
@@ -40,7 +34,6 @@ namespace PussyCatsApp.repositories
                         {
                             var match = new Match();
 
-                            // Map the database columns to the Match model properties
                             match.Id = Convert.ToInt32(reader["id"]);
                             match.UserId = Convert.ToInt32(reader["userID"]);
                             match.CompanyName = reader["companyName"].ToString();

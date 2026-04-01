@@ -13,13 +13,11 @@ namespace PussyCatsApp.services
     {
         private readonly MatchRepository _matchRepository;
 
-        // Constructor to receive and store the repository
-        public MatchService(MatchRepository matchRepository)
+        public MatchService()
         {
-            _matchRepository = matchRepository;
+            _matchRepository = new MatchRepository();
         }
 
-        // Calculates how many matches occurred within the last X months
         private int CountByPeriod(List<Match> matches, int months)
         {
             DateTime cutoffDate = DateTime.Now.AddMonths(-months);
@@ -27,7 +25,6 @@ namespace PussyCatsApp.services
 
             foreach (var match in matches)
             {
-                // If the match date is strictly greater (more recent) than the cutoff
                 if (match.MatchDate > cutoffDate)
                 {
                     count++;
@@ -37,7 +34,6 @@ namespace PussyCatsApp.services
             return count;
         }
 
-        // Groups matches by job role and counts them
         private Dictionary<string, int> GroupByPosition(List<Match> matches)
         {
             var positionCounts = new Dictionary<string, int>();
@@ -46,12 +42,10 @@ namespace PussyCatsApp.services
             {
                 if (positionCounts.ContainsKey(match.JobRole))
                 {
-                    // Key exists, increment the count
                     positionCounts[match.JobRole]++;
                 }
                 else
                 {
-                    // New key, add it with a count of 1
                     positionCounts.Add(match.JobRole, 1);
                 }
             }
@@ -59,13 +53,11 @@ namespace PussyCatsApp.services
             return positionCounts;
         }
 
-        // Retrieves the raw list of matches for the user directly from the repo
         public List<Match> GetMatchesForUser(int userId)
         {
             return _matchRepository.GetByUserId(userId);
         }
 
-        // Generates the complete statistics object for the user's dashboard
         public MatchStatistics GetStatistics(int userId)
         {
             var matches = _matchRepository.GetByUserId(userId);

@@ -37,12 +37,10 @@ namespace PussyCatsApp.views
             this.Loaded += MatchHistoryView_Loaded;
         }
 
-        // Metoda standard WinUI 3 pentru a primi date când navighezi către această pagină
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            // Verificăm dacă pagina a primit ViewModel-ul ca parametru la navigare
             if (e.Parameter is MatchHistoryViewModel vm)
             {
                 _viewModel = vm;
@@ -53,15 +51,9 @@ namespace PussyCatsApp.views
         {
             if (_viewModel == null)
             {
-                string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-
-                var repo = new MatchRepository(connectionString);
-                var service = new MatchService(repo);
-
-                _viewModel = new MatchHistoryViewModel(service, 1);
+                _viewModel = new MatchHistoryViewModel(1);
             }
 
-            // 2. Acum că avem ViewModel-ul gata, apelăm metodele de încărcare
             LoadMatches();
             LoadStatistics();
         }
@@ -72,13 +64,15 @@ namespace PussyCatsApp.views
 
             string error = _viewModel.GetErrorMessage();
             if (!string.IsNullOrEmpty(error))
-            {
-                ShowError(error);
                 return;
-            }
 
-            // Alocăm lista de istoric direct sursei de date a ListView-ului
             MatchesListView.ItemsSource = _viewModel.GetMatches();
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+                Frame.GoBack();
         }
 
         private void LoadStatistics()
@@ -87,22 +81,18 @@ namespace PussyCatsApp.views
 
             string error = _viewModel.GetErrorMessage();
             if (!string.IsNullOrEmpty(error))
-            {
-                ShowError(error);
                 return;
-            }
+            
 
             var stats = _viewModel.GetStatistics();
 
             if (stats != null)
             {
-                // Populăm etichetele text
                 lblTotalMatches.Text = $"Total Matches: {stats.TotalMatches}";
                 lblMatchesLastMonth.Text = $"Last Month: {stats.MatchesLastMonth}";
                 lblMatchesLastSixMonths.Text = $"Last 6 Months: {stats.MatchesLastSixMonths}";
                 lblMatchesLastYear.Text = $"Last Year: {stats.MatchesLastYear}";
 
-                // Convertim dicționarul din MatchStatistics într-o listă anonimă pentru a-l putea afișa în tabel
                 if (stats.MatchesPerPosition != null)
                 {
                     var positionData = stats.MatchesPerPosition
@@ -115,21 +105,6 @@ namespace PussyCatsApp.views
                     PositionStatsListView.ItemsSource = positionData;
                 }
             }
-        }
-
-        private async void ShowError(string message)
-        {
-            /*if (this.XamlRoot == null)
-                return;
-
-            var dialog = new ContentDialog
-            {
-                Title = "Eroare la încărcare",
-                Content = message,
-                CloseButtonText = "OK",
-                XamlRoot = this.XamlRoot // Obligatoriu în WinUI 3 pentru dialoguri
-            };
-            await dialog.ShowAsync();*/
         }
     }
 }
