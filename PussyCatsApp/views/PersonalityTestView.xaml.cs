@@ -104,10 +104,5 @@ namespace PussyCatsApp.views
             this.PersonalityTestViewModel = new PersonalityTestViewModel(service, userId);
             this.DataContext = this.PersonalityTestViewModel;
         }
-
-        private void btnBack_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
