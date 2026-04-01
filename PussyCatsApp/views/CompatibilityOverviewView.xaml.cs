@@ -21,7 +21,9 @@ namespace PussyCatsApp.views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            viewModel = e.Parameter as CompatibilityOverviewViewModel;
+            int userId = (int)e.Parameter;
+
+            viewModel = new CompatibilityOverviewViewModel(userId);
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -99,9 +101,7 @@ namespace PussyCatsApp.views
             if (result == null)
                 return;
 
-            CompatibilityDetailViewModel detailVm = new CompatibilityDetailViewModel();
-            detailVm.LoadResult(result);
-            Frame.Navigate(typeof(CompatibilityDetailView), detailVm);
+            Frame.Navigate(typeof(CompatibilityDetailView), result);
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)

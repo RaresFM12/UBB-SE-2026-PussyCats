@@ -14,11 +14,10 @@ namespace PussyCatsApp.views
 {
     public sealed partial class UserProfileView : Page
     {
-        private int currentUserId = 1;
+        private int currentUserId = 2;
         public UserProfileViewModel viewModel { get; private set; }
         private bool _isBinding = false;
         private SqlConnection connection;
-        private CompatibilityOverviewViewModel compatibilityViewModel;
 
         public UserProfileView()
         {
@@ -26,8 +25,6 @@ namespace PussyCatsApp.views
 
             var userProfileRepository = new UserProfileRepository();
             var skillTestRepository = new SkillTestRepository();
-
-            compatibilityViewModel = new CompatibilityOverviewViewModel(currentUserId);
 
             viewModel = new UserProfileViewModel(
                 new UserProfileService(userProfileRepository, skillTestRepository),
@@ -214,7 +211,7 @@ namespace PussyCatsApp.views
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CompatibilityOverviewView), compatibilityViewModel);
+            Frame.Navigate(typeof(CompatibilityOverviewView), currentUserId);
         }
 
         private void OnPersonalityTestClick(object sender, RoutedEventArgs e)

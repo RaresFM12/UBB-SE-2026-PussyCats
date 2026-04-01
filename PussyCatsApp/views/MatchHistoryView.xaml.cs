@@ -51,18 +51,13 @@ namespace PussyCatsApp.views
 
         private void MatchHistoryView_Loaded(object sender, RoutedEventArgs e)
         {
-            // 1. Configurăm manual tot ce are nevoie pagina noastră (Mod Test Local)
-            // Înlocuim logica de primire a parametrului cu o inițializare directă aici
             if (_viewModel == null)
             {
-                // Datele de conexiune către baza ta locală FAMILY\SQLEXPRESS
                 string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
 
-                // Creăm "motorul" paginii pe loc
                 var repo = new MatchRepository(connectionString);
                 var service = new MatchService(repo);
 
-                // Folosim ID-ul 1 (Ioana Gavrila din baza de date)
                 _viewModel = new MatchHistoryViewModel(service, 1);
             }
 
@@ -122,7 +117,6 @@ namespace PussyCatsApp.views
             }
         }
 
-        // Metoda nativă WinUI 3 pentru afișarea unui pop-up de eroare elegant (ContentDialog)
         private async void ShowError(string message)
         {
             /*if (this.XamlRoot == null)

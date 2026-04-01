@@ -36,7 +36,11 @@ namespace PussyCatsApp.views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            viewModel = (CompatibilityDetailViewModel)e.Parameter;
+            RoleResult result = e.Parameter as RoleResult;
+            
+
+            viewModel = new CompatibilityDetailViewModel();
+            viewModel.LoadResult(result);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
