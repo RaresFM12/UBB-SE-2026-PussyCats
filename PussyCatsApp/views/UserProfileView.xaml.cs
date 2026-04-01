@@ -226,5 +226,10 @@ namespace PussyCatsApp.views
         {
             Frame.Navigate(typeof(DocumentsPage));
         }
+
+        private void OnMatchmakingHistoryClick(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MatchHistoryView));
+        }
     }
 }

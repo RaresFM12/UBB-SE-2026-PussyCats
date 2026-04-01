@@ -56,7 +56,7 @@ namespace PussyCatsApp.views
             if (_viewModel == null)
             {
                 // Datele de conexiune către baza ta locală FAMILY\SQLEXPRESS
-                string connectionString = @"Server=FAMILY\SQLEXPRESS;Database=PussyCatsDB;Trusted_Connection=True;TrustServerCertificate=True;";
+                string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
 
                 // Creăm "motorul" paginii pe loc
                 var repo = new MatchRepository(connectionString);
