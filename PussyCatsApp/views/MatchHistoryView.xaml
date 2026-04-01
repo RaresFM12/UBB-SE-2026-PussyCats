@@ -19,8 +19,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
+            
             <TextBlock Text="Match History" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,16"/>
+
+            <Button Grid.Row="0" Content="Back" Click="btnBack_Click" Margin="200,0,0,16"/>
 
             <ListView x:Name="MatchesListView" 
                       Grid.Row="1"

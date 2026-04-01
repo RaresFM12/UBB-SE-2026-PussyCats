@@ -11,26 +11,23 @@ namespace PussyCatsApp.viewModels
 {
     public class MatchHistoryViewModel
     {
-        // Private fields as requested
         private List<Match> matches;
         private MatchStatistics statistics;
         private string errorMessage;
         private int currentUserId;
-        private MatchService matchService; // Change to IMatchService if you have an interface!
+        private MatchService matchService; 
 
-        // Constructor
-        public MatchHistoryViewModel(MatchService service, int userId)
+        public MatchHistoryViewModel(int userId)
         {
-            matchService = service;
+            matchService = new MatchService();
             currentUserId = userId;
             matches = new List<Match>();
             errorMessage = string.Empty;
         }
 
-        // Fetches the user's matchmaking history
         public void LoadMatches()
         {
-            errorMessage = string.Empty; // Clear previous errors
+            errorMessage = string.Empty; 
             try
             {
                 matches = matchService.GetMatchesForUser(currentUserId);
@@ -41,10 +38,9 @@ namespace PussyCatsApp.viewModels
             }
         }
 
-        // Fetches the calculated statistics for the user
         public void LoadStatistics()
         {
-            errorMessage = string.Empty; // Clear previous errors
+            errorMessage = string.Empty; 
             try
             {
                 statistics = matchService.GetStatistics(currentUserId);
@@ -55,7 +51,6 @@ namespace PussyCatsApp.viewModels
             }
         }
 
-        // Getters
         public List<Match> GetMatches()
         {
             return matches;
