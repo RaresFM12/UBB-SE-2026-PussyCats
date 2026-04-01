@@ -31,7 +31,11 @@ CREATE TABLE USERS (
     personalityTestResult VARCHAR(500) NULL,
     activeAccount   BIT             NOT NULL DEFAULT 1,
     profilePicture  VARCHAR(500)    NULL,
-    university      VARCHAR(200)    NULL
+    university      VARCHAR(200)    NULL,
+    degree          VARCHAR(200)    NULL,
+    universityStartYear SMALLINT    NULL,
+    city            NVARCHAR(200)   NULL,
+    LastUpdated     DATETIME        NULL DEFAULT GETDATE()
 );
 GO
 

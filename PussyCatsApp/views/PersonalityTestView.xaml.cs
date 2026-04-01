@@ -93,7 +93,7 @@ namespace PussyCatsApp.views
         private void InitializeViewModel(int userId)
         {
             // TODO: Get connection string from app configuration
-            string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
+            string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
 
             var repository = new PersonalityTestRepository(connectionString);
             var service = new PersonalityTestService(repository);
