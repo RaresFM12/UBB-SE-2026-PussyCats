@@ -6,7 +6,6 @@ namespace PussyCatsApp.viewModels
 {
     /// <summary>
     /// ViewModel for the upload panel.
-    /// Holds only plain data and business logic — zero UI / OS references.
     /// The View is responsible for opening the file picker and calling
     /// SetSelectedFilePath() with the result.
     /// </summary>
@@ -24,11 +23,9 @@ namespace PussyCatsApp.viewModels
             this.userId = userId;
         }
 
-        // ── Called by the View after the file picker resolves ────────────────
         public void SetSelectedFilePath(string path) => selectedFilePath = path;
 
-        // ── Validate both required inputs before uploading ───────────────────
-        public bool ValidateInput()
+        public bool ValidateDocumentInput()
         {
             if (string.IsNullOrWhiteSpace(documentName))
             {
@@ -46,22 +43,20 @@ namespace PussyCatsApp.viewModels
             return true;
         }
 
-        // ── Business logic: build Document and delegate to service ───────────
-        public void Upload()
+        public void UploadDocument()
         {
-            if (!ValidateInput())
+            if (!ValidateDocumentInput())
                 return;
 
-            var doc = new Document
+            var document = new Document
             {
                 UserId = userId,
                 DocumentName = documentName
             };
 
-            documentService.upload(doc, selectedFilePath);
+            documentService.uploadDocument(document, selectedFilePath);
         }
 
-        // ── Plain accessors the View reads ───────────────────────────────────
         public string GetDocumentName() => documentName;
         public void SetDocumentName(string name) => documentName = name;
         public string GetErrorMessage() => errorMessage;

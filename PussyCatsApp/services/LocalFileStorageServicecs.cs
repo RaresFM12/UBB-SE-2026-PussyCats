@@ -18,7 +18,6 @@ namespace PussyCatsApp.storage
             Directory.CreateDirectory(basePath);
         }
 
-        // ── Save a stream to disk, return the relative path ─────────────────
         // A GUID prefix avoids name collisions between users.
         public string saveFile(Stream fileStream, string originalFileName)
         {
@@ -31,8 +30,6 @@ namespace PussyCatsApp.storage
             // Return relative path (stored in DB)
             return Path.Combine("uploads", "documents", uniqueFileName);
         }
-
-        // ── Delete a file from disk given its relative path ─────────────────
         public void deleteFile(string relativePath)
         {
             string fullPath = Path.Combine(AppContext.BaseDirectory, relativePath);
@@ -41,7 +38,6 @@ namespace PussyCatsApp.storage
                 File.Delete(fullPath);
         }
 
-        // ── Resolve a relative path to its full absolute path ────────────────
         public string getFilePath(string relativePath)
         {
             return Path.Combine(AppContext.BaseDirectory, relativePath);

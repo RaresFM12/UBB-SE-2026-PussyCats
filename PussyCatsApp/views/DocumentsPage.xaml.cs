@@ -18,7 +18,6 @@ namespace PussyCatsApp.views
     ///   • rendering data exposed by the ViewModels
     ///   • handling UI events (file picker, Process.Start, dialogs)
     ///   • forwarding user intent to ViewModel methods
-    /// No business logic or data-access lives here.
     /// </summary>
     public sealed partial class DocumentsPage : Page
     {
@@ -29,16 +28,14 @@ namespace PussyCatsApp.views
         {
             this.InitializeComponent();
 
-            // Build the dependency chain here, matching the pattern in
-            // UserProfileView — the ViewModels themselves stay UI-free.
             int currentUserId = 1; // replace with real session user id
 
-            var repo = new DocumentRepository();
-            var storage = new LocalFileStorageService();
-            var service = new DocumentService(repo, storage);
+            var documentRepository = new DocumentRepository();
+            var localStorageService = new LocalFileStorageService();
+            var documentService = new DocumentService(documentRepository, localStorageService);
 
-            listViewModel = new DocumentListViewModel(service, currentUserId);
-            uploadViewModel = new UploadDocumentViewModel(service, currentUserId);
+            listViewModel = new DocumentListViewModel(documentService, currentUserId);
+            uploadViewModel = new UploadDocumentViewModel(documentService, currentUserId);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -47,17 +44,15 @@ namespace PussyCatsApp.views
             LoadGrid();
         }
 
-        // ── Helpers ──────────────────────────────────────────────────────────
-
         private void LoadGrid()
         {
             listViewModel.LoadDocuments();
-            var docs = listViewModel.GetDocuments();
+            var documents = listViewModel.GetDocuments();
 
             lvDocuments.ItemsSource = null;
-            lvDocuments.ItemsSource = docs;
+            lvDocuments.ItemsSource = documents;
 
-            lblNoDocuments.Visibility = docs.Count == 0
+            lblNoDocuments.Visibility = documents.Count == 0
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
@@ -74,20 +69,17 @@ namespace PussyCatsApp.views
             lblStatus.Visibility = Visibility.Visible;
         }
 
-        // ── Upload section — View handles file picker (UI concern) ───────────
 
         private void OnDocumentNameChanged(object sender, TextChangedEventArgs e)
         {
-            // Forward plain text to ViewModel; no logic here
             uploadViewModel.SetDocumentName(txtDocumentName.Text);
         }
 
         private async void OnBrowseClick(object sender, RoutedEventArgs e)
         {
-            // File picker is a UI/OS concern — lives in the View
             var picker = new FileOpenPicker();
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainAppWindow);
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+            var mainWindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(App.MainAppWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, mainWindowHandle);
 
             picker.ViewMode = PickerViewMode.List;
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -98,7 +90,6 @@ namespace PussyCatsApp.views
             var file = await picker.PickSingleFileAsync();
             if (file != null)
             {
-                // Hand the result to the ViewModel as plain data
                 uploadViewModel.SetSelectedFilePath(file.Path);
                 lblSelectedFile.Text = file.Name;
             }
@@ -110,7 +101,7 @@ namespace PussyCatsApp.views
 
             try
             {
-                uploadViewModel.Upload();
+                uploadViewModel.UploadDocument();
 
                 string error = uploadViewModel.GetErrorMessage();
                 if (!string.IsNullOrEmpty(error))
@@ -119,7 +110,6 @@ namespace PussyCatsApp.views
                     return;
                 }
 
-                // Reset form on success
                 txtDocumentName.Text = string.Empty;
                 lblSelectedFile.Text = "No file selected";
                 uploadViewModel.SetDocumentName(string.Empty);
@@ -134,14 +124,11 @@ namespace PussyCatsApp.views
             }
         }
 
-        // ── List section — View handles OS launch (UI concern) ───────────────
-
         private async void OnDeleteClick(object sender, RoutedEventArgs e)
         {
             if (sender is not Button btn || btn.Tag is not Document doc)
                 return;
 
-            // Confirmation dialog is a UI concern — lives in the View
             var dialog = new ContentDialog
             {
                 Title = "Delete Document",
@@ -173,7 +160,6 @@ namespace PussyCatsApp.views
 
             lblStatus.Visibility = Visibility.Collapsed;
 
-            // Ask ViewModel to resolve the path (data/business logic)
             string fullPath = listViewModel.GetResolvedFilePath(doc.Id);
 
             string status = listViewModel.GetStatusMessage();
@@ -183,7 +169,6 @@ namespace PussyCatsApp.views
                 return;
             }
 
-            // Opening the file with the OS is a UI/OS concern — lives in the View
             if (File.Exists(fullPath))
             {
                 Process.Start(new ProcessStartInfo(fullPath) { UseShellExecute = true });

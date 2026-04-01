@@ -2,7 +2,7 @@ namespace PussyCatsApp.models
 {
     public class Document
     {
-        private int id;
+        private int documentId;
         private int userId;
         private string documentName;
         private string filePath;

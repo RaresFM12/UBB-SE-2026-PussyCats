@@ -18,22 +18,19 @@ namespace PussyCatsApp.services
             this.fileStorage = fileStorage;
         }
 
-        // ── Validate that the file extension is in the allowed list ──────────
         private bool validateFileType(string extension)
         {
-            // Strip leading dot and uppercase so ".pdf" == "PDF"
+            // ".pdf" => "PDF"
             string normalised = extension.TrimStart('.').ToUpperInvariant();
             return Enum.TryParse<AllowedFileType>(normalised, out _);
         }
 
-        // ── Return all documents belonging to a user ─────────────────────────
-        public List<Document> getAll(int userId)
+        public List<Document> getDocumentsByUserId(int userId)
         {
-            return repository.getByUserId(userId);
+            return repository.getDocumentsByUserId(userId);
         }
 
-        // ── Upload: validate → save file → persist DB record ────────────────
-        public void upload(Document doc, string filePath)
+        public void uploadDocument(Document document, string filePath)
         {
             string extension = Path.GetExtension(filePath);
 
@@ -44,36 +41,34 @@ namespace PussyCatsApp.services
             using var stream = File.OpenRead(filePath);
             string relativePath = fileStorage.saveFile(stream, Path.GetFileName(filePath));
 
-            doc.FilePath = relativePath;
-            doc.UploadDate = DateTime.Now;
+            document.FilePath = relativePath;
+            document.UploadDate = DateTime.Now;
 
-            repository.add(doc);
+            repository.addDocument(document);
         }
 
-        // ── Delete: remove file from disk first, then remove DB record ───────
-        public void delete(int id)
+        public void deleteDocument(int id)
         {
-            Document doc = repository.getById(id);
+            Document document = repository.getDocumentById(id);
 
-            if (doc == null)
+            if (document == null)
                 throw new InvalidOperationException("Document not found.");
 
-            // Always delete the physical file before the database record
-            if (!string.IsNullOrEmpty(doc.FilePath))
-                fileStorage.deleteFile(doc.FilePath);
+            // delete the physical file before the database record
+            if (!string.IsNullOrEmpty(document.FilePath))
+                fileStorage.deleteFile(document.FilePath);
 
-            repository.delete(id);
+            repository.deleteDocument(id);
         }
 
-        // ── Resolve full absolute path for a stored document ─────────────────
-        public string getFilePath(int id)
+        public string getDocumentAbsolutePath(int id)
         {
-            Document doc = repository.getById(id);
+            Document document = repository.getDocumentById(id);
 
-            if (doc == null)
+            if (document == null)
                 throw new InvalidOperationException("Document not found.");
 
-            return fileStorage.getFilePath(doc.FilePath);
+            return fileStorage.getFilePath(document.FilePath);
         }
     }
 }

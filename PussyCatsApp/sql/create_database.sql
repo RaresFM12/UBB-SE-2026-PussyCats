@@ -220,4 +220,4 @@ VALUES
 
 
 SELECT * FROM USERS;
-
+SELECT * FROM documents;
