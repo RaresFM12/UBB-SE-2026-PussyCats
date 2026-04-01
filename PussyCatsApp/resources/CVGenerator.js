@@ -59,37 +59,37 @@ const CVGenerator = (() => {
 
     function renderWorkExperience(entries = []) {
         return entries.map(w => `
-<div class="work-entry">
-  <div class="work-line">
-    <span class="work-role">${esc(w.jobTitle)}</span>
-    <span class="work-company">${esc(w.company)}</span>
-    <span class="work-divider"></span>
-    <span class="work-period">${formatDate(w.startDate)} – ${w.currentlyWorking || !w.endDate ? 'Present' : formatDate(w.endDate)}</span>
-  </div>
-  ${w.description ? `<p class="work-description">${esc(w.description)}</p>` : ''}
-</div>`).join('');
+        <div class="work-entry">
+            <div class="work-line">
+                <span class="work-role">${esc(w.jobTitle)}</span>
+                <span class="work-company">${esc(w.company)}</span>
+                <span class="work-divider"></span>
+                <span class="work-period">${formatDate(w.startDate)} – ${w.currentlyWorking || !w.endDate ? 'Present' : formatDate(w.endDate)}</span>
+            </div>
+            ${w.description ? `<p class="work-description">${esc(w.description)}</p>` : ''}
+        </div>`).join('');
     }
 
     function renderProjects(entries = []) {
         return entries.map(p => `
-<div class="project-entry-custom">
-  <div class="project-line">
-    <span class="project-title">${esc(p.name)}</span>
-    <span class="project-divider"></span>
-    ${p.url ? `<span class="project-period"><a href="${esc(p.url)}" style="color:#2d6a9f;font-size:7.5pt">${esc(p.url)}</a></span>` : ''}
-  </div>
-  ${p.technologies?.length ? `<div class="project-tech">${p.technologies.map(esc).join(' · ')}</div>` : ''}
-  ${p.description ? `<p class="project-description">${esc(p.description)}</p>` : ''}
-</div>`).join('');
+        <div class="project-entry-custom">
+            <div class="project-line">
+                <span class="project-title">${esc(p.name)}</span>
+                <span class="project-divider"></span>
+                ${p.url ? `<span class="project-period"><a href="${esc(p.url)}" style="color:#2d6a9f;font-size:7.5pt">${esc(p.url)}</a></span>` : ''}
+            </div>
+            ${p.technologies?.length ? `<div class="project-tech">${p.technologies.map(esc).join(' · ')}</div>` : ''}
+            ${p.description ? `<p class="project-description">${esc(p.description)}</p>` : ''}
+        </div>`).join('');
     }
 
     function renderExtraCurricular(entries = []) {
         return entries.map(a => `
-<div class="extra-entry">
-  <div class="extra-title">${esc(a.activityName)}</div>
-  <div class="extra-meta">${[a.organization, a.role, a.period].filter(Boolean).map(esc).join(' · ')}</div>
-  ${a.description ? `<div class="extra-desc">${esc(a.description)}</div>` : ''}
-</div>`).join('');
+        <div class="extra-entry">
+            <div class="extra-title">${esc(a.activityName)}</div>
+            <div class="extra-meta">${[a.organization, a.role, a.period].filter(Boolean).map(esc).join(' · ')}</div>
+            ${a.description ? `<div class="extra-desc">${esc(a.description)}</div>` : ''}
+        </div>`).join('');
     }
 
     function renderCertificates(certs = []) {
@@ -116,10 +116,10 @@ const CVGenerator = (() => {
         });
 
         return Object.entries(buckets).map(([label, tags]) => `
-<div class="skill-group">
-  <div class="skill-group-label">${esc(label)}</div>
-  <div class="skill-tags">${tags.map(t => `<span class="skill-tag">${esc(t)}</span>`).join('')}</div>
-</div>`).join('');
+            <div class="skill-group">
+                <div class="skill-group-label">${esc(label)}</div>
+                <div class="skill-tags">${tags.map(t => `<span class="skill-tag">${esc(t)}</span>`).join('')}</div>
+            </div>`).join('');
     }
 
     // ── DOM injection helpers ─────────────────────────────────────
