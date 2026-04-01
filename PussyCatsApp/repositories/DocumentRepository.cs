@@ -1,63 +1,163 @@
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Data.SqlClient;
 using PussyCatsApp.models;
+using System;
+using System.Collections.Generic;
 
 namespace PussyCatsApp.repositories
 {
-    internal class DocumentRepository : IDocumentRepository
+    public class DocumentRepository
     {
-        private readonly List<Document> _documents = new();
-
-        public Document load(int id)
+        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        public List<Document> getDocumentsByUserId(int userId)
         {
-            return _documents.FirstOrDefault(d => d.DocumentId == id);
-        }
+            var documents = new List<Document>();
 
-        public void save(int id, Document data)
-        {
-            var existing = _documents.FirstOrDefault(d => d.DocumentId == id);
-            if (existing != null)
+            try
             {
-                existing.StoredDocument = data.StoredDocument;
-                existing.NameDocument = data.NameDocument;
-                existing.UserId = data.UserId;
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                const string query = @"
+                SELECT dID         AS Id,
+                       userID      AS UserId,
+                       nameDocument AS DocumentName,
+                       FilePath,
+                       UploadDate
+                FROM   DOCUMENTS
+                WHERE  userID = @UserId";
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@UserId", userId);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    documents.Add(MapRowToDocument(reader));
+                }
+            } 
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error retrieving documents for user {userId}: {ex.Message}");
             }
-            else
+            catch (Exception ex)
             {
-                data.DocumentId = id;
-                _documents.Add(data);
+                Console.Error.WriteLine($"An error occurred retrieving documents for user {userId}: {ex.Message}"); ;
+            }
+
+            return documents;
+        }
+
+        public Document getDocumentById(int id)
+        {
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                const string query = @"
+                SELECT dID         AS Id,
+                       userID      AS UserId,
+                       nameDocument AS DocumentName,
+                       FilePath,
+                       UploadDate
+                FROM   DOCUMENTS
+                WHERE  dID = @Id";
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id", id);
+
+                using var reader = command.ExecuteReader();
+                if (reader.Read())
+                    return MapRowToDocument(reader);
+
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error retrieving document with ID {id}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred retrieving document with ID {id}: {ex.Message}");
+            }
+            return null;
+        }
+
+        public void addDocument(Document doc)
+        {
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                const string query = @"
+                INSERT INTO DOCUMENTS (userID, nameDocument, FilePath, UploadDate)
+                VALUES (@UserId, @DocumentName, @FilePath, @UploadDate)";
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@UserId", doc.UserId);
+                command.Parameters.AddWithValue("@DocumentName", doc.DocumentName);
+                command.Parameters.AddWithValue("@FilePath", doc.FilePath ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@UploadDate", doc.UploadDate);
+
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error adding document for user {doc.UserId}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred adding document for user {doc.UserId}: {ex.Message}");
+            }
+        }
+        public void deleteDocument(int id)
+        {
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                const string query = "DELETE FROM DOCUMENTS WHERE dID = @Id";
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id", id);
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error deleting document with ID {id}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred deleting document with ID {id}: {ex.Message}");
             }
         }
 
-        public List<Document> GetDocumentsByUserId(int userId)
+        // ── Helper: map a data reader row to a Document object ───────────────
+        private static Document MapRowToDocument(SqlDataReader reader)
         {
-            return _documents.Where(d => d.UserId == userId).ToList();
-        }
-
-        public void AddDocument(Document document)
-        {
-            if (document.DocumentId == 0)
+            try
             {
-                document.DocumentId = _documents.Count > 0 ? _documents.Max(d => d.DocumentId) + 1 : 1;
+                return new Document
+                {
+                    Id = Convert.ToInt32(reader["Id"]),
+                    UserId = Convert.ToInt32(reader["UserId"]),
+                    DocumentName = reader["DocumentName"]?.ToString() ?? string.Empty,
+                    FilePath = reader["FilePath"] == DBNull.Value ? null : reader["FilePath"].ToString(),
+                    UploadDate = reader["UploadDate"] == DBNull.Value
+                                       ? DateTime.MinValue
+                                       : Convert.ToDateTime(reader["UploadDate"])
+                };
             }
-            _documents.Add(document);
-        }
-
-        public void RemoveDocument(int documentId)
-        {
-            var doc = _documents.FirstOrDefault(d => d.DocumentId == documentId);
-            if (doc != null)
+            catch (InvalidCastException castEx)
             {
-                _documents.Remove(doc);
+                Console.WriteLine($"Data mapping error: {castEx.Message}");
+                throw new Exception("Error mapping database row to Document object.", castEx);
             }
-        }
-
-        public void RenameDocument(int documentId, string newName)
-        {
-            var doc = _documents.FirstOrDefault(d => d.DocumentId == documentId);
-            if (doc != null)
+            catch (Exception ex)
             {
-                doc.NameDocument = newName;
+                Console.WriteLine($"Unexpected mapping error: {ex.Message}");
+                throw;
             }
         }
     }

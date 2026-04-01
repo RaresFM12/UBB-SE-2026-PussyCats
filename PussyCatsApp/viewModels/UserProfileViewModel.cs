@@ -75,7 +75,11 @@ namespace PussyCatsApp.viewModels
 
                 if (_userProfile != null)
                 {
+                    FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(_userProfile.LastUpdated);
                     ExportVM.UserId = _userProfile.UserId;
+
+                    CompletenessPercentage = completenessService.CalculateCompleteness(_userProfile);
+                    NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(_userProfile);
                 }
             }
             catch (Exception ex)

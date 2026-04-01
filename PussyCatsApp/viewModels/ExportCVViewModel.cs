@@ -9,7 +9,6 @@ namespace PussyCatsApp.viewModels
     {
         private readonly PdfExportService _pdfExportService;
 
-        // ADD THIS: A simple property to hold the ID
         public int UserId { get; set; }
 
         private string _statusText = string.Empty;
@@ -31,28 +30,42 @@ namespace PussyCatsApp.viewModels
             _pdfExportService = pdfExportService;
         }
 
-        // CHANGE THIS: Remove the (int userId) parameter
-        [RelayCommand]
-        private async Task ExportCVAsync()
+        public async Task LoadAndRenderCVAsync()
         {
-            // Check the property instead
-            if (UserId <= 0)
-            {
-                StatusText = "No valid user profile loaded.";
-                return;
-            }
+            if (UserId <= 0) return;
 
             IsLoading = true;
-            StatusText = "Generating PDF…";
+            StatusText = "Loading CV preview...";
 
             try
             {
-                await _pdfExportService.ExportProfileToPdfAsync(UserId);
+                await _pdfExportService.RenderProfileAsync(UserId);
                 StatusText = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                StatusText = $"Preview failed: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task ExportCVAsync()
+        {
+            IsLoading = true;
+            StatusText = "Saving PDF...";
+
+            try
+            {
+                await _pdfExportService.DownloadPdfAsync();
+                StatusText = "Downloaded successfully!";
             }
             catch (OperationCanceledException)
             {
-                StatusText = string.Empty;
+                StatusText = string.Empty; // User cancelled save picker
             }
             catch (Exception ex)
             {

@@ -24,35 +24,25 @@ namespace PussyCatsApp.views
 
             var userProfileRepository = new UserProfileRepository();
             var skillTestRepository = new SkillTestRepository();
-            IUserProileRepository user = new UserProfileRepository();
-            WebView2 view = new WebView2();
 
             viewModel = new UserProfileViewModel(
                 new UserProfileService(userProfileRepository, skillTestRepository),
                 new ImageStorageService(),
-                null, // PdfExportService is now handled by the ExportCVTestPage
+                null,
                 new CvUploadService(),
                 new CompletenessService()
             );
 
             viewModel.OnLevelUpdated += renderLevelDisplay;
-
-
-            viewModel.OnLevelUpdated += renderLevelDisplay;
-
-
             this.DataContext = viewModel;
 
-            // Wire up Edit button
             btnEdit.Click += OnEditProfileClick;
-
             btnOldTests.Click += OnGoToOldTestsClick;
-
             btnPublicProfile.Click += OnSeePublicProfileClick;
-
-            BindData();
+            btnViewDocuments.Click += OnViewDocumentsClick;
 
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -92,6 +82,7 @@ namespace PussyCatsApp.views
                 lblGender.Text = $"Gender: {displayGender}";
                 lblUniversity.Text = $"University: {viewModel._userProfile.University}";
                 lblCountry.Text = $"Country: {viewModel._userProfile.Country}";
+                lblAddress.Text = $"Address: {viewModel._userProfile.Address}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel._userProfile.ExpectedGraduationYear}";
                 lblFreshness.Text = viewModel.FreshnessText;
 
@@ -212,14 +203,16 @@ namespace PussyCatsApp.views
 
         private void OnSeePublicProfileClick(object sender, RoutedEventArgs e)
         {
-            //if (viewModel.userProfile == null)
-              //  return;
-            //this.Frame.Navigate(typeof(PublicProfileView), viewModel.userProfile);
+            if (viewModel._userProfile == null)
+                return;
+            this.Frame.Navigate(typeof(PublicProfileView), viewModel._userProfile);
         }
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
         {
-            string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+            //string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+            string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+
 
             UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
             SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
@@ -232,6 +225,11 @@ namespace PussyCatsApp.views
         private void OnPersonalityTestClick(object sender, RoutedEventArgs e)
         {
             viewModel.TakePersonalityTestCommand();
+        }
+
+        private void OnViewDocumentsClick(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(DocumentsPage));
         }
     }
 }

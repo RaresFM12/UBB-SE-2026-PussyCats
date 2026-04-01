@@ -12,43 +12,47 @@ public class PdfExportService
 {
     private readonly WebView2 _webView;
     private readonly IUserProileRepository _profileRepository;
+    private UserProfile _currentProfile; 
 
-    // Inject the repository into the service
     public PdfExportService(WebView2 webView, IUserProileRepository profileRepository)
     {
         _webView = webView;
         _profileRepository = profileRepository;
     }
 
-    public async Task ExportProfileToPdfAsync(int userId)
+    public async Task RenderProfileAsync(int userId)
     {
-        // Fetch the data
-        var profile = _profileRepository.getProfileById(userId);
+        _currentProfile = _profileRepository.getProfileById(userId);
 
-        if (profile == null)
+        if (_currentProfile == null)
             throw new InvalidOperationException("User profile not found in database.");
 
         _webView.Source = new Uri("http://assets.local/CVHtmlTemplate.html");
         await WaitForNavigationAsync();
 
-        var json = JsonSerializer.Serialize(profile, new JsonSerializerOptions
+        var json = JsonSerializer.Serialize(_currentProfile, new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
 
         await _webView.ExecuteScriptAsync($"CVGenerator.generate({json});");
 
-        // Wait for DOM updates to settle before printing
+        // Wait for DOM updates to settle
         await Task.Delay(500);
+    }
 
-        // Save file picker
+    public async Task DownloadPdfAsync()
+    {
+        if (_currentProfile == null)
+            throw new InvalidOperationException("Profile has not been rendered yet.");
+
         var savePicker = new FileSavePicker();
         savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-        savePicker.SuggestedFileName = BuildFileName(profile);
+        savePicker.SuggestedFileName = BuildFileName(_currentProfile);
         savePicker.FileTypeChoices.Add("PDF Document", new[] { ".pdf" });
 
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainAppWindow);
-        WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hwnd);
+        var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(App.MainAppWindow);
+        WinRT.Interop.InitializeWithWindow.Initialize(savePicker, windowHandle);
 
         var file = await savePicker.PickSaveFileAsync();
         if (file == null) return;  // user cancelled
