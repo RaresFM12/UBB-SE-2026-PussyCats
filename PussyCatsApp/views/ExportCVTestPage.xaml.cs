@@ -20,7 +20,6 @@ namespace PussyCatsApp.views
             this.Loaded += OnPageLoaded;
         }
 
-        // Catch the UserId when navigating here
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -55,9 +54,11 @@ namespace PussyCatsApp.views
             var pdfExportService = new PdfExportService(CvWebView, userRepository);
 
             ViewModel = new ExportCVViewModel(pdfExportService);
-            ViewModel.UserId = _userId; 
+            ViewModel.UserId = _userId;
 
             this.DataContext = ViewModel;
+
+            await ViewModel.LoadAndRenderCVAsync();
         }
     }
 }
