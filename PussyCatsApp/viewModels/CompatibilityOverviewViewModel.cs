@@ -19,9 +19,9 @@ namespace PussyCatsApp.viewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public CompatibilityOverviewViewModel(CompatibilityService compatibilityService, int userId)
+        public CompatibilityOverviewViewModel(int userId)
         {
-            this.compatibilityService = compatibilityService;
+            this.compatibilityService = compatibilityService = new CompatibilityService();
             this.currentUserId = userId;
             this.roleResults = new List<RoleResult>();
         }

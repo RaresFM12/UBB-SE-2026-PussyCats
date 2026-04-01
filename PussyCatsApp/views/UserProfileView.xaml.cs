@@ -14,9 +14,11 @@ namespace PussyCatsApp.views
 {
     public sealed partial class UserProfileView : Page
     {
+        private int currentUserId = 1;
         public UserProfileViewModel viewModel { get; private set; }
         private bool _isBinding = false;
         private SqlConnection connection;
+        private CompatibilityOverviewViewModel compatibilityViewModel;
 
         public UserProfileView()
         {
@@ -24,6 +26,8 @@ namespace PussyCatsApp.views
 
             var userProfileRepository = new UserProfileRepository();
             var skillTestRepository = new SkillTestRepository();
+
+            compatibilityViewModel = new CompatibilityOverviewViewModel(currentUserId);
 
             viewModel = new UserProfileViewModel(
                 new UserProfileService(userProfileRepository, skillTestRepository),
@@ -211,15 +215,15 @@ namespace PussyCatsApp.views
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
         {
             //string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-            string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+            //string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
 
 
-            UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
-            SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
-            CompatibilityService service = new CompatibilityService(userSkillRepo, skillGroupRepo);
-            CompatibilityOverviewViewModel vm = new CompatibilityOverviewViewModel(service, 2);
+            //UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
+            //SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
+            //CompatibilityService service = new CompatibilityService(userSkillRepo, skillGroupRepo);
+            //CompatibilityOverviewViewModel vm = new CompatibilityOverviewViewModel(service, 2);
 
-            Frame.Navigate(typeof(CompatibilityOverviewView), vm);
+            Frame.Navigate(typeof(CompatibilityOverviewView), compatibilityViewModel);
         }
 
         private void OnPersonalityTestClick(object sender, RoutedEventArgs e)

@@ -13,10 +13,10 @@ namespace PussyCatsApp.services
         private UserSkillRepository userSkillRepository;
         private SkillGroupRepository skillGroupRepository;
 
-        public CompatibilityService(UserSkillRepository userSkillRepository, SkillGroupRepository skillGroupRepository)
+        public CompatibilityService()
         {
-            this.userSkillRepository = userSkillRepository;
-            this.skillGroupRepository = skillGroupRepository;
+            this.userSkillRepository = new UserSkillRepository();
+            this.skillGroupRepository = new SkillGroupRepository();
         }
 
         private double ComputeGroupScore(SkillGroup group, List<UserSkill> userSkills)

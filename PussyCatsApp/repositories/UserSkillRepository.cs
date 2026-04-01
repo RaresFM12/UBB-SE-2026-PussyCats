@@ -10,12 +10,10 @@ namespace PussyCatsApp.repositories
 {
     public class UserSkillRepository 
     {
-        private string connectionString;
+        private readonly string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
 
-        public UserSkillRepository(string connectionString)
-        {
-            this.connectionString = connectionString;
-        }
+        public UserSkillRepository()
+        {}
 
         public List<UserSkill> GetByUserId(int userId)
         {
