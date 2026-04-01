@@ -43,6 +43,7 @@ namespace PussyCatsApp.views
 
             await CvWebView.EnsureCoreWebView2Async();
 
+            CvWebView.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
             var templateFolder = Path.Combine(AppContext.BaseDirectory, "resources");
 
             CvWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
@@ -59,6 +60,16 @@ namespace PussyCatsApp.views
             this.DataContext = ViewModel;
 
             await ViewModel.LoadAndRenderCVAsync();
+        }
+
+        private async void CoreWebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            if (e.Uri.StartsWith("http") && !e.Uri.Contains("assets.local"))
+            {
+                e.Cancel = true;
+
+                await Windows.System.Launcher.LaunchUriAsync(new Uri(e.Uri));
+            }
         }
     }
 }
