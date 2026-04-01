@@ -68,10 +68,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="Assets\badges\bronze.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -1,0 +1,63 @@
+﻿using PussyCatsApp.models;
+using PussyCatsApp.services;
+using System.Collections.Generic;
+
+namespace PussyCatsApp.viewModels
+{
+    /// <summary>
+    /// ViewModel for the document list panel.
+    /// Holds data and delegates to the service
+    /// Opening the file with the default application is the View's responsibility:
+    /// the ViewModel exposes GetResolvedFilePath() so the View can act on it.
+    /// </summary>
+    public class DocumentListViewModel
+    {
+        private List<Document> documents;
+        private string statusMessage;
+        private readonly int userId;
+        private readonly DocumentService documentService;
+
+        public DocumentListViewModel(DocumentService documentService, int userId)
+        {
+            this.documentService = documentService;
+            this.userId = userId;
+            documents = new List<Document>();
+        }
+
+        public void LoadDocuments()
+        {
+            documents = documentService.getDocumentsByUserId(userId);
+        }
+
+        public List<Document> GetDocuments() => documents;
+
+        public void DeleteDocument(int id)
+        {
+            documentService.deleteDocument(id);
+            LoadDocuments();
+        }
+
+        /// <summary>
+        /// Resolves the absolute path for a document.
+        /// Returns null and sets a status message if the document is not found.
+        /// The View is responsible for checking the path exists and launching
+        /// the OS default application
+        /// </summary>
+        public string GetResolvedFilePath(int documentId)
+        {
+            try
+            {
+                string fullPath = documentService.getDocumentAbsolutePath(documentId);
+                statusMessage = string.Empty;
+                return fullPath;
+            }
+            catch
+            {
+                statusMessage = "The file could not be found on disk.";
+                return null;
+            }
+        }
+
+        public string GetStatusMessage() => statusMessage;
+    }
+}

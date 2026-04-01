@@ -23,7 +23,6 @@ namespace PussyCatsApp.repositories
     /// </summary>
     public class UserProfileRepository : IUserProileRepository
     {
-        // JsonSerializerOptions reused across calls
         private static readonly JsonSerializerOptions _jsonOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -36,10 +35,11 @@ namespace PussyCatsApp.repositories
             List<ExtraCurricularActivity> ExtraCurricularActivities
         );
 
-        //private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
         private const string otherConnectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True";
 
-        private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        //private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        //private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
         private SqlConnection sqlConnection;
 
         public UserProfile getProfileById(int userId)
@@ -250,21 +250,21 @@ namespace PussyCatsApp.repositories
         /// </summary>
         private static void LoadParsedCV(SqlConnection conn, int userId, UserProfile profile)
         {
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT parsedCV FROM Users WHERE userID = @id";
-            cmd.Parameters.AddWithValue("@id", userId);
+            using var command = conn.CreateCommand();
+            command.CommandText = "SELECT parsedCV FROM Users WHERE userID = @id";
+            command.Parameters.AddWithValue("@id", userId);
 
-            var raw = cmd.ExecuteScalar() as string;
+            var raw = command.ExecuteScalar() as string;
             if (string.IsNullOrWhiteSpace(raw)) return;
 
             try
             {
-                var data = JsonSerializer.Deserialize<ParsedCVData>(raw, _jsonOptions);
-                if (data == null) return;
+                var cvData = JsonSerializer.Deserialize<ParsedCVData>(raw, _jsonOptions);
+                if (cvData == null) return;
 
-                profile.WorkExperiences = data.WorkExperiences ?? new();
-                profile.Projects = data.Projects ?? new();
-                profile.ExtraCurricularActivities = data.ExtraCurricularActivities ?? new();
+                profile.WorkExperiences = cvData.WorkExperiences ?? new();
+                profile.Projects = cvData.Projects ?? new();
+                profile.ExtraCurricularActivities = cvData.ExtraCurricularActivities ?? new();
             }
             catch (JsonException)
             {

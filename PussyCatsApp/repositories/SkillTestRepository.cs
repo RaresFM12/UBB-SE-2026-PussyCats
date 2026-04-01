@@ -11,6 +11,8 @@ namespace PussyCatsApp.repositories
     {
         private SqlConnection sqlConnection;
         private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        //private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        //private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
 
 
         public SkillTestRepository()
@@ -32,7 +34,7 @@ namespace PussyCatsApp.repositories
                     userId: (int)reader["userID"],
                     name: reader["name"].ToString(),
                     score: (int)reader["score"],
-                    achievedDate: DateOnly.FromDateTime((DateTime)reader["achievedDate"])
+                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
                 );
                 sqlConnection.Close();
                 return test;
@@ -69,7 +71,7 @@ namespace PussyCatsApp.repositories
                     userId: (int)reader["userID"],
                     name: reader["name"].ToString(),
                     score: (int)reader["score"],
-                    achievedDate: DateOnly.FromDateTime((DateTime)reader["achievedDate"])
+                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
                 ));
             }
             sqlConnection.Close();

@@ -20,7 +20,6 @@ namespace PussyCatsApp.views
             this.Loaded += OnPageLoaded;
         }
 
-        // Catch the UserId when navigating here
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -44,6 +43,7 @@ namespace PussyCatsApp.views
 
             await CvWebView.EnsureCoreWebView2Async();
 
+            CvWebView.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
             var templateFolder = Path.Combine(AppContext.BaseDirectory, "resources");
 
             CvWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
@@ -55,9 +55,21 @@ namespace PussyCatsApp.views
             var pdfExportService = new PdfExportService(CvWebView, userRepository);
 
             ViewModel = new ExportCVViewModel(pdfExportService);
-            ViewModel.UserId = _userId; 
+            ViewModel.UserId = _userId;
 
             this.DataContext = ViewModel;
+
+            await ViewModel.LoadAndRenderCVAsync();
+        }
+
+        private async void CoreWebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            if (e.Uri.StartsWith("http") && !e.Uri.Contains("assets.local"))
+            {
+                e.Cancel = true;
+
+                await Windows.System.Launcher.LaunchUriAsync(new Uri(e.Uri));
+            }
         }
     }
 }

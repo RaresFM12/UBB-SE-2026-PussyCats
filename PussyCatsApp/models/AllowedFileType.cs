@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.models
 {
-    internal class Documents
+    public enum AllowedFileType
     {
+        PDF,
+        JPG,
+        PNG
     }
 }
