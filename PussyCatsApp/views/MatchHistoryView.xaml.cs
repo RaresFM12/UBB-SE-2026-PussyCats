@@ -125,6 +125,9 @@ namespace PussyCatsApp.views
         // Metoda nativă WinUI 3 pentru afișarea unui pop-up de eroare elegant (ContentDialog)
         private async void ShowError(string message)
         {
+            /*if (this.XamlRoot == null)
+                return;
+
             var dialog = new ContentDialog
             {
                 Title = "Eroare la încărcare",
@@ -132,7 +135,7 @@ namespace PussyCatsApp.views
                 CloseButtonText = "OK",
                 XamlRoot = this.XamlRoot // Obligatoriu în WinUI 3 pentru dialoguri
             };
-            await dialog.ShowAsync();
+            await dialog.ShowAsync();*/
         }
     }
 }

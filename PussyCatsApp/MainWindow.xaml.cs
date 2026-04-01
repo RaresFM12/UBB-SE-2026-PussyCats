@@ -37,7 +37,7 @@ namespace PussyCatsApp
             InitializeComponent();
 
             // Start from profile page
-            ContentFrame.Navigate(typeof(PussyCatsApp.views.MatchHistoryView));
+            ContentFrame.Navigate(typeof(PussyCatsApp.views.UserProfileView));
         }
     }
 }
