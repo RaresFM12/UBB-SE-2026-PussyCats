@@ -404,49 +404,4 @@ body {
     margin: 0;
 }
 
-/* ─── Download button (hidden in PDF) ───────────────────────── */
-.no-print {
-    margin-top: 24px;
-    display: flex;
-    justify-content: center;
-}
 
-#download-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 36px;
-    font-size: 14px;
-    font-family: 'Georgia', serif;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background 0.2s;
-}
-
-#download-btn:hover {
-    background: var(--accent2);
-}
-
-#download-btn:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
-.spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(255, 255, 255, .4);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    display: none;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
