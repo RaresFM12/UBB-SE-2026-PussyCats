@@ -389,19 +389,19 @@ namespace PussyCatsApp.repositories
 
             // Serialize the entire form as a JSON snapshot
             var formDataJson = JsonSerializer.Serialize(new FormDataSnapshot(
-                p.FirstName, p.LastName, p.Age, p.Gender,
-                p.Email, p.PhoneNumber, p.GitHub, p.LinkedIn,
-                p.Country, p.City, p.University, p.Degree,
-                p.UniversityStartYear, p.ExpectedGraduationYear,
-                p.Address, p.Motivation, p.HasDisabilities,
-                p.Skills ?? new(),
-                p.WorkExperiences ?? new(),
-                p.Projects ?? new(),
-                p.ExtraCurricularActivities ?? new()
+                profile.FirstName, profile.LastName, profile.Age, profile.Gender,
+                profile.Email, profile.PhoneNumber, profile.GitHub, profile.LinkedIn,
+                profile.Country, profile.City, profile.University, profile.Degree,
+                profile.UniversityStartYear, profile.ExpectedGraduationYear,
+                profile.Address, profile.Motivation, profile.HasDisabilities,
+                profile.Skills ?? new(),
+                profile.WorkExperiences ?? new(),
+                profile.Projects ?? new(),
+                profile.ExtraCurricularActivities ?? new()
             ), _jsonOptions);
 
-            using var cmd = conn.CreateCommand();
-            cmd.Transaction = tx;
+            using var cmd = connection.CreateCommand();
+            cmd.Transaction = transaction;
             cmd.CommandText = @"
                 IF EXISTS (SELECT 1 FROM Users WHERE userID = @id)
                     UPDATE Users SET
@@ -455,23 +455,23 @@ namespace PussyCatsApp.repositories
             cmd.Parameters.AddWithValue("@firstName", profile.FirstName);
             cmd.Parameters.AddWithValue("@lastName", profile.LastName);
             cmd.Parameters.AddWithValue("@gender", (object)genderDb ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@age", p.Age);
-            cmd.Parameters.AddWithValue("@email", p.Email);
-            cmd.Parameters.AddWithValue("@phone", (object)p.PhoneNumber ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@github", (object)p.GitHub ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@linkedin", (object)p.LinkedIn ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@universityStartYear", p.UniversityStartYear);
-            cmd.Parameters.AddWithValue("@graduationYear", p.ExpectedGraduationYear);
-            cmd.Parameters.AddWithValue("@country", (object)p.Country ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@city", (object)p.City ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@address", (object)p.Address ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@motivation", (object)p.Motivation ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@disabilities", p.HasDisabilities);
-            cmd.Parameters.AddWithValue("@university", (object)p.University ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@degree", (object)p.Degree ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@personalityTestResult", (object)p.PersonalityTestResult ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@activeAccount", p.ActiveAccount);
-            cmd.Parameters.AddWithValue("@profilePicture", (object)p.ProfilePicture ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@age", profile.Age);
+            cmd.Parameters.AddWithValue("@email", profile.Email);
+            cmd.Parameters.AddWithValue("@phone", (object)profile.PhoneNumber ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@github", (object)profile.GitHub ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@linkedin", (object)profile.LinkedIn ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@universityStartYear", profile.UniversityStartYear);
+            cmd.Parameters.AddWithValue("@graduationYear", profile.ExpectedGraduationYear);
+            cmd.Parameters.AddWithValue("@country", (object)profile.Country ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@city", (object)profile.City ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@address", (object)profile.Address ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@motivation", (object)profile.Motivation ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@disabilities", profile.HasDisabilities);
+            cmd.Parameters.AddWithValue("@university", (object)profile.University ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@degree", (object)profile.Degree ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@personalityTestResult", (object)profile.PersonalityTestResult ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@activeAccount", profile.ActiveAccount);
+            cmd.Parameters.AddWithValue("@profilePicture", (object)profile.ProfilePicture ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@parsedCV", parsedCVJson);
             cmd.Parameters.AddWithValue("@formDataJson", formDataJson);
             cmd.ExecuteNonQuery();
