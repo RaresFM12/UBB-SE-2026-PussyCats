@@ -17,18 +17,21 @@
   <Address>Str. Universitatii, Nr. 1, Cluj-Napoca</Address>
   <Motivation>I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.</Motivation>
   <Skills>
-    <string>C#</string>
+    <string>HTML</string>
     <string>JavaScript</string>
+    <string>CSS</string>
+    <string>TypeScript</string>
     <string>React</string>
-    <string>ASP.NET Core</string>
-    <string>SQL Server</string>
     <string>Git</string>
+    <string>GitHub</string>
+    <string>Jest</string>
+    <string>Webpack</string>
+    <string>Vite</string>
+    <string>Figma</string>
+    <string>REST</string>
+    <string>SQL</string>
+    <string>PostgreSQL</string>
     <string>Docker</string>
-    <string>Azure</string>
-    <string>WinUI 3</string>
-    <string>Entity Framework</string>
-    <string>REST API</string>
-    <string>Agile/Scrum</string>
   </Skills>
   <WorkExperiences>
     <WorkExperience>

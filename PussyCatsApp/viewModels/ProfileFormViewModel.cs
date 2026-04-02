@@ -66,26 +66,71 @@ namespace PussyCatsApp.viewModels
         public List<string> SkillSuggestions { get; } = new()
         {
             // Languages
-            "JavaScript", "TypeScript", "Python", "Java", "C#", "C++", "Go", "Rust",
-            "PHP", "Ruby", "Swift", "Kotlin", "Scala",
-            // Frameworks
-            "React", "Angular", "Vue.js", "Next.js", "ASP.NET Core", "Spring Boot",
-            "Django", "Flask", "FastAPI", "Node.js",
-            // DevOps/Cloud
-            "Docker", "Kubernetes", "Git", "CI/CD", "Azure", "AWS", "GCP", "Linux",
-            "Bash", "Terraform",
+            "JavaScript", "TypeScript", "Python", "Java", "C#", "Go", "R", "Julia",
+
+            // Frontend
+            "HTML", "CSS", "SCSS", "Tailwind",
+
+            // Frameworks & Libraries
+            "React", "Angular", "Vue.js", "Svelte", "Node.js", "Spring Boot", "ASP.NET", "Django", "FastAPI",
+
+            // Build Tools
+            "Webpack", "Vite", "Parcel",
+
+            // Version Control
+            "Git", "GitHub",
+
+            // Testing
+            "Jest", "Cypress", "Selenium", "JUnit", "NUnit", "pytest",
+
+            // APIs & Communication
+            "REST", "GraphQL", "gRPC", "Postman",
+
             // Databases
-            "SQL Server", "PostgreSQL", "MySQL", "MongoDB", "Redis", "Oracle",
-            // Data & AI
-            "Machine Learning", "Deep Learning", "TensorFlow", "PyTorch", "Pandas",
-            "NumPy", "Tableau", "Power BI",
-            // Design
-            "Figma", "Adobe XD", "UI/UX", "Wireframing", "Prototyping",
-            // Soft Skills
-            "Teamwork", "Communication", "Problem Solving", "Leadership", "Time Management",
-            // Other
-            "REST API", "GraphQL", "Agile/Scrum", "Unit Testing", "Cybersecurity",
-            "OOP", "Microservices"
+            "SQL", "PostgreSQL", "MySQL", "MongoDB", "Redis", "BigQuery",
+
+            // DevOps / Cloud
+            "Docker", "Podman", "Kubernetes", "Docker Swarm", "OpenShift",
+            "Jenkins", "GitHub Actions", "GitLab CI", "CircleCI",
+            "AWS", "Azure", "Google Cloud",
+            "Terraform", "Ansible", "Pulumi",
+            "Prometheus", "Grafana", "Datadog",
+
+            // Design & UX
+            "Figma", "Adobe XD", "Zeplin", "Sketch", "InVision", "Marvel", "Axure",
+            "Figma Prototyping", "Typography", "Color Theory", "Grid Systems",
+            "Storybook",
+
+            // Research & UX Methods
+            "Interviews", "Surveys", "Usability Testing",
+
+            // Analytics & BI
+            "Google Analytics", "Hotjar", "Mixpanel",
+            "Power BI", "Tableau", "Looker",
+            "Excel", "Google Sheets", "OpenRefine",
+
+            // Data Science & AI
+            "Pandas", "NumPy", "TensorFlow", "PyTorch", "scikit-learn", "Keras",
+            "Apache Spark", "MLflow", "Hugging Face",
+            "OpenCV", "NLTK", "spaCy",
+            "Descriptive Statistics", "Regression", "Hypothesis Testing",
+            "Linear Algebra", "Calculus", "Probability", "Statistics",
+
+            // Security
+            "Firewalls", "VPN", "IDS/IPS", "TCP/IP",
+            "Metasploit", "Burp Suite", "Nmap",
+            "Splunk", "IBM QRadar", "Microsoft Sentinel",
+            "AES", "RSA", "PKI", "TLS/SSL",
+            "ISO 27001", "GDPR", "NIST", "SOC 2",
+            "Forensics", "Malware Analysis", "DFIR",
+
+            // Project Management
+            "Scrum", "Kanban", "Agile", "Waterfall",
+            "Jira", "Trello", "Asana",
+            "Risk Assessment", "Mitigation Planning",
+            "Stakeholder Management", "Reporting",
+            "Presentations", "Cost Estimation", "Budget Tracking",
+            "MS Project"
         };
 
         public List<int> GraduationYears { get; } = new();

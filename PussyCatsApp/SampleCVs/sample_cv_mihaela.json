@@ -15,17 +15,20 @@
   "motivation": "I am a passionate Computer Science student eager to build modern, user-centered applications. I enjoy tackling complex problems and learning new technologies to deliver clean, scalable solutions.",
   "skills": [
     "Python",
-    "JavaScript",
-    "TypeScript",
-    "React",
-    "Node.js",
+    "Django",
+    "SQL",
     "PostgreSQL",
-    "Git",
+    "Pandas",
+    "Numpy",
+    "scikit-learn",
+    "TensorFlow",
+    "REST",
+    "GraphQL",
     "Docker",
-    "Figma",
-    "REST API",
-    "Agile/Scrum",
-    "Communication"
+    "Kubernetes",
+    "AWS",
+    "Git",
+    "pytest"
   ],
   "workExperiences": [
     {

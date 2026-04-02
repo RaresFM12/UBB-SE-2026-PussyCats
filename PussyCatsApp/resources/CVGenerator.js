@@ -13,13 +13,43 @@
 const CVGenerator = (() => {
 
     const SKILL_GROUPS = {
-        Languages: ['JS', 'TS', 'Python', 'Java', 'C#', 'C++', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'Scala'],
-        Frameworks: ['React', 'Angular', 'Vue.js', 'Next.js', 'ASP.NET Core', 'Spring Boot', 'Django', 'Flask', 'FastAPI', 'Node.js'],
-        'DevOps / Cloud': ['Docker', 'Kubernetes', 'Git', 'CI/CD', 'Azure', 'AWS', 'GCP', 'Linux', 'Bash', 'Terraform'],
-        Databases: ['SQL Server', 'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Oracle'],
-        'Data & AI': ['ML', 'Deep Learning', 'TensorFlow', 'PyTorch', 'Pandas', 'NumPy', 'Tableau', 'Power BI'],
-        Design: ['Figma', 'Adobe XD', 'UI/UX', 'Wireframing', 'Prototyping'],
-        'Soft Skills': ['Teamwork', 'Communication', 'Problem Solving', 'Leadership', 'Time Management'],
+        Languages: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'C++', 'Go', 'Rust',
+            'PHP', 'Ruby', 'Swift', 'Kotlin', 'Scala', 'R', 'Julia',
+            'HTML', 'CSS', 'SCSS'],
+        Frameworks: [
+            'React', 'Angular', 'Vue.js', 'Next.js', 'Svelte',
+            'Node.js', 'Spring Boot', 'ASP.NET Core', 'Django', 'Flask', 'FastAPI'
+        ],
+        'DevOps / Cloud': [
+            'Docker', 'Kubernetes', 'Docker Swarm', 'OpenShift', 'Podman',
+            'Git', 'GitHub', 'CI/CD', 'Jenkins', 'GitHub Actions',
+            'AWS', 'Azure', 'Google Cloud',
+            'Terraform', 'Ansible', 'Pulumi',
+            'Linux', 'Bash',
+            'Prometheus', 'Grafana', 'Datadog'
+        ],
+        Databases: [
+            'SQL Server', 'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Oracle', 'SQL', 'BigQuery'
+        ],
+        'Data & AI': [
+            'ML', 'Deep Learning',
+            'TensorFlow', 'PyTorch', 'scikit-learn', 'Keras',
+            'Pandas', 'NumPy',
+            'Apache Spark', 'MLflow', 'Hugging Face',
+            'OpenCV', 'NLTK', 'spaCy',
+            'Descriptive Statistics', 'Regression', 'Hypothesis Testing',
+            'Linear Algebra', 'Calculus', 'Probability', 'Statistics'
+        ],
+        Design: [
+            'Figma', 'Adobe XD', 'Zeplin', 'Sketch', 'InVision', 'Marvel', 'Axure',
+            'UI/UX', 'Wireframing', 'Prototyping', 'Figma Prototyping',
+            'Typography', 'Color Theory', 'Grid Systems',
+            'Storybook'
+        ],
+        'Soft Skills': [
+            'Teamwork', 'Communication', 'Problem Solving',
+            'Leadership', 'Time Management'
+        ],
         Other: [],
     };
 

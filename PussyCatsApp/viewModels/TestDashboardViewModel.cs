@@ -16,14 +16,10 @@ namespace PussyCatsApp.viewModels
 
         public List<SkillTestCardViewModel> TestCards { get; private set; } = new();
 
-        //private int currentUserId = 1;
-
         public TestDashboardViewModel(SkillTestService skillTestService, UserProfileViewModel userProfileViewModel)
         {
             this.skillTestService = skillTestService;
             this.userProfileViewModel = userProfileViewModel;
-            //this.currentUserId = 1;
-
         }
 
         public void LoadTests(UserProfile userProfile)
@@ -37,14 +33,8 @@ namespace PussyCatsApp.viewModels
             }
         }
 
-        public void backCommand()
-        {
-
-        }
-
         public void goToAllTestsCommand()
         {
-
         }
     }
 }

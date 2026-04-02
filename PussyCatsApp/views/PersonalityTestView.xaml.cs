@@ -89,10 +89,8 @@ namespace PussyCatsApp.views
 
             InitializeViewModel(userId);
         }
-        // Initialize and assign the view model instance to the page's DataContext
         private void InitializeViewModel(int userId)
         {
-            // Create the view model instance and assign it to the page field and DataContext
             this.PersonalityTestViewModel = new PersonalityTestViewModel(userId);
             this.DataContext = this.PersonalityTestViewModel;
         }

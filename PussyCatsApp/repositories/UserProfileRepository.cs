@@ -74,7 +74,6 @@ namespace PussyCatsApp.repositories
                 profile.RelevantCertificates = LoadCertificates(connection, userId);
                 LoadPreferences(connection, userId, profile);
 
-                //Skills, WorkExperiences, Projects, ExtraCurricular live in formDataJson
                 LoadFormData(connection, userId, profile);
 
                 return profile;
@@ -247,10 +246,7 @@ namespace PussyCatsApp.repositories
             };
         }
 
-        /// <summary>
-        /// Loads Skills, WorkExperiences, Projects, and ExtraCurricularActivities
-        /// from the formDataJson column and populates them on the profile.
-        /// </summary>
+        
         private static void LoadFormData(SqlConnection connection, int userId, UserProfile profile)
         {
             using var command = connection.CreateCommand();
@@ -279,10 +275,7 @@ namespace PussyCatsApp.repositories
             }
         }
 
-        /// <summary>
-        /// Builds a plain-text summary for the parsedCV column.
-        /// Line 1: Full name, Line 2: University, Line 3: Skills (comma-separated)
-        /// </summary>
+        
         private static string BuildParsedCVText(UserProfile profile)
         {
             var sb = new StringBuilder();

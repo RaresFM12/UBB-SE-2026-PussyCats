@@ -48,8 +48,6 @@ namespace PussyCatsApp.viewModels
 
         public static UserProfileViewModel Create()
         {
-            var userProfileRepo = new UserProfileRepository();
-            var skillTestRepo = new SkillTestRepository();
             return new UserProfileViewModel();
         }
 
@@ -138,38 +136,12 @@ namespace PussyCatsApp.viewModels
                 return "TAKE PERSONALITY TEST";
             return "RETAKE PERSONALITY TEST";
         }
-
-        public void EditProfileCommand()
-        {
-            //TODO Navigations
-        }
         public void TakePersonalityTestCommand()
         {
             if (App.MainAppWindow is MainWindow mainWindow)
             {
-                // Use the NavigationFrame property to navigate
                 mainWindow.NavigationFrame.Navigate(typeof(PersonalityTestView), 1);
-                // hardcoded to userId 1 for testing, because right now the user is null
             }
         }
-
-        public void ViewDocumentsCommand()
-        { 
-        }
-
-        public void MatchHistoryCommand()
-        {
-        }
-
-        public void GoToSkillTestCommand()
-        {
-        }
-
-
-        public void GoToOldTestCommand()
-        {
-
-        }
-
     }
 }

@@ -235,22 +235,6 @@ WHERE userID = 1;
 
 DECLARE @newUserId INT = SCOPE_IDENTITY();
 
-INSERT INTO SKILLS (name, userID)
-VALUES 
-    ('C#', @newUserId),
-    ('JavaScript', @newUserId),
-    ('React', @newUserId),
-    ('ASP.NET Core', @newUserId),
-    ('SQL Server', @newUserId),
-    ('Git', @newUserId),
-    ('Docker', @newUserId),
-    ('Azure', @newUserId),
-    ('WinUI 3', @newUserId),
-    ('Entity Framework', @newUserId),
-    ('REST API', @newUserId),
-    ('Agile/Scrum', @newUserId);
-GO
-
 INSERT INTO DOCUMENTS (userID, storedDocument, nameDocument)
 VALUES 
     (@newUserId, 'https://example.com/cv/ioana_gavrila_cv.pdf', 'Ioana_Gavrila_CV.pdf');
@@ -289,9 +273,90 @@ SET city = 'Cluj-Napoca'
 WHERE userID = 1;
 GO
 
-update SKILLS Set score = 90 where skillID = 15
+INSERT INTO SKILLS (name, score, userID, achievedDate) VALUES
+('Tailwind', 88, 1, '2022-03-15'),
+('SCSS', 84, 1, '2021-11-10'),
+('Cypress', 79, 1, '2023-01-20'),
+('Selenium', 70, 1, '2022-09-05'),
+('Parcel', 73, 1, '2021-07-18'),
+('Adobe XD', 87, 1, '2026-03-31'),
+('Zeplin', 17, 1, '2026-03-31'),
+('Storybook', 70, 1, '2026-03-31'),
+('Google Analytics', 62, 1, '2026-03-31'),
+('Hotjar', 45, 1, '2026-03-31'),
+('Scrum', 80, 1, '2022-10-09'),
+('Jira', 85, 1, '2021-12-03');
 
-SELECT parsedCV FROM USERS;
+
+
+INSERT INTO SKILLS (name, score, userID, achievedDate) VALUES
+('PyTorch', 86, 5, '2023-02-17'),
+('Keras', 81, 5, '2022-06-08'),
+('NLTK', 74, 5, '2022-11-21'),
+('spaCy', 77, 5, '2023-03-09'),
+('OpenCV', 69, 5, '2021-10-27'),
+('FastAPI', 83, 5, '2023-05-16'),
+('Hugging Face', 78, 5, '2024-01-12'),
+('BigQuery', 65, 5, '2022-07-19'),
+('Tableau', 72, 5, '2021-09-14'),
+('Looker', 67, 5, '2023-08-22'),
+('Hypothesis Testing', 80, 5, '2022-04-02'),
+('Regression', 84, 5, '2021-12-29');
+
+SELECT * FROM USERS;
 SELECT * FROM documents;
 SELECT  * FROM Matches;
 SELECT * FROM SKILLS;
+
+INSERT INTO Users (
+    firstName,
+    lastName,
+    gender,
+    age,
+    email,
+    phone,
+    github,
+    linkedin,
+    graduationYear,
+    country,
+    address,
+    sexualOrientation,
+    disabilities,
+    parsedCV,
+    personalityTestResult,
+    activeAccount,
+    profilePicture,
+    university,
+    degree,
+    universityStartYear,
+    LastUpdated,
+    formDataJson,
+    city,
+    motivation
+)
+VALUES (
+    'Ioana',
+    'Gavrila',
+    'F',
+    22,
+    'ioana.gavrila@student.ubbcluj.com',
+    '+40723456789',
+    'github.com/ioanagavrila',
+    'linkedin.com/in/ioanagavrila',
+    2026,
+    'Romania',
+    'Str. Universitatii, Nr. 1, Cluj-Napoca',
+    NULL,
+    0,
+    'Ioana Gavrila  Babes-Bolyai University  HTML, JavaScript, CSS, TypeScript, React, Git, GitHub, Jest, Webpack, Vite, Figma, REST, SQL, PostgreSQL, Docker',
+    'BackendDeveloper',
+    1,
+    'E:\Rares\facultate\anul 2\sem 2\iss\UBB-SE-2026-PussyCats\PussyCatsApp\bin\x64\Debug\net8.0-windows10.0.19041.0\uploads\avatars\63b0a4fa-00a9-43a1-87c9-7e1f96b3dcd2.jpg',
+    'Babes-Bolyai University',
+    'Bachelor of Science in Computer Science',
+    2023,
+    '2026-04-02 14:32:29.793',
+    '{"firstName":"Ioana","lastName":"Gavrila","age":22,"gender":"Female","email":"ioana.gavrila@student.ubbcluj.ro","phoneNumber":"\u002B40723456789","gitHub":"github.com/ioanagavrila","linkedIn":"linkedin.com/in/ioanagavrila","country":"Romania","city":"Cluj-Napoca","university":"Babes-Bolyai University","degree":"Bachelor of Science in Computer Science","universityStartYear":2023,"expectedGraduationYear":2026,"address":"Str. Universitatii, Nr. 1, Cluj-Napoca","motivation":"I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.","hasDisabilities":false,"skills":["HTML","JavaScript","CSS","TypeScript","React","Git","GitHub","Jest","Webpack","Vite","Figma","REST","SQL","PostgreSQL","Docker"],"workExperiences":[{"company":"Tech Solutions SRL","jobTitle":"Junior Software Developer","startDate":"2024-06-01T00:00:00","endDate":null,"description":"Developing and maintaining web applications using ASP.NET Core and React. Participating in code reviews and contributing to architectural decisions.","currentlyWorking":true},{"company":"StartUp Hub","jobTitle":"Software Development Intern","startDate":"2023-07-01T00:00:00","endDate":"2023-09-30T00:00:00","description":"Worked on a mobile application using React Native. Implemented features for user authentication and data synchronization.","currentlyWorking":false}],"projects":[{"name":"PussyCats User Management System","description":"A comprehensive user profile management system built with WinUI 3 and C#. Features include CV parsing, skill assessment, and profile completeness tracking.","technologies":["C#","WinUI 3","SQL Server","Entity Framework"],"url":"github.com/ioanagavrila/pussycats"},{"name":"E-Commerce Platform","description":"Full-stack e-commerce solution with shopping cart, payment integration, and admin dashboard.","technologies":["React","Node.js","MongoDB","Stripe API"],"url":"github.com/ioanagavrila/ecommerce"},{"name":"Task Management Mobile App","description":"Cross-platform mobile application for task management with real-time synchronization.","technologies":["React Native","Firebase","Redux"],"url":"github.com/ioanagavrila/taskmanager"}],"extraCurricularActivities":[{"activityName":"Google Developer Student Club","organization":"Babes-Bolyai University","role":"Technical Lead","period":"2024 - Present","description":"Organizing workshops and hackathons for students interested in technology."},{"activityName":"Coding Competition","organization":"ACM ICPC","role":"Participant","period":"2023 - 2024","description":"Competed in regional programming contests, focusing on algorithm optimization."}]}',
+    'Cluj-Napoca',
+    'I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.'
+);
