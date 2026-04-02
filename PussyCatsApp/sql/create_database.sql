@@ -264,6 +264,19 @@ VALUES
     (1, 'E-Commerce Giants Ltd.', 'Backend Developer (ASP.NET)');
 GO
 
+delete from matches
+INSERT INTO MATCHES(userID, companyName, jobRole, matchDate)
+VALUES 
+    (1, 'NextGen AI Startups', 'Backend Developer', '2025-05-12'),
+    (1, 'E-Commerce Giants Ltd.', 'Backend Developer', '2025-06-28'),
+    (1, 'Google', 'Frontend Developer', '2025-08-15'),
+    (1, 'Amazon', 'AI/ML Engineer', '2025-10-03'),
+    (1, 'Microsoft', 'Frontend Developer', '2025-12-21'),
+    (1, 'Cresta', 'Data Analyst', '2026-01-30'),
+    (1, 'UiPath', 'Backend Developer', '2026-02-18'),
+    (1, 'LSEG', 'DevOps Engineer', '2026-03-25');
+GO
+
 -- Verify the insertions
 SELECT * FROM MATCHES;
 GO
