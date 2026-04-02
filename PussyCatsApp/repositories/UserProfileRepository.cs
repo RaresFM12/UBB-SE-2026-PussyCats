@@ -9,33 +9,21 @@ using Microsoft.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Windows.System;
 using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
 
 namespace PussyCatsApp.repositories
 {
-    /// <summary>
-    /// Reads and writes UserProfile data across 4 tables:
-    ///
-    ///   Users       — all scalar fields + parsedCV (JSON string storing
-    ///                 WorkExperiences, Projects, ExtraCurricularActivities)
-    ///   Skills      — one row per skill tag
-    ///   Documents   — one row per certificate/diploma
-    ///   Preferences — one row per preference (JobRole, WorkMode, Location)
-    /// </summary>
     public class UserProfileRepository : IUserProileRepository
     {
         private static readonly JsonSerializerOptions _jsonOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
-
-        // Shape stored in the parsedCV column
         private record ParsedCVData(
             List<WorkExperience> WorkExperiences,
             List<Project> Projects,
             List<ExtraCurricularActivity> ExtraCurricularActivities
         );
-
-        // Full form snapshot stored in formDataJson column
         private record FormDataSnapshot(
             string FirstName,
             string LastName,
@@ -60,13 +48,7 @@ namespace PussyCatsApp.repositories
             List<ExtraCurricularActivity> ExtraCurricularActivities
         );
 
-        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
-        //private const string otherConnectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True";
-        // private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
-        //private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
-
-        //private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-        // private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
         private SqlConnection sqlConnection;
 
         public UserProfile getProfileById(int userId)
@@ -125,10 +107,7 @@ namespace PussyCatsApp.repositories
                 using var tx = connection.BeginTransaction();
                 UpsertUserRow(connection, tx, id, data);
                 SaveSkills(connection, tx, id, data.Skills);
-                // Preferences are not managed from the profile form
-                // Documents (certificates) are managed separately via upload flow,
-                // not overwritten on every profile save.
-
+                
                 tx.Commit();
             }
             catch (SqlException e)
@@ -214,13 +193,6 @@ namespace PussyCatsApp.repositories
             }
         }
 
-        /// <summary>
-        /// Loads all scalar fields from the Users table for the given userId.
-        /// Does NOT load Skills, Preferences, or parse the parsedCV JSON column.
-        /// The caller is responsible for loading those separately.
-        /// Returns null if no user with the given ID exists.
-        /// </summary>
-       
         private static UserProfile LoadUserRow(SqlConnection connection, int userId)
         {
             using var cmd = connection.CreateCommand();
@@ -301,7 +273,6 @@ namespace PussyCatsApp.repositories
             }
             catch (JsonException)
             {
-                // parsedCV is malformed — leave the lists empty rather than crashing
                 profile.WorkExperiences = new();
                 profile.Projects = new();
                 profile.ExtraCurricularActivities = new();
@@ -373,21 +344,16 @@ namespace PussyCatsApp.repositories
             }
         }
 
-        // ════════════════════════════════════════════════════════════
-        // PRIVATE SAVERS
-        // ════════════════════════════════════════════════════════════
-
+        
         private static void UpsertUserRow(SqlConnection connection, SqlTransaction transaction,
             int userId, UserProfile profile)
         {
-            // Serialize WorkExperiences + Projects + ExtraCurricular into parsedCV
             var parsedCVJson = JsonSerializer.Serialize(new ParsedCVData(
                 profile.WorkExperiences ?? new(),
                 profile.Projects ?? new(),
                 profile.ExtraCurricularActivities ?? new()
             ), _jsonOptions);
 
-            // Serialize the entire form as a JSON snapshot
             var formDataJson = JsonSerializer.Serialize(new FormDataSnapshot(
                 profile.FirstName, profile.LastName, profile.Age, profile.Gender,
                 profile.Email, profile.PhoneNumber, profile.GitHub, profile.LinkedIn,
@@ -443,7 +409,6 @@ namespace PussyCatsApp.repositories
                         @profilePicture, @parsedCV, @formDataJson
                     )";
 
-            // Convert 'Male'/'Female' → 'M'/'F' for CHAR(1) DB column
             var genderDb = profile.Gender switch
             {
                 "Male" => "M",
@@ -480,7 +445,6 @@ namespace PussyCatsApp.repositories
         private static void SaveSkills(SqlConnection connection, SqlTransaction transaction,
             int userId, List<string> skills)
         {
-            // Delete all then re-insert — simplest for a flat tag list
             using (var del = connection.CreateCommand())
             {
                 del.Transaction = transaction;
@@ -531,8 +495,6 @@ namespace PussyCatsApp.repositories
             Insert("WorkMode", profile.WorkModePreference);
             Insert("Location", profile.LocationPreference);
         }
-
-        // ── Null-safe reader helpers ───────────────────────────────────
 
         private static string GetString(SqlDataReader reader, string col)
             => reader.IsDBNull(reader.GetOrdinal(col)) ? string.Empty : reader.GetString(reader.GetOrdinal(col));

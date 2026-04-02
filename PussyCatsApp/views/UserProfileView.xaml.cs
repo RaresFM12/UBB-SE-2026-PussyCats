@@ -11,7 +11,7 @@ namespace PussyCatsApp.views
 {
     public sealed partial class UserProfileView : Page
     {
-        private int currentUserId = 2;
+        private int currentUserId = 1;
         public UserProfileViewModel viewModel { get; private set; }
         private bool _isBinding = false;
 
@@ -70,7 +70,8 @@ namespace PussyCatsApp.views
                 lblGender.Text = $"Gender: {displayGender}";
                 lblUniversity.Text = $"University: {viewModel._userProfile.University}";
                 lblCountry.Text = $"Country: {viewModel._userProfile.Country}";
-                lblAddress.Text = $"Address: {viewModel._userProfile.Address}";
+                //lblAddress.Text = $"Address: {viewModel._userProfile.Address}";
+                lblCity.Text = $"City: {viewModel._userProfile.City}";
                 lblGraduationYear.Text = $"Graduation Year: {viewModel._userProfile.ExpectedGraduationYear}";
                 lblFreshness.Text = viewModel.FreshnessText;
 
