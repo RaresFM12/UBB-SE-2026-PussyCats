@@ -92,10 +92,6 @@ const CVGenerator = (() => {
         </div>`).join('');
     }
 
-    function renderCertificates(certs = []) {
-        return certs.map(name => `<li>${esc(name)}</li>`).join('');
-    }
-
     function renderSkills(skills = []) {
         const buckets = {};
         skills.map(s => s.trim()).forEach(skill => {
@@ -235,16 +231,6 @@ const CVGenerator = (() => {
             }
         }
 
-        // ── Certificates ──────────────────────────────────────────
-        const certsSection = document.getElementById('section-certs');
-        if (certsSection) {
-            if (hasValue(profile.relevantCertificates)) {
-                certsSection.style.display = '';
-                setHtml('#certs-list', renderCertificates(profile.relevantCertificates));
-            } else {
-                certsSection.style.display = 'none';
-            }
-        }
 
         // ── Skills ────────────────────────────────────────────────
         const skillsSection = document.getElementById('section-skills');
