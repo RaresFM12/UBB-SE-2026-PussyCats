@@ -106,7 +106,7 @@ namespace PussyCatsApp.viewModels
         {
             var userProfileRepo = new UserProfileRepository();
             var skillTestRepo = new SkillTestRepository();
-            var profileService = new UserProfileService(userProfileRepo, skillTestRepo);
+            var profileService = new UserProfileService();
             var cvParsingService = new CVParsingService();
             return new ProfileFormViewModel(profileService, cvParsingService);
         }

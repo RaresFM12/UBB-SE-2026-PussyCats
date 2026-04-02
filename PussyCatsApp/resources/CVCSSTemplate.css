@@ -357,22 +357,6 @@ body {
     color: #333;
 }
 
-/* ─── Certifications ────────────────────────────────────────── */
-.cert-list {
-    list-style: none;
-    padding: 0;
-}
-
-.cert-list li {
-    font-size: 8.5pt;
-    padding: 2px 0;
-    border-bottom: 0.5px solid var(--divider);
-    color: #333;
-}
-
-.cert-list li:last-child {
-    border-bottom: none;
-}
 
 /* ─── Motivation block ──────────────────────────────────────── */
 .motivation-text {

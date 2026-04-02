@@ -284,7 +284,14 @@ GO
 SELECT * FROM MATCHES;
 GO
 
-SELECT * FROM USERS;
+UPDATE USERS
+SET city = 'Cluj-Napoca'
+WHERE userID = 1;
+GO
+
+update SKILLS Set score = 90 where skillID = 15
+
+SELECT parsedCV FROM USERS;
 SELECT * FROM documents;
 SELECT  * FROM Matches;
 SELECT * FROM SKILLS;

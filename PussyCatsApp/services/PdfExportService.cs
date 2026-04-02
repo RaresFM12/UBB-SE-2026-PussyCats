@@ -12,20 +12,18 @@ public class PdfExportService
 {
     private readonly WebView2 _webView;
     private readonly IUserProileRepository _profileRepository;
-    private UserProfile _currentProfile; 
+    private UserProfile _currentProfile;
 
-    public PdfExportService(WebView2 webView, IUserProileRepository profileRepository)
+    public PdfExportService(WebView2 webView)
     {
         _webView = webView;
-        _profileRepository = profileRepository;
     }
-
-    public async Task RenderProfileAsync(int userId)
+    public async Task RenderProfileAsync(UserProfile profile)
     {
-        _currentProfile = _profileRepository.getProfileById(userId);
+        if (profile == null)
+            throw new ArgumentNullException(nameof(profile), "Profile cannot be null.");
 
-        if (_currentProfile == null)
-            throw new InvalidOperationException("User profile not found in database.");
+        _currentProfile = profile;
 
         _webView.Source = new Uri("http://assets.local/CVHtmlTemplate.html");
         await WaitForNavigationAsync();

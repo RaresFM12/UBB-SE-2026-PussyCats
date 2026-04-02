@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
+using PussyCatsApp.repositories; 
 
 namespace PussyCatsApp.viewModels
 {
@@ -37,28 +38,19 @@ namespace PussyCatsApp.viewModels
         public string FreshnessText { get; set; } = "";
         public int TotalXP { get; private set; } = 0;
 
-        public UserProfileViewModel(UserProfileService userProfileService, ImageStorageService imageStorageService,PdfExportService pdfExportService,CvUploadService cvUploadService, CompletenessService completenessService)
+        public UserProfileViewModel()
         {
-            this.profileSerivice = userProfileService;
-            this.imageStorageService = imageStorageService;
-            this.cvUploadService = cvUploadService;
-            this.completenessService = completenessService;
-
-            // Initialize nested ViewModel
-            this.ExportVM = new ExportCVViewModel(pdfExportService);
+            this.profileSerivice = new UserProfileService();
+            this.imageStorageService = new ImageStorageService();
+            this.cvUploadService = new CvUploadService();
+            this.completenessService = new CompletenessService();
         }
 
         public static UserProfileViewModel Create()
         {
             var userProfileRepo = new UserProfileRepository();
             var skillTestRepo = new SkillTestRepository();
-            return new UserProfileViewModel(
-                new UserProfileService(userProfileRepo, skillTestRepo),
-                new ImageStorageService(),
-                null,
-                new CvUploadService(),
-                new CompletenessService()
-            );
+            return new UserProfileViewModel();
         }
 
         public event Action OnLevelUpdated;
@@ -91,7 +83,6 @@ namespace PussyCatsApp.viewModels
                 if (_userProfile != null)
                 {
                     FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(_userProfile.LastUpdated);
-                    ExportVM.UserId = _userProfile.UserId;
 
                     CompletenessPercentage = completenessService.CalculateCompleteness(_userProfile);
                     NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(_userProfile);

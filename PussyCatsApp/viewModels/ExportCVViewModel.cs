@@ -2,13 +2,15 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.services;
+using PussyCatsApp.repositories; 
 
 namespace PussyCatsApp.viewModels
 {
     public partial class ExportCVViewModel : ObservableObject
     {
         private readonly PdfExportService _pdfExportService;
-
+        private readonly UserProfileService _userProfileService;
         public int UserId { get; set; }
 
         private string _statusText = string.Empty;
@@ -28,6 +30,7 @@ namespace PussyCatsApp.viewModels
         public ExportCVViewModel(PdfExportService pdfExportService)
         {
             _pdfExportService = pdfExportService;
+            _userProfileService = new UserProfileService();
         }
 
         public async Task LoadAndRenderCVAsync()
@@ -39,7 +42,13 @@ namespace PussyCatsApp.viewModels
 
             try
             {
-                await _pdfExportService.RenderProfileAsync(UserId);
+                var profile = _userProfileService.GetProfile(UserId);
+
+                if (profile == null)
+                    throw new Exception("User profile not found in database.");
+
+                await _pdfExportService.RenderProfileAsync(profile);
+
                 StatusText = string.Empty;
             }
             catch (Exception ex)

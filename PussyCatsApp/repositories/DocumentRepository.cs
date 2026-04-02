@@ -8,7 +8,8 @@ namespace PussyCatsApp.repositories
 {
     public class DocumentRepository
     {
-        private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
+        private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
+
         public List<Document> getDocumentsByUserId(int userId)
         {
             var documents = new List<Document>();

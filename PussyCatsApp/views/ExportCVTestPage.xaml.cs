@@ -42,17 +42,15 @@ namespace PussyCatsApp.views
             this.Loaded -= OnPageLoaded;
 
             await CvWebView.EnsureCoreWebView2Async();
-
             CvWebView.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
-            var templateFolder = Path.Combine(AppContext.BaseDirectory, "resources");
 
+            var templateFolder = Path.Combine(AppContext.BaseDirectory, "resources");
             CvWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
                 "assets.local",
                 templateFolder,
                 CoreWebView2HostResourceAccessKind.Allow);
 
-            var userRepository = new UserProfileRepository();
-            var pdfExportService = new PdfExportService(CvWebView, userRepository);
+            var pdfExportService = new PdfExportService(CvWebView);
 
             ViewModel = new ExportCVViewModel(pdfExportService);
             ViewModel.UserId = _userId;
