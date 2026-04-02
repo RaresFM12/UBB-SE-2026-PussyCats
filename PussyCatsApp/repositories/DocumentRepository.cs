@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using PussyCatsApp.models;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,7 @@ namespace PussyCatsApp.repositories
 {
     public class DocumentRepository
     {
-        //private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
-        private const string connectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
-
+        private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
         public List<Document> getDocumentsByUserId(int userId)
         {
             var documents = new List<Document>();
@@ -49,7 +48,7 @@ namespace PussyCatsApp.repositories
             return documents;
         }
 
-        public Document getDocumentById(int id)
+        public Document getDocumentById(int documentId)
         {
             try
             {
@@ -66,7 +65,7 @@ namespace PussyCatsApp.repositories
                 WHERE  dID = @Id";
 
                 using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@Id", documentId);
 
                 using var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -75,16 +74,16 @@ namespace PussyCatsApp.repositories
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error retrieving document with ID {id}: {ex.Message}");
+                Console.Error.WriteLine($"Database error retrieving document with ID {documentId}: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred retrieving document with ID {id}: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred retrieving document with ID {documentId}: {ex.Message}");
             }
             return null;
         }
 
-        public void addDocument(Document doc)
+        public void addDocument(Document document)
         {
             try
             {
@@ -96,23 +95,23 @@ namespace PussyCatsApp.repositories
                 VALUES (@UserId, @DocumentName, @FilePath, @UploadDate)";
 
                 using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@UserId", doc.UserId);
-                command.Parameters.AddWithValue("@DocumentName", doc.DocumentName);
-                command.Parameters.AddWithValue("@FilePath", doc.FilePath ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@UploadDate", doc.UploadDate);
+                command.Parameters.AddWithValue("@UserId", document.UserId);
+                command.Parameters.AddWithValue("@DocumentName", document.DocumentName);
+                command.Parameters.AddWithValue("@FilePath", document.FilePath ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@UploadDate", document.UploadDate);
 
                 command.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error adding document for user {doc.UserId}: {ex.Message}");
+                Console.Error.WriteLine($"Database error adding document for user {document.UserId}: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred adding document for user {doc.UserId}: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred adding document for user {document.UserId}: {ex.Message}");
             }
         }
-        public void deleteDocument(int id)
+        public void deleteDocument(int documentId)
         {
             try
             {
@@ -122,16 +121,16 @@ namespace PussyCatsApp.repositories
                 const string query = "DELETE FROM DOCUMENTS WHERE dID = @Id";
 
                 using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@Id", documentId);
                 command.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error deleting document with ID {id}: {ex.Message}");
+                Console.Error.WriteLine($"Database error deleting document with ID {documentId}: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred deleting document with ID {id}: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred deleting document with ID {documentId}: {ex.Message}");
             }
         }
 

@@ -9,14 +9,14 @@ namespace PussyCatsApp.repositories
     {
         private readonly List<Skill> _skills = new();
 
-        public Skill load(int id)
+        public Skill load(int skillId)
         {
-            return _skills.FirstOrDefault(s => s.SkillId == id);
+            return _skills.FirstOrDefault(s => s.SkillId == skillId);
         }
 
-        public void save(int id, Skill data)
+        public void save(int skillId, Skill data)
         {
-            var existing = _skills.FirstOrDefault(s => s.SkillId == id);
+            var existing = _skills.FirstOrDefault(s => s.SkillId == skillId);
             if (existing != null)
             {
                 existing.Name = data.Name;
@@ -26,7 +26,7 @@ namespace PussyCatsApp.repositories
             }
             else
             {
-                data.SkillId = id;
+                data.SkillId = skillId;
                 _skills.Add(data);
             }
         }

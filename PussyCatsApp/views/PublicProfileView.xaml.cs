@@ -59,24 +59,37 @@ namespace PussyCatsApp.views
             }
         }
 
+        private Uri GetValidUri(string url, string fallback)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return new Uri(fallback);
+
+            if (Uri.TryCreate(url, UriKind.Absolute, out Uri result) &&
+                (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps))
+            {
+                return result;
+            }
+
+            return new Uri(fallback);
+        }
         private void UpdateUI(UserProfile profile)
         {
             
             FirstNameLabel.Text = profile.FirstName;
             LastNameLabel.Text = profile.LastName;
-            LevelLabel.Text = $" :{profile.UserLevel.Title}";
+            LevelLabel.Text = $"Level {profile.UserLevel.Title}";
 
             EmailLabel.Text = profile.Email;
             PhoneLabel.Text = profile.PhoneNumber;
-            GenderLabel.Text = $": {profile.Gender}";
+            GenderLabel.Text = $"{profile.Gender}";
 
-            UniversityLabel.Text = $": {profile.University}";
-            GradYearLabel.Text = $": {profile.ExpectedGraduationYear}";
-            CountryLabel.Text = $":  {profile.Country}";
-            AddressLabel.Text = $": {profile.Address}";
+            UniversityLabel.Text = $"{profile.University}";
+            GradYearLabel.Text = $"{profile.ExpectedGraduationYear}";
+            CountryLabel.Text = $"{profile.Country}";
+            AddressLabel.Text = $"{profile.Address}";
 
-            GithubLink.NavigateUri = new System.Uri(profile.GitHub ?? "https://github.com");
-            LinkedinLink.NavigateUri = new System.Uri(profile.LinkedIn ?? "https://linkedin.com");
+            GithubLink.NavigateUri = GetValidUri(profile.GitHub, "https://github.com");
+            LinkedinLink.NavigateUri = GetValidUri(profile.LinkedIn, "https://linkedin.com");
 
             if (!string.IsNullOrEmpty(viewModel.Profile.ProfilePicture))
             {

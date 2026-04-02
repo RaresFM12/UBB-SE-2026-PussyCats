@@ -100,8 +100,7 @@ namespace PussyCatsApp.views
             }
             else
             {
-                // No user in DB — go straight to the profile form
-                //Frame.Navigate(typeof(ProfileFormPage));
+                
                 return;
             }
 
