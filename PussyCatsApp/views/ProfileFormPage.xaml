@@ -66,10 +66,12 @@
                     <!-- First Name and Last Name -->
                     <TextBox Grid.Row="0" Grid.Column="0" x:Name="FirstNameTextBox"
                              Header="First Name *" PlaceholderText="Enter first name"
-                             MaxLength="50"/>
+                             MaxLength="50"
+                             BeforeTextChanging="NameTextBox_BeforeTextChanging"/>
                     <TextBox Grid.Row="0" Grid.Column="1" x:Name="LastNameTextBox"
                              Header="Last Name *" PlaceholderText="Enter last name"
-                             MaxLength="60"/>
+                             MaxLength="60"
+                             BeforeTextChanging="NameTextBox_BeforeTextChanging"/>
 
                     <!-- Age and Gender -->
                     <NumberBox Grid.Row="1" Grid.Column="0" x:Name="AgeNumberBox"

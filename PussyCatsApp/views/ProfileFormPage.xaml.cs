@@ -274,6 +274,11 @@ namespace PussyCatsApp.views
                 _viewModel.RemoveExtraCurricularActivity(activity);
         }
 
+        private void NameTextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            args.Cancel = args.NewText.Any(c => char.IsDigit(c));
+        }
+
         private void PhoneNumberTextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
             args.Cancel = args.NewText.Any(c => !char.IsDigit(c));

@@ -366,6 +366,12 @@ namespace PussyCatsApp.viewModels
             if (!string.IsNullOrEmpty(parsed.Address)) Address = parsed.Address;
             if (!string.IsNullOrEmpty(parsed.Motivation)) Motivation = parsed.Motivation;
 
+            // Clear existing collections before loading new CV data
+            Skills.Clear();
+            WorkExperiences.Clear();
+            Projects.Clear();
+            ExtraCurricularActivities.Clear();
+
             // Add skills with duplicate detection (R20)
             if (parsed.Skills != null)
             {
