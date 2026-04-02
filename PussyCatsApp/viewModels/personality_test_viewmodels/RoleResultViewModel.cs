@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.viewModels
+/*namespace PussyCatsApp.viewModels
 {
     public partial class RoleResultViewModel : ObservableObject
     {
@@ -24,4 +24,4 @@ namespace PussyCatsApp.viewModels
             Score = score;
         }
     }
-}
+}*/

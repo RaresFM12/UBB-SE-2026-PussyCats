@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
@@ -10,7 +10,7 @@ using System.Linq;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace PussyCatsApp.views
+/*namespace PussyCatsApp.views
 {
     public sealed partial class ProfileFormPage : Page
     {
@@ -20,7 +20,7 @@ namespace PussyCatsApp.views
         {
             this.InitializeComponent();
 
-            _viewModel = ProfileFormViewModel.Create();
+           // _viewModel = ProfileFormViewModel.Create();
 
             PopulateGraduationYears();
         }
@@ -79,8 +79,8 @@ namespace PussyCatsApp.views
             SkillsItemsRepeater.ItemsSource = _viewModel.Skills;
             WorkExperienceItemsRepeater.ItemsSource = _viewModel.WorkExperiences;
             ProjectsItemsRepeater.ItemsSource = _viewModel.Projects;
-            ActivitiesItemsRepeater.ItemsSource = _viewModel.ExtraCurricularActivities;
-            DisabilitiesCheckBox.IsChecked = _viewModel.HasDisabilities;
+           // ActivitiesItemsRepeater.ItemsSource = _viewModel.ExtraCurricularActivities;
+           // DisabilitiesCheckBox.IsChecked = _viewModel.HasDisabilities;
         }
 
         private void SyncViewToViewModel()
@@ -100,7 +100,7 @@ namespace PussyCatsApp.views
             _viewModel.Address = AddressTextBox.Text;
             _viewModel.Motivation = MotivationTextBox.Text;
             _viewModel.ExpectedGraduationYear = int.TryParse(GraduationYearComboBox.SelectedItem?.ToString(), out var yr) ? yr : 0;
-            _viewModel.HasDisabilities = DisabilitiesCheckBox.IsChecked == true;
+            //_viewModel.HasDisabilities = DisabilitiesCheckBox.IsChecked == true;
         }
 
         private async void UploadCVButton_Click(object sender, RoutedEventArgs e)
@@ -256,7 +256,7 @@ namespace PussyCatsApp.views
             ShowInfoBarFromViewModel();
         }
 
-        private void RemoveProjectButton_Click(object sender, RoutedEventArgs e)
+       /* private void RemoveProjectButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is Project project)
                 _viewModel.RemoveProject(project);
@@ -277,9 +277,9 @@ namespace PussyCatsApp.views
         private void PhoneNumberTextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
             args.Cancel = args.NewText.Any(c => !char.IsDigit(c));
-        }
+        }*/
 
-        private void EndDatePicker_DateChanged(object sender, DatePickerValueChangedEventArgs args)
+        /*private void EndDatePicker_DateChanged(object sender, DatePickerValueChangedEventArgs args)
         {
             try
             {
@@ -335,5 +335,14 @@ namespace PussyCatsApp.views
             else
                 Frame.Navigate(typeof(UserProfileView));
         }
+        // FUNCȚIA PENTRU BUTONUL TĂU
+        private void EditPreferencesButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Salvăm temporar ce a scris utilizatorul pe pagina Ioanei ca să nu piardă datele
+            SyncViewToViewModel();
+
+            // Navigăm către pagina ta de preferințe!
+            Frame.Navigate(typeof(views.PreferencesView));
+        }
     }
-}
+}*/
