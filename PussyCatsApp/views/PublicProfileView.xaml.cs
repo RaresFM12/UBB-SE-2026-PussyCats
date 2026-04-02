@@ -34,7 +34,7 @@ namespace PussyCatsApp.views
 
             var skillTestRepo = new SkillTestRepository();
             var userProfileRepo = new UserProfileRepository();
-            var userProfileService = new UserProfileService(userProfileRepo, skillTestRepo);
+            var userProfileService = new UserProfileService();
             viewModel = new PublicProfileViewModel(userProfileService);
         }
 

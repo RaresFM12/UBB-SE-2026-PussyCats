@@ -19,7 +19,7 @@ namespace PussyCatsApp.views
         {
             this.InitializeComponent();
 
-            viewModel = UserProfileViewModel.Create();
+            viewModel = new UserProfileViewModel();
 
             viewModel.OnLevelUpdated += renderLevelDisplay;
             this.DataContext = viewModel;

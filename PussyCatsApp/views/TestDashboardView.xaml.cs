@@ -38,13 +38,7 @@ namespace PussyCatsApp.views
 
             IUserProileRepository user = new UserProfileRepository();
             WebView2 view = new WebView2();
-            var userProfileViewModel = new UserProfileViewModel(
-                new UserProfileService(userProfileRepo, skillTestRepo),
-                new ImageStorageService(),
-                new PdfExportService(view, user),
-                new CvUploadService(),
-                new CompletenessService()
-            );
+            var userProfileViewModel = new UserProfileViewModel();
 
             testDashboardViewModel = new TestDashboardViewModel(skillTestService, userProfileViewModel);
         }
