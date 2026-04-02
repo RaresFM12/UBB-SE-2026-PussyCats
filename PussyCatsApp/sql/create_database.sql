@@ -84,6 +84,20 @@ CREATE TABLE PREFERENCES (
 );
 GO
 
+-- ============================================
+-- MATCHES table (FK -> USERS)
+-- ============================================
+
+CREATE TABLE MATCHES (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    userID INT NOT NULL,
+    companyName NVARCHAR(255) NOT NULL,
+    jobRole NVARCHAR(255) NOT NULL,
+    matchDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Matches_Users FOREIGN KEY (userID) REFERENCES USERS(userID) ON DELETE CASCADE
+);
+GO
+
 -- =============================================
 -- Updates
 -- =============================================
