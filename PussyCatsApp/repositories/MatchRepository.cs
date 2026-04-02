@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using PussyCatsApp.models;
+using System.Diagnostics;
 
 namespace PussyCatsApp.repositories
 {
@@ -21,6 +22,8 @@ namespace PussyCatsApp.repositories
 
             string query = "SELECT id, userID, companyName, jobRole, matchDate FROM MATCHES WHERE userID = @UserId ORDER BY matchDate DESC";
 
+            Debug.WriteLine($"query for {userId}: {query}");
+            
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
