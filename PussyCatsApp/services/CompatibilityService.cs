@@ -2,9 +2,6 @@
 using PussyCatsApp.repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PussyCatsApp.services
 {
@@ -19,26 +16,104 @@ namespace PussyCatsApp.services
             this.skillGroupRepository = new SkillGroupRepository();
         }
 
+        private List<UserSkill> GetUserSkills(int userId)
+        {
+            List<UserSkill> verifiedSkills = userSkillRepository.GetVerifiedSkillsByUserId(userId);
+            string parsedCv = userSkillRepository.GetParsedCvByUserId(userId);
+
+            List<string> cvSkills = ExtractSkillsFromParsedCv(parsedCv);
+
+            return MergeVerifiedAndUnverifiedSkills(verifiedSkills, cvSkills);
+        }
+
+        private List<string> ExtractSkillsFromParsedCv(string parsedCv)
+        {
+            List<string> extractedSkills = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(parsedCv))
+                return extractedSkills;
+
+            string[] lines = parsedCv.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+            if (lines.Length < 3)
+                return extractedSkills;
+
+            string skillsLine = lines[2].Trim();
+
+            if (string.IsNullOrWhiteSpace(skillsLine))
+                return extractedSkills;
+
+            string[] cvSkills = skillsLine.Split(',');
+
+            foreach (string cvSkill in cvSkills)
+            {
+                string skillName = cvSkill.Trim();
+                if (!string.IsNullOrWhiteSpace(skillName))
+                    extractedSkills.Add(skillName);
+            }
+
+            return extractedSkills;
+        }
+
+        private List<UserSkill> MergeVerifiedAndUnverifiedSkills(List<UserSkill> verifiedSkills, List<string> cvSkills)
+        {
+            List<UserSkill> allSkills = new List<UserSkill>();
+
+            foreach (UserSkill verifiedSkill in verifiedSkills)
+                allSkills.Add(verifiedSkill);
+
+            foreach (string cvSkill in cvSkills)
+            {
+                bool alreadyExists = false;
+
+                foreach (UserSkill existingSkill in allSkills)
+                {
+                    if (string.Equals(existingSkill.SkillName, cvSkill, StringComparison.OrdinalIgnoreCase))
+                    {
+                        alreadyExists = true;
+                        break;
+                    }
+                }
+
+                if (!alreadyExists)
+                {
+                    allSkills.Add(new UserSkill
+                    {
+                        SkillName = cvSkill,
+                        IsVerified = false,
+                        Score = 0
+                    });
+                }
+            }
+
+            return allSkills;
+        }
+
         private double ComputeGroupScore(SkillGroup group, List<UserSkill> userSkills)
         {
             double maxCi = 0;
+
             foreach (string skill in group.Skills)
             {
                 double ci = 0;
+
                 foreach (UserSkill userSkill in userSkills)
                 {
-                    if (userSkill.SkillName == skill)
+                    if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                     {
                         if (userSkill.IsVerified)
                             ci = userSkill.Score / 100.0;
                         else
                             ci = 0.5;
+
                         break;
                     }
                 }
+
                 if (ci > maxCi)
                     maxCi = ci;
             }
+
             return maxCi;
         }
 
@@ -82,7 +157,7 @@ namespace PussyCatsApp.services
 
                     foreach (UserSkill userSkill in userSkills)
                     {
-                        if (userSkill.SkillName == skill)
+                        if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                         {
                             if (userSkill.IsVerified)
                                 userHasVerified = true;
@@ -127,7 +202,7 @@ namespace PussyCatsApp.services
 
         public RoleResult CalculateForRole(int userId, JobRole role)
         {
-            List<UserSkill> userSkills = userSkillRepository.GetByUserId(userId);
+            List<UserSkill> userSkills = GetUserSkills(userId);
             List<SkillGroup> groups = skillGroupRepository.GetByRole(role);
 
             int totalWeight = 0;
@@ -152,14 +227,17 @@ namespace PussyCatsApp.services
 
             result.MatchScore = matchScore;
             result.Suggestions = IdentifyGaps(groups, userSkills, totalWeight);
+
             return result;
         }
 
         public List<RoleResult> CalculateAll(int userId)
         {
             List<RoleResult> results = new List<RoleResult>();
+
             foreach (JobRole role in Enum.GetValues(typeof(JobRole)))
                 results.Add(CalculateForRole(userId, role));
+
             return results;
         }
 
