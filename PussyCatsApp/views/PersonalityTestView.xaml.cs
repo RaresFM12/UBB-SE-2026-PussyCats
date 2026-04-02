@@ -89,7 +89,7 @@ namespace PussyCatsApp.views
 
             InitializeViewModel(userId);
         }
-        // Initialize and assign the view model instance to the page's DataContext
+        // Initialize and assign the view model instance to the page's Da  taContext
         private void InitializeViewModel(int userId)
         {
             // TODO: Get connection string from app configuration
