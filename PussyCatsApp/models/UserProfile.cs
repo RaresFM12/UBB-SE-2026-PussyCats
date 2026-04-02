@@ -64,8 +64,8 @@ namespace PussyCatsApp.models
     {
         public string Company { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; } // null if currently working
+        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; } // null if currently working
         public string Description { get; set; } = string.Empty;
         public bool CurrentlyWorking { get; set; }
     }

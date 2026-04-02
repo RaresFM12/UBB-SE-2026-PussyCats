@@ -243,7 +243,7 @@ namespace PussyCatsApp.viewModels
 
             WorkExperiences.Add(new WorkExperience
             {
-                StartDate = DateTime.Now,
+                StartDate = DateTimeOffset.Now,
                 CurrentlyWorking = false
             });
         }
