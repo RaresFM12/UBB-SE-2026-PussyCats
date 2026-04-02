@@ -262,6 +262,11 @@ SET LastUpdated = DATEADD(day, -5, GETDATE())
 WHERE userID = 1;
 GO
 
+UPDATE USERS
+SET city = 'Cluj-Napoca'
+WHERE userID = 1;
+GO
+
 SELECT * FROM USERS;
 SELECT * FROM documents;
 SELECT  * FROM Matches;
