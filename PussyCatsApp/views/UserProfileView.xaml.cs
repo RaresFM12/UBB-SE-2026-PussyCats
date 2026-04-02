@@ -75,6 +75,25 @@ namespace PussyCatsApp.views
                 lblGraduationYear.Text = $"Graduation Year: {viewModel._userProfile.ExpectedGraduationYear}";
                 lblFreshness.Text = viewModel.FreshnessText;
 
+                string testResultDisplay = "Not taken yet";
+                if (!string.IsNullOrEmpty(viewModel._userProfile.PersonalityTestResult))
+                {
+                    // Try parsing the string to the JobRole enum
+                    if (Enum.TryParse<JobRole>(viewModel._userProfile.PersonalityTestResult, out var jobRole))
+                    {
+                        var converter = new converters.JobRoleToDisplayNameConverter();
+
+                        // Convert the enum value to the display string
+                        testResultDisplay = converter.Convert(jobRole, typeof(string), null, string.Empty).ToString();
+                    }
+                    else
+                    {
+                        // Fallback if the string couldn't be parsed 
+                        testResultDisplay = viewModel._userProfile.PersonalityTestResult;
+                    }
+                }
+                lblPersonalityTestResult.Text = $"Personality Test Result: {testResultDisplay}";
+
                 LevelTitleText.Text = "Level 2 - Apprentice";
                 XpProgressBar.Maximum = 250;
                 XpProgressBar.Value = 150;
@@ -91,6 +110,15 @@ namespace PussyCatsApp.views
                 else
                 {
                     pbAvatar.ProfilePicture = null;
+                }
+
+                if (!string.IsNullOrEmpty(viewModel._userProfile.PersonalityTestResult))
+                {
+                    btnPersonalityTest.Content = "Retake Personality Test";
+                }
+                else
+                {
+                    btnPersonalityTest.Content = "Take Personality Test";
                 }
 
                 completenessBar.Update(viewModel.CompletenessPercentage, viewModel.NextEmptyFieldPrompt);

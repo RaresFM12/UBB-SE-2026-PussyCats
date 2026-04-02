@@ -3,10 +3,7 @@
 -- Based on DB diagram: USERS, SKILLS, DOCUMENTS, PREFERENCES
 -- =============================================
 
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'PussyCatsDB')
-BEGIN
-    CREATE DATABASE PussyCatsDB;
-END
+CREATE DATABASE PussyCatsDB;
 GO
 
 USE PussyCatsDB;

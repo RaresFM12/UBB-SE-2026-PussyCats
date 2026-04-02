@@ -16,9 +16,9 @@ namespace PussyCatsApp.services
     {
         private PersonalityTestRepository Repository;
 
-        public PersonalityTestService(PersonalityTestRepository repository)
+        public PersonalityTestService()
         {
-            this.Repository = repository;
+            this.Repository = new PersonalityTestRepository();
         }
 
         public static List<Question> LoadQuestions()
