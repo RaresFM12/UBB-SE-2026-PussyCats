@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.models;
+using PussyCatsApp.repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.views;
 using System;
@@ -45,6 +46,19 @@ namespace PussyCatsApp.viewModels
 
             // Initialize nested ViewModel
             this.ExportVM = new ExportCVViewModel(pdfExportService);
+        }
+
+        public static UserProfileViewModel Create()
+        {
+            var userProfileRepo = new UserProfileRepository();
+            var skillTestRepo = new SkillTestRepository();
+            return new UserProfileViewModel(
+                new UserProfileService(userProfileRepo, skillTestRepo),
+                new ImageStorageService(),
+                null,
+                new CvUploadService(),
+                new CompletenessService()
+            );
         }
 
         public event Action OnLevelUpdated;
