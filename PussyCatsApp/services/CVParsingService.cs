@@ -272,16 +272,16 @@ namespace PussyCatsApp.services
         /// <summary>
         /// Validates date values
         /// </summary>
-        private DateTime ValidateDate(DateTime? date)
+        private DateTimeOffset ValidateDate(DateTimeOffset? date)
         {
             if (!date.HasValue)
-                return DateTime.Now;
+                return DateTimeOffset.Now;
 
-            var minDate = new DateTime(1980, 1, 1);
-            var maxDate = DateTime.Now.AddYears(1);
+            var minDate = new DateTimeOffset(new DateTime(1980, 1, 1));
+            var maxDate = DateTimeOffset.Now.AddYears(1);
 
             if (date < minDate || date > maxDate)
-                return DateTime.Now;
+                return DateTimeOffset.Now;
 
             return date.Value;
         }
