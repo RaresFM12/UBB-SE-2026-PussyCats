@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Networking.Sockets;
 
 namespace PussyCatsApp.viewModels
 {
@@ -34,9 +35,9 @@ namespace PussyCatsApp.viewModels
 
         public bool CanSave => SelectedRole != null;
 
-        public PersonalityTestViewModel(PersonalityTestService service, int userId)
+        public PersonalityTestViewModel(int userId)
         {
-            PersonalityTestService = service;
+            PersonalityTestService = new PersonalityTestService();
             UserId = userId;
 
             Questions = PersonalityTestService.LoadQuestions()
