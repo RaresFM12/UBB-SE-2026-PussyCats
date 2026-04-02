@@ -97,10 +97,10 @@
                     <TextBlock x:Name="lblLinkedinAccount" Text="LinkedIn: " Foreground="Black" FontSize="16" />
                     <TextBlock x:Name="lblGender" Text="Gender: " Foreground="Black" FontSize="16" />
                     <TextBlock x:Name="lblUniversity" Text="University: " Foreground="Black" FontSize="16" />
+                    <TextBlock x:Name="lblGraduationYear" Text="Expected year to finish university: " Foreground="Black" FontSize="16" />
                     <TextBlock x:Name="lblCountry" Text="Country: " Foreground="Black" FontSize="16" />
                     <TextBlock x:Name="lblCity" Text="City: " Foreground="Black" FontSize="16" /> 
                     <TextBlock x:Name="lblPersonalityTestResult" Text="Personality Test Result: " Foreground="Black" FontSize="16" />
-                    <TextBlock x:Name="lblGraduationYear" Text="Expected year to finish university: " Foreground="Black" FontSize="16" />
                     <TextBlock x:Name="lblError" Foreground="#FFA0A0" TextWrapping="Wrap" Margin="0,20,0,0" />
                 </StackPanel>
 

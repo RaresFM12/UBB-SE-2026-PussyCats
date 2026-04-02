@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,11 +11,11 @@ namespace PussyCatsApp.repositories.personality_test_repo
 {
     public class PersonalityTestRepository : IPersonalityTestRepository
     {
-        private string ConnectionString = "Data Source=.;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
 
         public String? load(int id)
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
@@ -40,7 +41,7 @@ namespace PussyCatsApp.repositories.personality_test_repo
 
         public void save(int id, string personalityTestResult)
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
