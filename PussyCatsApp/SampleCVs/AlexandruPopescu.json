@@ -14,20 +14,18 @@
     "university": "Babes-Bolyai University",
     "degree": "Master of Science in Software Engineering",
     "skills": [
-        "C#",
-        ".NET 8",
-        "React",
-        "TypeScript",
-        "SQL Server",
-        "Azure",
-        "Docker",
-        "Kubernetes",
-        "GraphQL",
-        "Redis",
-        "RabbitMQ",
-        "CI/CD",
-        "Microservices Architecture",
-        "Agile/Scrum"
+      "React",
+      "TypeScript",
+      "Node.js",
+      "JavaScript",
+      "PostgreSQL",
+      "MongoDB",
+      "REST",
+      "GraphQL",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD"
     ],
     "parsedCV": {
         "workExperiences": [
