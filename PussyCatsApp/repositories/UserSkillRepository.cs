@@ -30,7 +30,7 @@ namespace PussyCatsApp.repositories
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT name, score FROM Skills WHERE userId = @UserId";
+                string query = "SELECT name, score FROM SKILLS WHERE userID = @UserId";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@UserId", userId);
                 SqlDataReader reader = command.ExecuteReader();

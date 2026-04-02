@@ -292,6 +292,8 @@ SET city = 'Cluj-Napoca'
 WHERE userID = 1;
 GO
 
+update SKILLS Set score = 90 where skillID = 15
+
 SELECT * FROM USERS;
 SELECT * FROM documents;
 SELECT  * FROM Matches;

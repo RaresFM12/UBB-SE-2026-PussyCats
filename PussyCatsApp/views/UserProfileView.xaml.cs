@@ -11,7 +11,7 @@ namespace PussyCatsApp.views
 {
     public sealed partial class UserProfileView : Page
     {
-        private int currentUserId = 2;
+        private int currentUserId = 1;
         public UserProfileViewModel viewModel { get; private set; }
         private bool _isBinding = false;
 
