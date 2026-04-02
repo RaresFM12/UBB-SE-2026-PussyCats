@@ -10,7 +10,8 @@ namespace PussyCatsApp.repositories
 {
     public class UserSkillRepository 
     {
-        private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
+        //private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
+        private const string connectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
 
         public UserSkillRepository()
         {}
