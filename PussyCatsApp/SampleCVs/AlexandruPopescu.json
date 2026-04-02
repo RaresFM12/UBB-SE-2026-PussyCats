@@ -1,0 +1,97 @@
+{
+    "firstName": "Alexander",
+    "lastName": "Popescu",
+    "gender": "Male",
+    "age": 28,
+    "email": "alexander.popescu.dev@gmail.com",
+    "phone": "+40 722 123 456",
+    "github": "https://github.com/alexpopescu-dev",
+    "linkedin": "https://www.linkedin.com/in/alexpopescu-dev/",
+    "graduationYear": 2019,
+    "country": "Romania",
+    "city": "Cluj-Napoca",
+    "address": "Strada Observatorului 34, Cluj-Napoca, Romania",
+    "university": "Babes-Bolyai University",
+    "degree": "Master of Science in Software Engineering",
+    "skills": [
+        "C#",
+        ".NET 8",
+        "React",
+        "TypeScript",
+        "SQL Server",
+        "Azure",
+        "Docker",
+        "Kubernetes",
+        "GraphQL",
+        "Redis",
+        "RabbitMQ",
+        "CI/CD",
+        "Microservices Architecture",
+        "Agile/Scrum"
+    ],
+    "parsedCV": {
+        "workExperiences": [
+            {
+                "jobTitle": "Senior Software Engineer",
+                "company": "Endava",
+                "period": "Jan 2021 - Present",
+                "description": "Led a team of 5 developers in migrating a monolithic legacy application to a microservices architecture using .NET 7/8 and Azure Kubernetes Service (AKS). Improved system latency by 40% and reduced deployment time from 2 hours to 15 minutes via automated CI/CD pipelines. Mentored junior developers and conducted rigorous weekly code reviews."
+            },
+            {
+                "jobTitle": "Full Stack Developer",
+                "company": "Cognizant Softvision",
+                "period": "Jul 2019 - Dec 2020",
+                "description": "Developed and maintained highly scalable web applications using React on the frontend and C# ASP.NET Web API on the backend. Integrated third-party payment gateways (Stripe, PayPal) successfully handling $50k+ daily transactions. Optimized SQL queries resulting in a 30% faster data retrieval for the main reporting dashboard."
+            },
+            {
+                "jobTitle": "Junior Web Developer (Intern)",
+                "company": "NTT Data",
+                "period": "Jun 2018 - Sep 2018",
+                "description": "Assisted in the development of internal HR management tools. Wrote comprehensive unit tests using xUnit and Moq, increasing overall code coverage from 45% to 75%."
+            }
+        ],
+        "projects": [
+            {
+                "projectName": "E-Commerce Microservices Platform",
+                "technologies": [
+                    "C#",
+                    ".NET 8",
+                    "React",
+                    "RabbitMQ",
+                    "Docker",
+                    "SQL Server"
+                ],
+                "url": "https://github.com/alexpopescu-dev/ecommerce-micro",
+                "description": "Built a highly scalable e-commerce backend from scratch using CQRS and Event Sourcing patterns. Implemented an API Gateway using Ocelot, distributed caching with Redis, and secure identity management using Duende IdentityServer."
+            },
+            {
+                "projectName": "Real-Time Collaborative Code Editor",
+                "technologies": [
+                    "Node.js",
+                    "Express",
+                    "Socket.io",
+                    "React",
+                    "Monaco Editor"
+                ],
+                "url": "https://github.com/alexpopescu-dev/collab-code",
+                "description": "Created a real-time collaborative code editor allowing multiple users to edit the same file simultaneously. Utilized Operational Transformation (OT) algorithms to resolve live typing conflicts and integrated WebRTC for live audio communication."
+            }
+        ],
+        "extraCurricularActivities": [
+            {
+                "activityName": "Tech Meetup Speaker",
+                "organization": "Cluj .NET User Group",
+                "role": "Speaker & Co-Organizer",
+                "period": "2022 - Present",
+                "description": "Organize monthly tech meetups for local developers. Delivered talks on advanced C# 12 features, cloud-native design patterns, and application performance tuning to audiences of 100+ peers."
+            },
+            {
+                "activityName": "Open Source Contributor",
+                "organization": "Various GitHub Projects",
+                "role": "Contributor",
+                "period": "2020 - Present",
+                "description": "Actively contributing bug fixes and feature enhancements to popular .NET open-source repositories including Entity Framework Core and AutoMapper. Recognized as a top contributor in 2022."
+            }
+        ]
+    }
+}

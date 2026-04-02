@@ -107,11 +107,11 @@
                     <Button x:Name="btnEdit" Content="Edit Profile" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnPersonalityTest" Content="Take Personality Test" Click="OnPersonalityTestClick" HorizontalAlignment="Stretch" />
 
-                    <Button x:Name="btnPreviewCV" Content="Preview &amp; Export CV" Click="OnPreviewCVClick" HorizontalAlignment="Stretch" />
+                    <Button x:Name="btnPreviewCV" Content="Download Profile as PDF" Click="OnPreviewCVClick" HorizontalAlignment="Stretch" />
 
                     <Button x:Name="btnViewDocuments" Content="View Documents" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnMatchHistory" Content="Match History" Click="OnMatchmakingHistoryClick" HorizontalAlignment="Stretch" />
-                    <Button x:Name="btnRoleCompatibility" Content="Role Compatibility Analyzer" Click="OnCompatibilityAnalyzerClick" HorizontalAlignment="Stretch" />
+                    <Button x:Name="btnRoleCompatibility" Content="Check Compatibility" Click="OnCompatibilityAnalyzerClick" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnPublicProfile" Content="See Public Profile" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnOldTests" Content="Go to old tests" HorizontalAlignment="Stretch" />
                     <Button x:Name="btnSkillTests" Content="Skill Tests" HorizontalAlignment="Stretch" />
