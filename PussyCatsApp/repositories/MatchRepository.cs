@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using PussyCatsApp.models;
+using System.Diagnostics;
 
 namespace PussyCatsApp.repositories
 {
     public class MatchRepository
     {
-        //private const string _connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
-        private const string _connectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
+        private const string _connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
 
         public MatchRepository()
         {}
@@ -22,6 +22,8 @@ namespace PussyCatsApp.repositories
 
             string query = "SELECT id, userID, companyName, jobRole, matchDate FROM MATCHES WHERE userID = @UserId ORDER BY matchDate DESC";
 
+            Debug.WriteLine($"query for {userId}: {query}");
+            
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
