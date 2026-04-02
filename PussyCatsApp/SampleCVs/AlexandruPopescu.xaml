@@ -1,0 +1,160 @@
+<Page
+    x:Class="PussyCatsApp.views.CVSamplePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollViewer Padding="40" MaxWidth="900" HorizontalAlignment="Center">
+        <StackPanel Spacing="30">
+
+            <StackPanel Spacing="10">
+                <TextBlock Text="Alexander Popescu" FontSize="42" FontWeight="Bold" Foreground="#2c1a3e" />
+                <TextBlock Text="Senior Full Stack Software Engineer" FontSize="20" FontWeight="SemiBold" Foreground="#9b72a8" />
+                
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,20,0">
+                        <TextBlock Text="📧 "/>
+                        <TextBlock Text="alex.popescu@gmail.com" Foreground="DarkGray" />
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,20,0">
+                        <TextBlock Text="📱 "/>
+                        <TextBlock Text="+40 722 123 456" Foreground="DarkGray"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,20,0">
+                        <TextBlock Text="🔗 "/>
+                        <HyperlinkButton Content="linkedin.com/in/alexpopescu" NavigateUri="https://www.linkedin.com/in/alexpopescu-dev/" Padding="0" Margin="0,-2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                        <TextBlock Text="💻 "/>
+                        <HyperlinkButton Content="github.com/alexpopescu" NavigateUri="https://github.com/alexpopescu-dev" Padding="0" Margin="0,-2,0,0"/>
+                    </StackPanel>
+                </Grid>
+                
+                <TextBlock Text="📍 Strada Observatorului 34, Cluj-Napoca, Romania" Foreground="DarkGray" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <Border Height="1" Background="#E0E0E0" Margin="0,10" />
+
+            <Grid ColumnSpacing="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Spacing="8">
+                    <TextBlock Text="EDUCATION" FontSize="18" FontWeight="Bold" Foreground="#2c1a3e"/>
+                    <TextBlock Text="Master of Science in Software Engineering" FontWeight="SemiBold" FontSize="15"/>
+                    <TextBlock Text="Babes-Bolyai University | 2019" Foreground="Gray"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="TOP SKILLS" FontSize="18" FontWeight="Bold" Foreground="#2c1a3e"/>
+                    <TextBlock Text="C#, .NET 8, SQL Server, Azure, Docker, React" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                    <TextBlock Text="Kubernetes, TypeScript, RabbitMQ, CI/CD, Agile" TextWrapping="Wrap" Foreground="Gray"/>
+                </StackPanel>
+            </Grid>
+
+            <Border Height="1" Background="#E0E0E0" Margin="0,10" />
+
+            <StackPanel Spacing="15">
+                <TextBlock Text="WORK EXPERIENCE" FontSize="18" FontWeight="Bold" Foreground="#2c1a3e"/>
+
+                <Border Background="#F9F9F9" CornerRadius="8" Padding="15">
+                    <StackPanel Spacing="5">
+                        <Grid>
+                            <TextBlock Text="Senior Software Engineer - Endava" FontWeight="Bold" FontSize="16"/>
+                            <TextBlock Text="Jan 2021 - Present" HorizontalAlignment="Right" Foreground="Gray"/>
+                        </Grid>
+                        <TextBlock Text="Led a team of 5 developers in migrating a monolithic legacy application to a microservices architecture using .NET 8 and Azure Kubernetes Service. Improved system latency by 40% and reduced deployment time from 2 hours to 15 minutes." TextWrapping="Wrap" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#F9F9F9" CornerRadius="8" Padding="15">
+                    <StackPanel Spacing="5">
+                        <Grid>
+                            <TextBlock Text="Full Stack Developer - Cognizant Softvision" FontWeight="Bold" FontSize="16"/>
+                            <TextBlock Text="Jul 2019 - Dec 2020" HorizontalAlignment="Right" Foreground="Gray"/>
+                        </Grid>
+                        <TextBlock Text="Maintained scalable web apps using React and C# ASP.NET Web API. Integrated third-party payment gateways (Stripe, PayPal) handling $50k+ daily transactions. Optimized SQL queries resulting in 30% faster data retrieval." TextWrapping="Wrap" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Spacing="15">
+                <TextBlock Text="NOTABLE PROJECTS" FontSize="18" FontWeight="Bold" Foreground="#2c1a3e"/>
+
+                <Border BorderBrush="#9b72a8" BorderThickness="1" CornerRadius="8" Padding="15">
+                    <StackPanel Spacing="5">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="E-Commerce Microservices Platform" FontWeight="Bold" FontSize="16"/>
+                            <HyperlinkButton Content="[GitHub Repo]" NavigateUri="https://github.com/alexpopescu-dev/ecommerce-micro" Padding="0" Margin="0,-2,0,0"/>
+                        </StackPanel>
+                        <TextBlock Text="Tech Stack: C#, .NET 8, React, RabbitMQ, Docker" Foreground="#9b72a8" FontSize="12" FontWeight="SemiBold"/>
+                        <TextBlock Text="Built a scalable e-commerce backend using CQRS and Event Sourcing patterns. Implemented an API Gateway using Ocelot and identity management with Duende IdentityServer." TextWrapping="Wrap" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="#9b72a8" BorderThickness="1" CornerRadius="8" Padding="15">
+                    <StackPanel Spacing="5">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Real-Time Collaborative Code Editor" FontWeight="Bold" FontSize="16"/>
+                            <HyperlinkButton Content="[GitHub Repo]" NavigateUri="https://github.com/alexpopescu-dev/collab-code" Padding="0" Margin="0,-2,0,0"/>
+                        </StackPanel>
+                        <TextBlock Text="Tech Stack: Node.js, Express, Socket.io, React" Foreground="#9b72a8" FontSize="12" FontWeight="SemiBold"/>
+                        <TextBlock Text="Created a real-time code editor allowing multiple users to edit simultaneously with operational transformation (OT) to resolve conflicts. Includes live WebRTC chat." TextWrapping="Wrap" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Spacing="15">
+                <TextBlock Text="EXTRACURRICULAR ACTIVITIES" FontSize="18" FontWeight="Bold" Foreground="#2c1a3e"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="2022 - Present" Foreground="Gray"/>
+                        <TextBlock Text="Cluj .NET Group" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Tech Meetup Speaker &amp; Co-Organizer" FontWeight="Bold"/>
+                        <TextBlock Text="Organize monthly meetups for local developers. Delivered talks on advanced C# features, cloud-native patterns, and performance tuning." TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="2020 - Present" Foreground="Gray"/>
+                        <TextBlock Text="Various Projects" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Open Source Contributor" FontWeight="Bold"/>
+                        <TextBlock Text="Contributed bug fixes and feature enhancements to popular .NET open source repositories including Entity Framework Core and AutoMapper." TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+            
+            <TextBlock Text="References available upon request." FontStyle="Italic" Foreground="Gray" HorizontalAlignment="Center" Margin="0,30,0,0"/>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
