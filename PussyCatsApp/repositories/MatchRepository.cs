@@ -10,7 +10,7 @@ namespace PussyCatsApp.repositories
 {
     public class MatchRepository
     {
-        private const string _connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
+        private const string _connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
 
         public MatchRepository()
         {}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using PussyCatsApp.models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace PussyCatsApp.repositories
 {
     public class DocumentRepository
     {
-        private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
+        private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
         public List<Document> getDocumentsByUserId(int userId)
         {
             var documents = new List<Document>();

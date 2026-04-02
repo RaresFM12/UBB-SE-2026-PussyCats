@@ -160,6 +160,9 @@ BEGIN
 END
 GO
 
+ALTER TABLE Users
+ADD formDataJson VARCHAR(MAX) NULL;
+
 -- =============================================
 -- MATCHES table (FK -> USERS)
 -- =============================================
