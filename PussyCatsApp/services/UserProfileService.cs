@@ -13,10 +13,10 @@ namespace PussyCatsApp.services
         private readonly SkillTestRepository skillTestRepository;
         private readonly UserProfileRepository userProfileRepository;
 
-        public UserProfileService(UserProfileRepository userProfileRepository, SkillTestRepository skillTestRepository)
+        public UserProfileService()
         {
-            this.userProfileRepository = userProfileRepository;
-            this.skillTestRepository = skillTestRepository;
+            this.userProfileRepository = new UserProfileRepository();
+            this.skillTestRepository = new SkillTestRepository();
         }
 
         public UserProfile GetProfile(int userId)
