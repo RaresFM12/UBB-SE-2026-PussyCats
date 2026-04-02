@@ -82,6 +82,7 @@ namespace PussyCatsApp.viewModels
 
         public async Task LoadUserAsync(int userId)
         {
+            ErrorMessage = "";
             _isLoading = true;
             try
             {
@@ -132,7 +133,7 @@ namespace PussyCatsApp.viewModels
 
         public void RemoveAvatarCommand()
         {
-            if (_userProfile?.ProfilePicture != null)
+            if (!string.IsNullOrEmpty(_userProfile?.ProfilePicture))
             {
                 imageStorageService.DeleteImage(_userProfile.ProfilePicture);
                 profileSerivice.RemoveAvatarPath(_userProfile.UserId);

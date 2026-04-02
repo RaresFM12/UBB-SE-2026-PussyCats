@@ -3,7 +3,10 @@
 -- Based on DB diagram: USERS, SKILLS, DOCUMENTS, PREFERENCES
 -- =============================================
 
-CREATE DATABASE IF NOT EXISTS PussyCatsDB;
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'PussyCatsDB')
+BEGIN
+    CREATE DATABASE PussyCatsDB;
+END
 GO
 
 USE PussyCatsDB;
@@ -256,6 +259,11 @@ VALUES
     (@newUserId, 'https://example.com/cv/ioana_gavrila_cv.pdf', 'Ioana_Gavrila_CV.pdf');
 
 
+--set the last modified to check if the update works
+UPDATE USERS
+SET LastUpdated = DATEADD(day, -5, GETDATE())
+WHERE userID = 1;
+
 -- =============================================
 -- Insert Sample Data into MATCHES
 -- =============================================
@@ -281,3 +289,5 @@ GO
 
 SELECT * FROM USERS;
 SELECT * FROM documents;
+SELECT  * FROM Matches;
+SELECT * FROM SKILLS;
