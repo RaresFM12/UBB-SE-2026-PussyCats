@@ -96,7 +96,7 @@ namespace PussyCatsApp.views
             //string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
             //string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
             //string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-            string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+            string connectionString = "Data Source=.;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
 
             var repository = new PersonalityTestRepository(connectionString);
             var service = new PersonalityTestService(repository);

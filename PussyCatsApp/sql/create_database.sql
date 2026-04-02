@@ -3,7 +3,7 @@
 -- Based on DB diagram: USERS, SKILLS, DOCUMENTS, PREFERENCES
 -- =============================================
 
-CREATE DATABASE IF NOT EXISTS PussyCatsDB;
+CREATE DATABASE PussyCatsDB;
 GO
 
 USE PussyCatsDB;
