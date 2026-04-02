@@ -287,6 +287,11 @@ GO
 SELECT * FROM MATCHES;
 GO
 
+UPDATE USERS
+SET city = 'Cluj-Napoca'
+WHERE userID = 1;
+GO
+
 SELECT * FROM USERS;
 SELECT * FROM documents;
 SELECT  * FROM Matches;
