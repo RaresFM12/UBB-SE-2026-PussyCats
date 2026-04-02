@@ -160,6 +160,9 @@ BEGIN
 END
 GO
 
+ALTER TABLE Users 
+ADD formDataJson VARCHAR(max) NULL
+
 -- =============================================
 -- MATCHES table (FK -> USERS)
 -- =============================================
@@ -252,6 +255,29 @@ INSERT INTO DOCUMENTS (userID, storedDocument, nameDocument)
 VALUES 
     (@newUserId, 'https://example.com/cv/ioana_gavrila_cv.pdf', 'Ioana_Gavrila_CV.pdf');
 
+
+-- =============================================
+-- Insert Sample Data into MATCHES
+-- =============================================
+
+-- Using explicit dates (e.g., matching over the last few days)
+INSERT INTO MATCHES (userID, companyName, jobRole, matchDate)
+VALUES 
+    (1, 'Tech Innovators Cluj', 'Junior .NET Developer', DATEADD(day, -5, GETDATE())),
+    (1, 'Global Software Corp', 'Full Stack Engineer (React/C#)', DATEADD(day, -2, GETDATE())),
+    (1, 'FinTech Solutions SRL', 'Frontend Developer', GETDATE());
+GO
+
+-- Relying on the DEFAULT constraint for matchDate (will use exactly GETDATE())
+INSERT INTO MATCHES(userID, companyName, jobRole)
+VALUES 
+    (1, 'NextGen AI Startups', 'Software Integration Engineer'),
+    (1, 'E-Commerce Giants Ltd.', 'Backend Developer (ASP.NET)');
+GO
+
+-- Verify the insertions
+SELECT * FROM MATCHES;
+GO
 
 SELECT * FROM USERS;
 SELECT * FROM documents;
