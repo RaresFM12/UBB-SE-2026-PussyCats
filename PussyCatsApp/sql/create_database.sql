@@ -294,7 +294,7 @@ GO
 
 update SKILLS Set score = 90 where skillID = 15
 
-SELECT * FROM USERS;
+SELECT parsedCV FROM USERS;
 SELECT * FROM documents;
 SELECT  * FROM Matches;
 SELECT * FROM SKILLS;
