@@ -60,11 +60,13 @@ namespace PussyCatsApp.repositories
             List<ExtraCurricularActivity> ExtraCurricularActivities
         );
 
-        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        //private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
         //private const string otherConnectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True";
+        // private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
+        private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
 
         //private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-        //private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        // private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
         private SqlConnection sqlConnection;
 
         public UserProfile getProfileById(int userId)
@@ -219,9 +221,9 @@ namespace PussyCatsApp.repositories
         /// Returns null if no user with the given ID exists.
         /// </summary>
        
-        private static UserProfile LoadUserRow(SqlConnection conn, int userId)
+        private static UserProfile LoadUserRow(SqlConnection connection, int userId)
         {
-            using var cmd = conn.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
                 SELECT userID, firstName, lastName, gender, age,
                        email, phone, github, linkedin, universityStartYear,
@@ -279,9 +281,9 @@ namespace PussyCatsApp.repositories
         /// Deserializes WorkExperiences, Projects, and ExtraCurricularActivities
         /// from the parsedCV JSON column and populates them on the profile.
         /// </summary>
-        private static void LoadParsedCV(SqlConnection conn, int userId, UserProfile profile)
+        private static void LoadParsedCV(SqlConnection connection, int userId, UserProfile profile)
         {
-            using var command = conn.CreateCommand();
+            using var command = connection.CreateCommand();
             command.CommandText = "SELECT parsedCV FROM Users WHERE userID = @id";
             command.Parameters.AddWithValue("@id", userId);
 
@@ -306,24 +308,24 @@ namespace PussyCatsApp.repositories
             }
         }
 
-        private static List<string> LoadSkills(SqlConnection conn, int userId)
+        private static List<string> LoadSkills(SqlConnection connection, int userId)
         {
             var skills = new List<string>();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT name FROM Skills WHERE userID = @id ORDER BY skillID";
-            cmd.Parameters.AddWithValue("@id", userId);
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT name FROM Skills WHERE userID = @id ORDER BY skillID";
+            command.Parameters.AddWithValue("@id", userId);
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = command.ExecuteReader();
             while (reader.Read())
                 skills.Add(reader.GetString(0));
 
             return skills;
         }
 
-        private static List<string> LoadCertificates(SqlConnection conn, int userId)
+        private static List<string> LoadCertificates(SqlConnection connection, int userId)
         {
             var list = new List<string>();
-            using var cmd = conn.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
                 SELECT nameDocument
                 FROM Documents
@@ -341,9 +343,9 @@ namespace PussyCatsApp.repositories
             return list;
         }
 
-        private static void LoadPreferences(SqlConnection conn, int userId, UserProfile profile)
+        private static void LoadPreferences(SqlConnection connection, int userId, UserProfile profile)
         {
-            using var cmd = conn.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
                 SELECT preferanceType, value
                 FROM Preferences
@@ -375,14 +377,14 @@ namespace PussyCatsApp.repositories
         // PRIVATE SAVERS
         // ════════════════════════════════════════════════════════════
 
-        private static void UpsertUserRow(SqlConnection conn, SqlTransaction tx,
-            int userId, UserProfile p)
+        private static void UpsertUserRow(SqlConnection connection, SqlTransaction transaction,
+            int userId, UserProfile profile)
         {
             // Serialize WorkExperiences + Projects + ExtraCurricular into parsedCV
             var parsedCVJson = JsonSerializer.Serialize(new ParsedCVData(
-                p.WorkExperiences ?? new(),
-                p.Projects ?? new(),
-                p.ExtraCurricularActivities ?? new()
+                profile.WorkExperiences ?? new(),
+                profile.Projects ?? new(),
+                profile.ExtraCurricularActivities ?? new()
             ), _jsonOptions);
 
             // Serialize the entire form as a JSON snapshot
@@ -442,16 +444,16 @@ namespace PussyCatsApp.repositories
                     )";
 
             // Convert 'Male'/'Female' → 'M'/'F' for CHAR(1) DB column
-            var genderDb = p.Gender switch
+            var genderDb = profile.Gender switch
             {
                 "Male" => "M",
                 "Female" => "F",
-                _ => p.Gender
+                _ => profile.Gender
             };
 
             cmd.Parameters.AddWithValue("@id", userId);
-            cmd.Parameters.AddWithValue("@firstName", p.FirstName);
-            cmd.Parameters.AddWithValue("@lastName", p.LastName);
+            cmd.Parameters.AddWithValue("@firstName", profile.FirstName);
+            cmd.Parameters.AddWithValue("@lastName", profile.LastName);
             cmd.Parameters.AddWithValue("@gender", (object)genderDb ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@age", p.Age);
             cmd.Parameters.AddWithValue("@email", p.Email);
@@ -475,13 +477,13 @@ namespace PussyCatsApp.repositories
             cmd.ExecuteNonQuery();
         }
 
-        private static void SaveSkills(SqlConnection conn, SqlTransaction tx,
+        private static void SaveSkills(SqlConnection connection, SqlTransaction transaction,
             int userId, List<string> skills)
         {
             // Delete all then re-insert — simplest for a flat tag list
-            using (var del = conn.CreateCommand())
+            using (var del = connection.CreateCommand())
             {
-                del.Transaction = tx;
+                del.Transaction = transaction;
                 del.CommandText = "DELETE FROM Skills WHERE userID = @id";
                 del.Parameters.AddWithValue("@id", userId);
                 del.ExecuteNonQuery();
@@ -489,8 +491,8 @@ namespace PussyCatsApp.repositories
 
             foreach (var skill in skills ?? new List<string>())
             {
-                using var cmd = conn.CreateCommand();
-                cmd.Transaction = tx;
+                using var cmd = connection.CreateCommand();
+                cmd.Transaction = transaction;
                 cmd.CommandText = "INSERT INTO Skills (userID, name) VALUES (@uid, @name)";
                 cmd.Parameters.AddWithValue("@uid", userId);
                 cmd.Parameters.AddWithValue("@name", skill);
@@ -498,12 +500,12 @@ namespace PussyCatsApp.repositories
             }
         }
 
-        private static void SavePreferences(SqlConnection conn, SqlTransaction tx,
-            int userId, UserProfile p)
+        private static void SavePreferences(SqlConnection connection, SqlTransaction transaction,
+            int userId, UserProfile profile)
         {
-            using (var del = conn.CreateCommand())
+            using (var del = connection.CreateCommand())
             {
-                del.Transaction = tx;
+                del.Transaction = transaction;
                 del.CommandText = "DELETE FROM Preferences WHERE userID = @id";
                 del.Parameters.AddWithValue("@id", userId);
                 del.ExecuteNonQuery();
@@ -512,8 +514,8 @@ namespace PussyCatsApp.repositories
             void Insert(string type, string value)
             {
                 if (string.IsNullOrWhiteSpace(value)) return;
-                using var cmd = conn.CreateCommand();
-                cmd.Transaction = tx;
+                using var cmd = connection.CreateCommand();
+                cmd.Transaction = transaction;
                 cmd.CommandText = @"
                     INSERT INTO Preferences (userID, preferanceType, value)
                     VALUES (@uid, @type, @value)";
@@ -523,24 +525,24 @@ namespace PussyCatsApp.repositories
                 cmd.ExecuteNonQuery();
             }
 
-            foreach (var role in p.PreferredJobRoles ?? new List<string>())
+            foreach (var role in profile.PreferredJobRoles ?? new List<string>())
                 Insert("JobRole", role);
 
-            Insert("WorkMode", p.WorkModePreference);
-            Insert("Location", p.LocationPreference);
+            Insert("WorkMode", profile.WorkModePreference);
+            Insert("Location", profile.LocationPreference);
         }
 
         // ── Null-safe reader helpers ───────────────────────────────────
 
-        private static string GetString(SqlDataReader r, string col)
-            => r.IsDBNull(r.GetOrdinal(col)) ? string.Empty : r.GetString(r.GetOrdinal(col));
+        private static string GetString(SqlDataReader reader, string col)
+            => reader.IsDBNull(reader.GetOrdinal(col)) ? string.Empty : reader.GetString(reader.GetOrdinal(col));
 
-        private static int GetInt(SqlDataReader r, string col)
+        private static int GetInt(SqlDataReader reader, string col)
         {
-            int ordinal = r.GetOrdinal(col);
-            if (r.IsDBNull(ordinal)) return 0;
+            int ordinal = reader.GetOrdinal(col);
+            if (reader.IsDBNull(ordinal)) return 0;
 
-            return Convert.ToInt32(r.GetValue(ordinal));
+            return Convert.ToInt32(reader.GetValue(ordinal));
         }
     }
 }

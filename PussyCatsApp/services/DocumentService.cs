@@ -47,9 +47,9 @@ namespace PussyCatsApp.services
             repository.addDocument(document);
         }
 
-        public void deleteDocument(int id)
+        public void deleteDocument(int documentId)
         {
-            Document document = repository.getDocumentById(id);
+            Document document = repository.getDocumentById(documentId);
 
             if (document == null)
                 throw new InvalidOperationException("Document not found.");
@@ -58,12 +58,12 @@ namespace PussyCatsApp.services
             if (!string.IsNullOrEmpty(document.FilePath))
                 fileStorage.deleteFile(document.FilePath);
 
-            repository.deleteDocument(id);
+            repository.deleteDocument(documentId);
         }
 
-        public string getDocumentAbsolutePath(int id)
+        public string getDocumentAbsolutePath(int documentId)
         {
-            Document document = repository.getDocumentById(id);
+            Document document = repository.getDocumentById(documentId);
 
             if (document == null)
                 throw new InvalidOperationException("Document not found.");

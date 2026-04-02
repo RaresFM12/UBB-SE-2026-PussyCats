@@ -11,8 +11,7 @@ namespace PussyCatsApp.repositories
 {
     public class MatchRepository
     {
-        //private readonly string _connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-        private readonly string _connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        private const string _connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
 
         public MatchRepository()
         {}

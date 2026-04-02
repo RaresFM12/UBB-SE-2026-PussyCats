@@ -11,20 +11,20 @@ namespace PussyCatsApp.repositories
     {
         private SqlConnection sqlConnection;
         //private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-        //private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
-
+        //private const string connectionString = "Data Source=DESKTOP-LBK0E96\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True;";
+        //private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=PussyCatsDB;Integrated Security=True;TrustServerCertificate=True";
 
         public SkillTestRepository()
         {
             sqlConnection = new SqlConnection(connectionString);
         }
 
-        public SkillTest load(int id)
+        public SkillTest load(int skillId)
         {
             string query = "SELECT * FROM SKILLS WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@id", skillId);
             sqlConnection.Open();
             using SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
@@ -40,17 +40,17 @@ namespace PussyCatsApp.repositories
                 return test;
             }
             sqlConnection.Close();
-            throw new Exception($"SkillTest with ID {id} not found.");
+            throw new Exception($"SkillTest with ID {skillId} not found.");
         }
 
 
-        public void save(int id, SkillTest data)
+        public void save(int skillId, SkillTest data)
         {
             string query = "UPDATE SKILLS SET score = @score, achievedDate = @date WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
             cmd.Parameters.AddWithValue("@score", data.Score);
             cmd.Parameters.AddWithValue("@date", data.AchievedDate); 
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@id", skillId);
             sqlConnection.Open();
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
@@ -78,23 +78,23 @@ namespace PussyCatsApp.repositories
             return tests;
         }
 
-        public void UpdateSkillTestScore(int id, int score)
+        public void UpdateSkillTestScore(int skillId, int score)
         {
             string query = "UPDATE SKILLS SET score = @score WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
             cmd.Parameters.AddWithValue("@score", score);
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@id", skillId);
             sqlConnection.Open();
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
         }
 
-        public void UpdateAchievedDate(int id, DateOnly date)
+        public void UpdateAchievedDate(int skillId, DateOnly date)
         {
             string query = "UPDATE SKILLS SET achievedDate = @date WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
             cmd.Parameters.AddWithValue("@date", date);
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@id", skillId);
             sqlConnection.Open();
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
