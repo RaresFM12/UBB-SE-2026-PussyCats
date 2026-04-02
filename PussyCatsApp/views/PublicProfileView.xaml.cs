@@ -64,19 +64,30 @@ namespace PussyCatsApp.views
             
             FirstNameLabel.Text = profile.FirstName;
             LastNameLabel.Text = profile.LastName;
-            LevelLabel.Text = $"Level {profile.UserLevel.Title}";
+            LevelLabel.Text = $" :{profile.UserLevel.Title}";
 
             EmailLabel.Text = profile.Email;
             PhoneLabel.Text = profile.PhoneNumber;
-            GenderLabel.Text = $"Gender: {profile.Gender}";
+            GenderLabel.Text = $": {profile.Gender}";
 
-            UniversityLabel.Text = $"University: {profile.University}";
-            GradYearLabel.Text = $"Graduation Year: {profile.ExpectedGraduationYear}";
-            CountryLabel.Text = $"Country:  {profile.Country}";
-            AddressLabel.Text = $"Address: {profile.Address}";
+            UniversityLabel.Text = $": {profile.University}";
+            GradYearLabel.Text = $": {profile.ExpectedGraduationYear}";
+            CountryLabel.Text = $":  {profile.Country}";
+            AddressLabel.Text = $": {profile.Address}";
 
             GithubLink.NavigateUri = new System.Uri(profile.GitHub ?? "https://github.com");
             LinkedinLink.NavigateUri = new System.Uri(profile.LinkedIn ?? "https://linkedin.com");
+
+            if (!string.IsNullOrEmpty(viewModel.Profile.ProfilePicture))
+            {
+                ProfilePhoto.Source =
+                    new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
+                        new Uri(viewModel.Profile.ProfilePicture));
+            }
+            else
+            {
+                ProfilePhoto.Source = null;
+            }
 
             SkillTestsContainer.Children.Clear();
             foreach (var test in viewModel.Tests)
