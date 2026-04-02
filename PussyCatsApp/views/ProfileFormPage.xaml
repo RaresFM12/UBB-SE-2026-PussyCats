@@ -94,7 +94,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <ComboBox Grid.Column="0" x:Name="PhonePrefixComboBox"
-                                      PlaceholderText="Prefix" Width="100">
+                                      PlaceholderText="Prefix" Width="120">
                                 <ComboBoxItem>+40</ComboBoxItem>
                                 <ComboBoxItem>+44</ComboBoxItem>
                                 <ComboBoxItem>+49</ComboBoxItem>
@@ -105,9 +105,43 @@
                                 <ComboBoxItem>+48</ComboBoxItem>
                                 <ComboBoxItem>+43</ComboBoxItem>
                                 <ComboBoxItem>+32</ComboBoxItem>
+                                <ComboBoxItem>+46</ComboBoxItem>
+                                <ComboBoxItem>+351</ComboBoxItem>
+                                <ComboBoxItem>+420</ComboBoxItem>
+                                <ComboBoxItem>+36</ComboBoxItem>
+                                <ComboBoxItem>+359</ComboBoxItem>
+                                <ComboBoxItem>+30</ComboBoxItem>
+                                <ComboBoxItem>+45</ComboBoxItem>
+                                <ComboBoxItem>+358</ComboBoxItem>
+                                <ComboBoxItem>+353</ComboBoxItem>
+                                <ComboBoxItem>+385</ComboBoxItem>
+                                <ComboBoxItem>+421</ComboBoxItem>
+                                <ComboBoxItem>+370</ComboBoxItem>
+                                <ComboBoxItem>+371</ComboBoxItem>
+                                <ComboBoxItem>+372</ComboBoxItem>
+                                <ComboBoxItem>+386</ComboBoxItem>
+                                <ComboBoxItem>+352</ComboBoxItem>
+                                <ComboBoxItem>+356</ComboBoxItem>
+                                <ComboBoxItem>+357</ComboBoxItem>
+                                <ComboBoxItem>+1</ComboBoxItem>
+                                <ComboBoxItem>+61</ComboBoxItem>
+                                <ComboBoxItem>+47</ComboBoxItem>
+                                <ComboBoxItem>+41</ComboBoxItem>
+                                <ComboBoxItem>+90</ComboBoxItem>
+                                <ComboBoxItem>+380</ComboBoxItem>
+                                <ComboBoxItem>+381</ComboBoxItem>
+                                <ComboBoxItem>+373</ComboBoxItem>
+                                <ComboBoxItem>+387</ComboBoxItem>
+                                <ComboBoxItem>+382</ComboBoxItem>
+                                <ComboBoxItem>+389</ComboBoxItem>
+                                <ComboBoxItem>+355</ComboBoxItem>
+                                <ComboBoxItem>+375</ComboBoxItem>
+                                <ComboBoxItem>+7</ComboBoxItem>
                             </ComboBox>
                             <TextBox Grid.Column="1" x:Name="PhoneNumberTextBox"
-                                     PlaceholderText="Phone number" MaxLength="12"/>
+                                     PlaceholderText="Phone number" MaxLength="12"
+                                     InputScope="Number"
+                                     BeforeTextChanging="PhoneNumberTextBox_BeforeTextChanging"/>
                         </Grid>
                     </StackPanel>
 
@@ -172,6 +206,10 @@
                     <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
                              x:Name="AddressTextBox" Header="Address"
                              PlaceholderText="Enter full address"/>
+
+                    <!-- Disabilities -->
+                    <CheckBox Grid.Row="7" Grid.Column="0" x:Name="DisabilitiesCheckBox"
+                              Content="Do you have any disabilities?"/>
                 </Grid>
 
                 <!-- Optional Fields Section -->
@@ -193,22 +231,25 @@
                         <Button Grid.Column="1" x:Name="AddSkillButton" Content="Add Skill"
                                 Click="AddSkillButton_Click"/>
                     </Grid>
-                    <ItemsRepeater x:Name="SkillsItemsRepeater" Margin="0,10,0,0">
-                        <ItemsRepeater.Layout>
-                            <StackLayout Orientation="Horizontal" Spacing="5"/>
-                        </ItemsRepeater.Layout>
-                        <ItemsRepeater.ItemTemplate>
-                            <DataTemplate>
-                                <Button Style="{StaticResource DefaultButtonStyle}"
-                                        Tag="{Binding}" Click="RemoveSkillButton_Click">
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <TextBlock Text="{Binding}"/>
-                                        <FontIcon Glyph="&#xE711;" FontSize="10"/>
-                                    </StackPanel>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsRepeater.ItemTemplate>
-                    </ItemsRepeater>
+                    <ScrollViewer MaxHeight="180" Margin="0,10,0,0">
+                        <ItemsRepeater x:Name="SkillsItemsRepeater">
+                            <ItemsRepeater.Layout>
+                                <StackLayout Orientation="Vertical" Spacing="2"/>
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource DefaultButtonStyle}"
+                                            Tag="{Binding}" Click="RemoveSkillButton_Click"
+                                            Padding="8,2,8,2" MinHeight="0" Height="28">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <TextBlock Text="{Binding}" FontSize="12"/>
+                                            <FontIcon Glyph="&#xE711;" FontSize="8"/>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </ScrollViewer>
                 </StackPanel>
 
                 <!-- Work Experience -->
@@ -237,9 +278,9 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBox Grid.Column="0" Header="Company"
-                                                         Text="{Binding Company}" MaxLength="150"/>
+                                                         Text="{Binding Company, Mode=TwoWay}" MaxLength="150"/>
                                                 <TextBox Grid.Column="1" Header="Job Title"
-                                                         Text="{Binding JobTitle}" MaxLength="100"/>
+                                                         Text="{Binding JobTitle, Mode=TwoWay}" MaxLength="100"/>
                                                 <Button Grid.Column="2" Content="Remove"
                                                         VerticalAlignment="Bottom"
                                                         Tag="{Binding}"
@@ -252,17 +293,18 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <DatePicker Grid.Column="0" Header="Start Date"
-                                                            Date="{Binding StartDate}"/>
+                                                            Date="{Binding StartDate, Mode=TwoWay}"/>
                                                 <DatePicker Grid.Column="1" Header="End Date"
-                                                            Date="{Binding EndDate}"
-                                                            IsEnabled="{Binding CurrentlyWorking, Converter={StaticResource BoolNegationConverter}}"/>
+                                                            Date="{Binding EndDate, Mode=TwoWay}"
+                                                            IsEnabled="{Binding CurrentlyWorking, Converter={StaticResource BoolNegationConverter}}"
+                                                            DateChanged="EndDatePicker_DateChanged"/>
                                             </Grid>
 
                                             <CheckBox Grid.Row="2" Content="Currently Working Here"
-                                                      IsChecked="{Binding CurrentlyWorking}"/>
+                                                      IsChecked="{Binding CurrentlyWorking, Mode=TwoWay}"/>
 
                                             <TextBox Grid.Row="3" Header="Description"
-                                                     Text="{Binding Description}"
+                                                     Text="{Binding Description, Mode=TwoWay}"
                                                      TextWrapping="Wrap" MaxLength="500"
                                                      AcceptsReturn="True" Height="80"/>
                                         </Grid>
@@ -280,7 +322,94 @@
                         <Button x:Name="AddProjectButton" Content="Add Project"
                                 Click="AddProjectButton_Click"/>
                         <ItemsRepeater x:Name="ProjectsItemsRepeater">
-                            <!-- Project template will be similar to work experience -->
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Gray" BorderThickness="1"
+                                            CornerRadius="5" Padding="10" Margin="0,5">
+                                        <Grid RowSpacing="10">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Row="0" ColumnSpacing="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0" Header="Project Name"
+                                                         Text="{Binding Name, Mode=TwoWay}" MaxLength="100"/>
+                                                <Button Grid.Column="1" Content="Remove"
+                                                        VerticalAlignment="Bottom"
+                                                        Tag="{Binding}"
+                                                        Click="RemoveProjectButton_Click"/>
+                                            </Grid>
+
+                                            <TextBox Grid.Row="1" Header="Description"
+                                                     Text="{Binding Description, Mode=TwoWay}"
+                                                     TextWrapping="Wrap" MaxLength="600"
+                                                     AcceptsReturn="True" Height="80"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </StackPanel>
+                </Expander>
+
+                <!-- Extra-Curricular Activities -->
+                <Expander Header="Extra-Curricular Activities" HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Left">
+                    <StackPanel Spacing="10" Margin="0,10,0,0">
+                        <Button x:Name="AddActivityButton" Content="Add Activity"
+                                Click="AddActivityButton_Click"/>
+                        <ItemsRepeater x:Name="ActivitiesItemsRepeater">
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Gray" BorderThickness="1"
+                                            CornerRadius="5" Padding="10" Margin="0,5">
+                                        <Grid RowSpacing="10">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Row="0" ColumnSpacing="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0" Header="Activity Name"
+                                                         Text="{Binding ActivityName, Mode=TwoWay}" MaxLength="150"/>
+                                                <TextBox Grid.Column="1" Header="Organization"
+                                                         Text="{Binding Organization, Mode=TwoWay}" MaxLength="100"/>
+                                                <Button Grid.Column="2" Content="Remove"
+                                                        VerticalAlignment="Bottom"
+                                                        Tag="{Binding}"
+                                                        Click="RemoveActivityButton_Click"/>
+                                            </Grid>
+
+                                            <Grid Grid.Row="1" ColumnSpacing="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0" Header="Role"
+                                                         Text="{Binding Role, Mode=TwoWay}" MaxLength="80"/>
+                                                <TextBox Grid.Column="1" Header="Period"
+                                                         Text="{Binding Period, Mode=TwoWay}" MaxLength="60"/>
+                                            </Grid>
+
+                                            <TextBox Grid.Row="2" Header="Description"
+                                                     Text="{Binding Description, Mode=TwoWay}"
+                                                     TextWrapping="Wrap" MaxLength="300"
+                                                     AcceptsReturn="True" Height="80"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>
                     </StackPanel>
                 </Expander>
@@ -290,6 +419,9 @@
                          PlaceholderText="Describe your motivation..."
                          TextWrapping="Wrap" MaxLength="1000"
                          AcceptsReturn="True" Height="120"/>
+
+                <!-- Form Validation InfoBar -->
+                <InfoBar x:Name="FormValidationInfoBar" Severity="Warning" IsOpen="False" Margin="0,10,0,0"/>
 
                 <!-- Buttons -->
                 <Grid Margin="0,30,0,20">

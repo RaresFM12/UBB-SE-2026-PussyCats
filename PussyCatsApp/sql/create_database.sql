@@ -25,7 +25,6 @@ CREATE TABLE USERS (
     graduationYear  SMALLINT        NULL,
     country         VARCHAR(100)    NULL,
     address         VARCHAR(500)    NULL,
-    sexualOrientation VARCHAR(50)   NULL,
     disabilities    BIT             NULL DEFAULT 0,
     parsedCV        VARCHAR(MAX)    NULL,
     personalityTestResult VARCHAR(500) NULL,
@@ -35,7 +34,8 @@ CREATE TABLE USERS (
     degree          VARCHAR(200)    NULL,
     universityStartYear SMALLINT    NULL,
     city            NVARCHAR(200)   NULL,
-    LastUpdated     DATETIME        NULL DEFAULT GETDATE()
+    LastUpdated     DATETIME        NULL DEFAULT GETDATE(),
+    formDataJson    VARCHAR(MAX)    NULL
 );
 GO
 
@@ -81,6 +81,20 @@ CREATE TABLE PREFERENCES (
     CONSTRAINT FK_Preferences_Users FOREIGN KEY (userID)
         REFERENCES USERS(userID)
         ON DELETE CASCADE
+);
+GO
+
+-- ============================================
+-- MATCHES table (FK -> USERS)
+-- ============================================
+
+CREATE TABLE MATCHES (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    userID INT NOT NULL,
+    companyName NVARCHAR(255) NOT NULL,
+    jobRole NVARCHAR(255) NOT NULL,
+    matchDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Matches_Users FOREIGN KEY (userID) REFERENCES USERS(userID) ON DELETE CASCADE
 );
 GO
 
@@ -146,12 +160,31 @@ BEGIN
 END
 GO
 
+ALTER TABLE Users
+ADD formDataJson VARCHAR(MAX) NULL;
+
+-- =============================================
+-- MATCHES table (FK -> USERS)
+-- =============================================
+CREATE TABLE MATCHES (
+    id              INT             PRIMARY KEY IDENTITY(1,1),
+    userID          INT             NOT NULL,
+    companyName     NVARCHAR(255)   NOT NULL,
+    jobRole         NVARCHAR(255)   NOT NULL,
+    matchDate       DATETIME        NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Matches_Users FOREIGN KEY (userID)
+        REFERENCES USERS(userID)
+        ON DELETE CASCADE
+);
+GO
+
 -- =============================================
 -- Indexes for common queries
 -- =============================================
 CREATE INDEX IX_Skills_UserID        ON SKILLS(userID);
 CREATE INDEX IX_Documents_UserID     ON DOCUMENTS(userID);
 CREATE INDEX IX_Preferences_UserID   ON PREFERENCES(userID);
+CREATE INDEX IX_Matches_UserID       ON MATCHES(userID);
 CREATE INDEX IX_Users_Email          ON USERS(email);
 GO
 

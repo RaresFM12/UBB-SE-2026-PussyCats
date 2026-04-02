@@ -1,10 +1,7 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
-using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;
 using System.Diagnostics;
@@ -14,25 +11,15 @@ namespace PussyCatsApp.views
 {
     public sealed partial class UserProfileView : Page
     {
+        private int currentUserId = 2;
         public UserProfileViewModel viewModel { get; private set; }
         private bool _isBinding = false;
-        private SqlConnection connection;
 
         public UserProfileView()
         {
             this.InitializeComponent();
 
-            var userProfileRepository = new UserProfileRepository();
-            var skillTestRepository = new SkillTestRepository();
-
-            // ????????? this is some SHIT
-            viewModel = new UserProfileViewModel(
-                new UserProfileService(userProfileRepository, skillTestRepository),
-                new ImageStorageService(),
-                null,
-                new CvUploadService(),
-                new CompletenessService()
-            );
+            viewModel = UserProfileViewModel.Create();
 
             viewModel.OnLevelUpdated += renderLevelDisplay;
             this.DataContext = viewModel;
@@ -112,8 +99,7 @@ namespace PussyCatsApp.views
             }
             else
             {
-                // No user in DB — go straight to the profile form
-                //Frame.Navigate(typeof(ProfileFormPage));
+                
                 return;
             }
 
@@ -211,16 +197,7 @@ namespace PussyCatsApp.views
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
         {
-            //string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
-            string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
-
-
-            UserSkillRepository userSkillRepo = new UserSkillRepository(connectionString);
-            SkillGroupRepository skillGroupRepo = new SkillGroupRepository();
-            CompatibilityService service = new CompatibilityService(userSkillRepo, skillGroupRepo);
-            CompatibilityOverviewViewModel vm = new CompatibilityOverviewViewModel(service, 2);
-
-            Frame.Navigate(typeof(CompatibilityOverviewView), vm);
+            Frame.Navigate(typeof(CompatibilityOverviewView), currentUserId);
         }
 
         private void OnPersonalityTestClick(object sender, RoutedEventArgs e)
@@ -231,6 +208,11 @@ namespace PussyCatsApp.views
         private void OnViewDocumentsClick(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(DocumentsPage));
+        }
+
+        private void OnMatchmakingHistoryClick(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MatchHistoryView));
         }
     }
 }

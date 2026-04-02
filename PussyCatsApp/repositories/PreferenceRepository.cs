@@ -1,64 +1,109 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data.SqlClient;
 using PussyCatsApp.models;
 
 namespace PussyCatsApp.repositories
 {
-    internal class PreferenceRepository : IPreferenceRepository
+    public class PreferenceRepository : IPreferenceRepository
     {
-        private readonly List<Preference> _preferences = new();
+        private readonly string _connectionString;
 
-        public Preference load(int id)
+        public PreferenceRepository(string connectionString)
         {
-            return _preferences.FirstOrDefault(p => p.PreferenceId == id);
-        }
-
-        public void save(int id, Preference data)
-        {
-            var existing = _preferences.FirstOrDefault(p => p.PreferenceId == id);
-            if (existing != null)
-            {
-                existing.PreferenceType = data.PreferenceType;
-                existing.Value = data.Value;
-                existing.UserId = data.UserId;
-            }
-            else
-            {
-                data.PreferenceId = id;
-                _preferences.Add(data);
-            }
+            _connectionString = connectionString;
         }
 
         public List<Preference> GetPreferencesByUserId(int userId)
         {
-            return _preferences.Where(p => p.UserId == userId).ToList();
+            var preferences = new List<Preference>();
+            string query = "SELECT pID, userID, preferanceType, value FROM PREFERENCES WHERE userID = @UserId";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var pref = new Preference();
+                            pref.PreferenceId = Convert.ToInt32(reader["pID"]);
+                            pref.UserId = Convert.ToInt32(reader["userID"]);
+                            pref.PreferenceType = reader["preferanceType"].ToString();
+                            pref.Value = reader["value"].ToString();
+
+                            preferences.Add(pref);
+                        }
+                    }
+                }
+            }
+            return preferences;
         }
 
         public void AddPreference(Preference preference)
         {
-            if (preference.PreferenceId == 0)
+            string query = "INSERT INTO PREFERENCES (userID, preferanceType, value) VALUES (@UserId, @PreferenceType, @Value)";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                preference.PreferenceId = _preferences.Count > 0 ? _preferences.Max(p => p.PreferenceId) + 1 : 1;
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", preference.UserId);
+                    cmd.Parameters.AddWithValue("@PreferenceType", preference.PreferenceType);
+                    cmd.Parameters.AddWithValue("@Value", preference.Value);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
-            _preferences.Add(preference);
         }
 
         public void RemovePreference(int preferenceId)
         {
-            var pref = _preferences.FirstOrDefault(p => p.PreferenceId == preferenceId);
-            if (pref != null)
+            string query = "DELETE FROM PREFERENCES WHERE pID = @PId";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                _preferences.Remove(pref);
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@PId", preferenceId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteAllByUserId(int userId)
+        {
+            string query = "DELETE FROM PREFERENCES WHERE userID = @UserId";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
         public void UpdatePreference(int preferenceId, string value)
         {
-            var pref = _preferences.FirstOrDefault(p => p.PreferenceId == preferenceId);
-            if (pref != null)
-            {
-                pref.Value = value;
-            }
+            throw new NotImplementedException("Use DeleteAllByUserId and AddPreference instead.");
+        }
+
+        public Preference load(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void save(int id, Preference data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

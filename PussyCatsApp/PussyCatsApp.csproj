@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="views\MatchHistoryView.xaml" />
     <None Remove="views\PublicProfileView.xaml" />
     <None Remove="views\UserProfileView.xaml" />
     <None Remove="views\CompatibilityDetailView.xaml" />
@@ -62,8 +63,10 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.0" />
   </ItemGroup>
 
@@ -83,9 +86,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="views\MatchHistoryView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+
     <Page Update="views\UserProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
 
     <None Update="views\CompatibilityDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -98,12 +109,15 @@
     <Page Update="views\ProfileCompletenessBar.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+
     <Page Update="views\CompatibilityDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+
     <None Update="views\CompatibilityOverviewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+
     <Page Update="views\CompatibilityOverviewView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -111,9 +125,11 @@
     <Page Update="views\ExportCVTestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+
     <Page Update="views\DocumentsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+
     <Page Update="views\ViewProfilePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

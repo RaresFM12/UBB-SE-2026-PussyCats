@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.models;
+using PussyCatsApp.repositories;
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty] private string _address = string.Empty;
         [ObservableProperty] private int _expectedGraduationYear;
         [ObservableProperty] private string _motivation = string.Empty;
+        [ObservableProperty] private bool _hasDisabilities;
 
         // Status
         [ObservableProperty] private string _errorMessage = string.Empty;
@@ -47,6 +49,7 @@ namespace PussyCatsApp.viewModels
         public ObservableCollection<string> Skills { get; } = new();
         public ObservableCollection<WorkExperience> WorkExperiences { get; } = new();
         public ObservableCollection<Project> Projects { get; } = new();
+        public ObservableCollection<ExtraCurricularActivity> ExtraCurricularActivities { get; } = new();
 
         public List<string> UniversityList { get; } = new()
         {
@@ -99,6 +102,15 @@ namespace PussyCatsApp.viewModels
             }
         }
 
+        public static ProfileFormViewModel Create()
+        {
+            var userProfileRepo = new UserProfileRepository();
+            var skillTestRepo = new SkillTestRepository();
+            var profileService = new UserProfileService(userProfileRepo, skillTestRepo);
+            var cvParsingService = new CVParsingService();
+            return new ProfileFormViewModel(profileService, cvParsingService);
+        }
+
         public void LoadProfile(UserProfile profile)
         {
             _userProfile = profile ?? new UserProfile();
@@ -114,7 +126,9 @@ namespace PussyCatsApp.viewModels
             Address = _userProfile.Address;
             Motivation = _userProfile.Motivation;
             Country = _userProfile.Country;
+            City = _userProfile.City;
             ExpectedGraduationYear = _userProfile.ExpectedGraduationYear;
+            HasDisabilities = _userProfile.HasDisabilities;
 
             // Extract phone prefix and number
             if (!string.IsNullOrEmpty(_userProfile.PhoneNumber))
@@ -135,6 +149,10 @@ namespace PussyCatsApp.viewModels
             Projects.Clear();
             foreach (var project in _userProfile.Projects)
                 Projects.Add(project);
+
+            ExtraCurricularActivities.Clear();
+            foreach (var activity in _userProfile.ExtraCurricularActivities)
+                ExtraCurricularActivities.Add(activity);
         }
 
         public void AddSkill(string skill)
@@ -201,6 +219,27 @@ namespace PussyCatsApp.viewModels
             Projects.Add(new Project());
         }
 
+        public void RemoveProject(Project project)
+        {
+            Projects.Remove(project);
+        }
+
+        public void AddExtraCurricularActivity()
+        {
+            if (ExtraCurricularActivities.Count >= 10)
+            {
+                ShowInfoBar("Maximum of 10 extra-curricular activities allowed.", 2);
+                return;
+            }
+
+            ExtraCurricularActivities.Add(new ExtraCurricularActivity());
+        }
+
+        public void RemoveExtraCurricularActivity(ExtraCurricularActivity activity)
+        {
+            ExtraCurricularActivities.Remove(activity);
+        }
+
         public List<string> ValidateForm()
         {
             var errors = new List<string>();
@@ -225,6 +264,12 @@ namespace PussyCatsApp.viewModels
                 errors.Add("University");
             if (ExpectedGraduationYear == 0)
                 errors.Add("Expected Graduation Year");
+
+            foreach (var we in WorkExperiences)
+            {
+                if (!we.CurrentlyWorking && we.EndDate.HasValue && we.EndDate.Value < we.StartDate)
+                    errors.Add($"Work Experience \"{we.Company}\": End date is before start date");
+            }
 
             return errors;
         }
@@ -270,13 +315,16 @@ namespace PussyCatsApp.viewModels
             _userProfile.GitHub = GitHub.Trim();
             _userProfile.LinkedIn = LinkedIn.Trim();
             _userProfile.Country = Country;
+            _userProfile.City = City.Trim();
             _userProfile.University = University.Trim();
             _userProfile.ExpectedGraduationYear = ExpectedGraduationYear;
             _userProfile.Address = Address.Trim();
             _userProfile.Motivation = Motivation.Trim();
+            _userProfile.HasDisabilities = HasDisabilities;
             _userProfile.Skills = Skills.ToList();
             _userProfile.WorkExperiences = WorkExperiences.ToList();
             _userProfile.Projects = Projects.ToList();
+            _userProfile.ExtraCurricularActivities = ExtraCurricularActivities.ToList();
             _userProfile.LastUpdated = DateTime.Now;
         }
 
@@ -312,6 +360,7 @@ namespace PussyCatsApp.viewModels
             if (!string.IsNullOrEmpty(parsed.GitHub)) GitHub = parsed.GitHub;
             if (!string.IsNullOrEmpty(parsed.LinkedIn)) LinkedIn = parsed.LinkedIn;
             if (!string.IsNullOrEmpty(parsed.Country)) Country = parsed.Country;
+            if (!string.IsNullOrEmpty(parsed.City)) City = parsed.City;
             if (!string.IsNullOrEmpty(parsed.University)) University = parsed.University;
             if (parsed.ExpectedGraduationYear > 0) ExpectedGraduationYear = parsed.ExpectedGraduationYear;
             if (!string.IsNullOrEmpty(parsed.Address)) Address = parsed.Address;
@@ -342,6 +391,15 @@ namespace PussyCatsApp.viewModels
                 {
                     if (Projects.Count < 10)
                         Projects.Add(proj);
+                }
+            }
+
+            if (parsed.ExtraCurricularActivities != null)
+            {
+                foreach (var activity in parsed.ExtraCurricularActivities)
+                {
+                    if (ExtraCurricularActivities.Count < 10)
+                        ExtraCurricularActivities.Add(activity);
                 }
             }
 
@@ -397,8 +455,15 @@ namespace PussyCatsApp.viewModels
             if (string.IsNullOrEmpty(phoneNumber))
                 return ("", "");
 
-            var prefixes = new[] { "+40", "+44", "+49", "+33", "+39", "+34", "+31", "+48", "+43", "+32" };
-            foreach (var prefix in prefixes)
+            var prefixes = new[] {
+                "+40", "+44", "+49", "+33", "+39", "+34", "+31", "+48", "+43", "+32",
+                "+46", "+351", "+420", "+36", "+359", "+30", "+45", "+358", "+353", "+385",
+                "+421", "+370", "+371", "+372", "+386", "+352", "+356", "+357",
+                "+1", "+61",
+                "+47", "+41", "+90", "+380", "+381", "+373", "+387", "+382", "+389", "+355", "+375", "+7"
+            };
+            // Sort by length descending so longer prefixes match first (e.g. +351 before +3)
+            foreach (var prefix in prefixes.OrderByDescending(p => p.Length))
             {
                 if (phoneNumber.StartsWith(prefix))
                     return (prefix, phoneNumber.Substring(prefix.Length));

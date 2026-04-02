@@ -34,8 +34,7 @@ namespace PussyCatsApp.models
         public List<ExtraCurricularActivity> ExtraCurricularActivities { get; set; } = new List<ExtraCurricularActivity>();
         public List<string> Skills { get; set; } = new List<string>();
         public string Motivation { get; set; } = string.Empty;
-        public string Disabilities { get; set; } = string.Empty;
-        public string SexualOrientation { get; set; } = string.Empty;
+        public bool HasDisabilities { get; set; }
         public List<string> RelevantCertificates { get; set; } = new List<string>();
 
         // Additional profile fields from requirements
@@ -46,6 +45,7 @@ namespace PussyCatsApp.models
         public string ProfilePicture { get; set; } = string.Empty;
         public string PersonalityTestResult { get; set; } = string.Empty;
         public string ParsedCV { get; set; } = string.Empty;
+        public string FormDataJson { get; set; } = string.Empty;
 
         // Job preferences (R13-R15)
         public List<string> PreferredJobRoles { get; set; } = new List<string>();
