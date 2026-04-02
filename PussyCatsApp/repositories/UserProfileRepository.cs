@@ -35,10 +35,35 @@ namespace PussyCatsApp.repositories
             List<ExtraCurricularActivity> ExtraCurricularActivities
         );
 
-        private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
-        private const string otherConnectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True";
+        // Full form snapshot stored in formDataJson column
+        private record FormDataSnapshot(
+            string FirstName,
+            string LastName,
+            int Age,
+            string Gender,
+            string Email,
+            string PhoneNumber,
+            string GitHub,
+            string LinkedIn,
+            string Country,
+            string City,
+            string University,
+            string Degree,
+            int UniversityStartYear,
+            int ExpectedGraduationYear,
+            string Address,
+            string Motivation,
+            bool HasDisabilities,
+            List<string> Skills,
+            List<WorkExperience> WorkExperiences,
+            List<Project> Projects,
+            List<ExtraCurricularActivity> ExtraCurricularActivities
+        );
 
-        //private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        //private const string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
+        //private const string otherConnectionString = "Data Source=JEFF\\SQLEXPRESS;Initial Catalog=UserManagementDB;Integrated Security=True;TrustServerCertificate=True";
+
+        private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
         //private const string connectionString = "Data Source=DESKTOP-SCP6QST;Initial Catalog=UserManagementDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
         private SqlConnection sqlConnection;
 
@@ -98,7 +123,7 @@ namespace PussyCatsApp.repositories
                 using var tx = connection.BeginTransaction();
                 UpsertUserRow(connection, tx, id, data);
                 SaveSkills(connection, tx, id, data.Skills);
-                SavePreferences(connection, tx, id, data);
+                // Preferences are not managed from the profile form
                 // Documents (certificates) are managed separately via upload flow,
                 // not overwritten on every profile save.
 
@@ -200,9 +225,11 @@ namespace PussyCatsApp.repositories
             cmd.CommandText = @"
                 SELECT userID, firstName, lastName, gender, age,
                        email, phone, github, linkedin, universityStartYear,
-                       graduationYear, country, address,
+                       graduationYear, country, city, address, motivation,
+                       disabilities,
                        personalityTestResult, activeAccount,
-                       profilePicture, university, degree, LastUpdated, parsedCV
+                       profilePicture, university, degree, LastUpdated, parsedCV,
+                       formDataJson
                 FROM Users
                 WHERE userID = @id";
             cmd.Parameters.AddWithValue("@id", userId);
@@ -234,13 +261,17 @@ namespace PussyCatsApp.repositories
                 UniversityStartYear = GetInt(reader, "universityStartYear"),
                 ExpectedGraduationYear = GetInt(reader, "graduationYear"),
                 Country = GetString(reader, "country"),
+                City = GetString(reader, "city"),
                 Address = GetString(reader, "address"),
+                Motivation = GetString(reader, "motivation"),
+                HasDisabilities = !reader.IsDBNull(reader.GetOrdinal("disabilities")) && reader.GetBoolean(reader.GetOrdinal("disabilities")),
                 University = GetString(reader, "university"),
                 Degree = GetString(reader, "degree"),
                 PersonalityTestResult = GetString(reader, "personalityTestResult"),
                 ActiveAccount = reader.GetBoolean(reader.GetOrdinal("activeAccount")),
                 LastUpdated = reader.IsDBNull(reader.GetOrdinal("LastUpdated")) ? DateTime.Now : reader.GetDateTime(reader.GetOrdinal("LastUpdated")),
                 ProfilePicture = GetString(reader, "profilePicture"),
+                FormDataJson = GetString(reader, "formDataJson"),
             };
         }
 
@@ -354,6 +385,19 @@ namespace PussyCatsApp.repositories
                 p.ExtraCurricularActivities ?? new()
             ), _jsonOptions);
 
+            // Serialize the entire form as a JSON snapshot
+            var formDataJson = JsonSerializer.Serialize(new FormDataSnapshot(
+                p.FirstName, p.LastName, p.Age, p.Gender,
+                p.Email, p.PhoneNumber, p.GitHub, p.LinkedIn,
+                p.Country, p.City, p.University, p.Degree,
+                p.UniversityStartYear, p.ExpectedGraduationYear,
+                p.Address, p.Motivation, p.HasDisabilities,
+                p.Skills ?? new(),
+                p.WorkExperiences ?? new(),
+                p.Projects ?? new(),
+                p.ExtraCurricularActivities ?? new()
+            ), _jsonOptions);
+
             using var cmd = conn.CreateCommand();
             cmd.Transaction = tx;
             cmd.CommandText = @"
@@ -370,25 +414,31 @@ namespace PussyCatsApp.repositories
                         universityStartYear   = @universityStartYear,
                         graduationYear        = @graduationYear,
                         country               = @country,
+                        city                  = @city,
                         address               = @address,
+                        motivation            = @motivation,
+                        disabilities          = @disabilities,
                         university            = @university,
                         degree                = @degree,
                         personalityTestResult = @personalityTestResult,
                         activeAccount         = @activeAccount,
                         profilePicture        = @profilePicture,
-                        parsedCV              = @parsedCV
+                        parsedCV              = @parsedCV,
+                        formDataJson          = @formDataJson
                     WHERE userID = @id
                 ELSE
                     INSERT INTO Users (
                         firstName, lastName, gender, age, email, phone,
-                        github, linkedin, universityStartYear, graduationYear, country, address,
+                        github, linkedin, universityStartYear, graduationYear, country, city, address,
+                        motivation, disabilities,
                         university, degree, personalityTestResult, activeAccount,
-                        profilePicture, parsedCV
+                        profilePicture, parsedCV, formDataJson
                     ) VALUES (
                         @firstName, @lastName, @gender, @age, @email, @phone,
-                        @github, @linkedin, @universityStartYear, @graduationYear, @country, @address,
+                        @github, @linkedin, @universityStartYear, @graduationYear, @country, @city, @address,
+                        @motivation, @disabilities,
                         @university, @degree, @personalityTestResult, @activeAccount,
-                        @profilePicture, @parsedCV
+                        @profilePicture, @parsedCV, @formDataJson
                     )";
 
             // Convert 'Male'/'Female' → 'M'/'F' for CHAR(1) DB column
@@ -411,13 +461,17 @@ namespace PussyCatsApp.repositories
             cmd.Parameters.AddWithValue("@universityStartYear", p.UniversityStartYear);
             cmd.Parameters.AddWithValue("@graduationYear", p.ExpectedGraduationYear);
             cmd.Parameters.AddWithValue("@country", (object)p.Country ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@city", (object)p.City ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@address", (object)p.Address ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@motivation", (object)p.Motivation ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@disabilities", p.HasDisabilities);
             cmd.Parameters.AddWithValue("@university", (object)p.University ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@degree", (object)p.Degree ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@personalityTestResult", (object)p.PersonalityTestResult ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@activeAccount", p.ActiveAccount);
             cmd.Parameters.AddWithValue("@profilePicture", (object)p.ProfilePicture ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@parsedCV", parsedCVJson);
+            cmd.Parameters.AddWithValue("@formDataJson", formDataJson);
             cmd.ExecuteNonQuery();
         }
 

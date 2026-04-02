@@ -66,6 +66,7 @@ namespace PussyCatsApp.services
                 Email = SanitizeEmail(cvData.Email),
                 PhoneNumber = FormatPhoneNumber(cvData.PhoneNumber),
                 Country = SanitizeString(cvData.Country, 100),
+                City = SanitizeString(cvData.City, 100),
                 University = SanitizeString(cvData.University, 200),
                 ExpectedGraduationYear = ValidateGraduationYear(cvData.ExpectedGraduationYear),
 
@@ -305,8 +306,7 @@ namespace PussyCatsApp.services
         public string LinkedIn { get; set; }
         public string Address { get; set; }
         public string Motivation { get; set; }
-        public string Disabilities { get; set; }
-        public string SexualOrientation { get; set; }
+        public bool HasDisabilities { get; set; }
         public List<string> Skills { get; set; }
         public List<WorkExperience> WorkExperiences { get; set; }
         public List<Project> Projects { get; set; }

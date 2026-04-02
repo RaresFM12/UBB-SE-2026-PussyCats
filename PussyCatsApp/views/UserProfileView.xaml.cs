@@ -1,10 +1,7 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
-using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;
 using System.Diagnostics;
@@ -17,22 +14,12 @@ namespace PussyCatsApp.views
         private int currentUserId = 2;
         public UserProfileViewModel viewModel { get; private set; }
         private bool _isBinding = false;
-        private SqlConnection connection;
 
         public UserProfileView()
         {
             this.InitializeComponent();
 
-            var userProfileRepository = new UserProfileRepository();
-            var skillTestRepository = new SkillTestRepository();
-
-            viewModel = new UserProfileViewModel(
-                new UserProfileService(userProfileRepository, skillTestRepository),
-                new ImageStorageService(),
-                null,
-                new CvUploadService(),
-                new CompletenessService()
-            );
+            viewModel = UserProfileViewModel.Create();
 
             viewModel.OnLevelUpdated += renderLevelDisplay;
             this.DataContext = viewModel;
