@@ -95,6 +95,8 @@ namespace PussyCatsApp.views
             // TODO: Get connection string from app configuration
             //string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
             //string connectionString = "Data Source=.;Initial Catalog=UserManagementDB;Integrated Security=True;Trust Server Certificate=True";
+            
+            // this shit is not mvvm -- o sa va comenteze probabil
             string connectionString = "Data Source=DESKTOP-C5LH746\\SQLEXPRESS;Initial Catalog=PussyCatsDB;Integrated Security=True;Trust Server Certificate=True";
 
             var repository = new PersonalityTestRepository(connectionString);

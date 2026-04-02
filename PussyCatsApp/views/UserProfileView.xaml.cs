@@ -25,6 +25,7 @@ namespace PussyCatsApp.views
             var userProfileRepository = new UserProfileRepository();
             var skillTestRepository = new SkillTestRepository();
 
+            // ????????? this is some SHIT
             viewModel = new UserProfileViewModel(
                 new UserProfileService(userProfileRepository, skillTestRepository),
                 new ImageStorageService(),

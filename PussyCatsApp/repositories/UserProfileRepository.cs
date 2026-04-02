@@ -200,7 +200,7 @@ namespace PussyCatsApp.repositories
             cmd.CommandText = @"
                 SELECT userID, firstName, lastName, gender, age,
                        email, phone, github, linkedin, universityStartYear,
-                       graduationYear, country, address,
+                       graduationYear, country, city, address,
                        personalityTestResult, activeAccount,
                        profilePicture, university, degree, LastUpdated, parsedCV
                 FROM Users
@@ -234,6 +234,7 @@ namespace PussyCatsApp.repositories
                 UniversityStartYear = GetInt(reader, "universityStartYear"),
                 ExpectedGraduationYear = GetInt(reader, "graduationYear"),
                 Country = GetString(reader, "country"),
+                City = GetString(reader, "city"),
                 Address = GetString(reader, "address"),
                 University = GetString(reader, "university"),
                 Degree = GetString(reader, "degree"),
