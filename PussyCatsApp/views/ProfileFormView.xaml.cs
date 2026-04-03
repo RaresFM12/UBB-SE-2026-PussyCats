@@ -80,7 +80,7 @@ namespace PussyCatsApp.views
             WorkExperienceItemsRepeater.ItemsSource = _viewModel.WorkExperiences;
             ProjectsItemsRepeater.ItemsSource = _viewModel.Projects;
             ActivitiesItemsRepeater.ItemsSource = _viewModel.ExtraCurricularActivities;
-           // DisabilitiesCheckBox.IsChecked = _viewModel.HasDisabilities;
+            DisabilitiesCheckBox.IsChecked = _viewModel.HasDisabilities;
         }
 
         private void SyncViewToViewModel()
