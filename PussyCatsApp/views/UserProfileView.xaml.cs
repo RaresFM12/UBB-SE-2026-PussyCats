@@ -41,8 +41,7 @@ namespace PussyCatsApp.views
         {
             _isBinding = true;
 
-            int dummyUserId = 1;
-            await viewModel.LoadUserAsync(dummyUserId);
+            await viewModel.LoadUserAsync(currentUserId);
 
             if (!string.IsNullOrEmpty(viewModel.ErrorMessage))
             {
