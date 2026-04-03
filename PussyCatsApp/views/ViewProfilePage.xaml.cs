@@ -57,7 +57,7 @@ namespace PussyCatsApp.views
 
         private void EditProfileButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(ProfileFormPage), _userProfile);
+            Frame.Navigate(typeof(ProfileFormView), _userProfile);
         }
     }
 }
