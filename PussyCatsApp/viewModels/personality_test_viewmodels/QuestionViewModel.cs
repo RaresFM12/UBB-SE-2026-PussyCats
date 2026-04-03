@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.models;
 
-/*namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.viewModels
 {
     public partial class QuestionViewModel : ObservableObject
     {
@@ -24,4 +24,3 @@ using PussyCatsApp.models;
         }
     }
 }
-*/

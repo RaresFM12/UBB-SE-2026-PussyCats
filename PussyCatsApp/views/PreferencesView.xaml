@@ -7,10 +7,19 @@
     <ScrollViewer>
         <StackPanel Spacing="24" Padding="40" MaxWidth="600" HorizontalAlignment="Left">
 
-            <StackPanel Spacing="8">
-                <TextBlock Text="Job Preferences" FontSize="32" FontWeight="SemiBold"/>
-                <TextBlock Text="Set up your filters so we can match you with the perfect jobs." Foreground="Gray"/>
-            </StackPanel>
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Spacing="8">
+                    <TextBlock Text="Job Preferences" FontSize="32" FontWeight="SemiBold"/>
+                    <TextBlock Text="Set up your filters so we can match you with the perfect jobs." Foreground="Gray"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" Content="Back" Click="btnBack_Click" VerticalAlignment="Top" Margin="0,6,100,0"/>
+            </Grid>
 
             <StackPanel Spacing="8">
                 <TextBlock Text="Preferred Job Roles (Max 3)" FontWeight="Medium"/>
@@ -41,7 +50,7 @@
             <AutoSuggestBox x:Name="LocationAutoSuggestBox"
                             Header="Location (City, Country)"
                             PlaceholderText="e.g., Bucharest, Romania"
-                            Width="300"
+                            HorizontalAlignment="Stretch"
                             TextChanged="LocationAutoSuggestBox_TextChanged"
                             SuggestionChosen="LocationAutoSuggestBox_SuggestionChosen"/>
 

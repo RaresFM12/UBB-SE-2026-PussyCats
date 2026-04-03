@@ -10,7 +10,7 @@ using System.Linq;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-/*namespace PussyCatsApp.views
+namespace PussyCatsApp.views
 {
     public sealed partial class ProfileFormPage : Page
     {
@@ -20,7 +20,7 @@ using Windows.Storage.Pickers;
         {
             this.InitializeComponent();
 
-           // _viewModel = ProfileFormViewModel.Create();
+            _viewModel = ProfileFormViewModel.Create();
 
             PopulateGraduationYears();
         }
@@ -256,7 +256,7 @@ using Windows.Storage.Pickers;
             ShowInfoBarFromViewModel();
         }
 
-       /* private void RemoveProjectButton_Click(object sender, RoutedEventArgs e)
+        private void RemoveProjectButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is Project project)
                 _viewModel.RemoveProject(project);
@@ -282,9 +282,9 @@ using Windows.Storage.Pickers;
         private void PhoneNumberTextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
             args.Cancel = args.NewText.Any(c => !char.IsDigit(c));
-        }*/
+        }
 
-        /*private void EndDatePicker_DateChanged(object sender, DatePickerValueChangedEventArgs args)
+        private void EndDatePicker_DateChanged(object sender, DatePickerValueChangedEventArgs args)
         {
             try
             {
@@ -340,14 +340,11 @@ using Windows.Storage.Pickers;
             else
                 Frame.Navigate(typeof(UserProfileView));
         }
-        // FUNCȚIA PENTRU BUTONUL TĂU
         private void EditPreferencesButton_Click(object sender, RoutedEventArgs e)
         {
-            // Salvăm temporar ce a scris utilizatorul pe pagina Ioanei ca să nu piardă datele
             SyncViewToViewModel();
 
-            // Navigăm către pagina ta de preferințe!
             Frame.Navigate(typeof(views.PreferencesView));
         }
     }
-}*/
+}
