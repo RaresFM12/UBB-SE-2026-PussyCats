@@ -232,6 +232,9 @@ SET
     linkedin = 'https://www.linkedin.com/in/rare%C8%99fodorca/'
 WHERE userID = 1;
 
+UPDATE USERS
+SET personalityTestResult = NULL
+WHERE userID = 1;
 
 DECLARE @newUserId INT = SCOPE_IDENTITY();
 

@@ -9,12 +9,12 @@ using PussyCatsApp.repositories;
 
 namespace PussyCatsApp.views
 {
-    public sealed partial class ExportCVTestPage : Page
+    public sealed partial class ExportCVView : Page
     {
         public ExportCVViewModel ViewModel { get; private set; }
         private int _userId;
 
-        public ExportCVTestPage()
+        public ExportCVView()
         {
             this.InitializeComponent();
             this.Loaded += OnPageLoaded;

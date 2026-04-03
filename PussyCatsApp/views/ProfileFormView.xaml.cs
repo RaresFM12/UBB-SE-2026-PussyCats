@@ -12,11 +12,11 @@ using Windows.Storage.Pickers;
 
 namespace PussyCatsApp.views
 {
-    public sealed partial class ProfileFormPage : Page
+    public sealed partial class ProfileFormView : Page
     {
         private ProfileFormViewModel _viewModel;
 
-        public ProfileFormPage()
+        public ProfileFormView()
         {
             this.InitializeComponent();
 

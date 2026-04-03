@@ -125,11 +125,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
-    <Page Update="views\ExportCVTestPage.xaml">
+    <Page Update="views\ExportCVView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
-    <Page Update="views\DocumentsPage.xaml">
+    <Page Update="views\DocumentsListView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
