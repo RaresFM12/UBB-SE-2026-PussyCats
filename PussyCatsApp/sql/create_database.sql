@@ -232,6 +232,9 @@ SET
     linkedin = 'https://www.linkedin.com/in/rare%C8%99fodorca/'
 WHERE userID = 1;
 
+UPDATE USERS
+SET personalityTestResult = NULL
+WHERE userID = 1;
 
 DECLARE @newUserId INT = SCOPE_IDENTITY();
 
@@ -264,7 +267,6 @@ VALUES
     (1, 'E-Commerce Giants Ltd.', 'Backend Developer (ASP.NET)');
 GO
 
-delete from matches
 INSERT INTO MATCHES(userID, companyName, jobRole, matchDate)
 VALUES 
     (1, 'NextGen AI Startups', 'Backend Developer', '2025-05-12'),
@@ -303,18 +305,18 @@ INSERT INTO SKILLS (name, score, userID, achievedDate) VALUES
 
 
 INSERT INTO SKILLS (name, score, userID, achievedDate) VALUES
-('PyTorch', 86, 5, '2023-02-17'),
-('Keras', 81, 5, '2022-06-08'),
-('NLTK', 74, 5, '2022-11-21'),
-('spaCy', 77, 5, '2023-03-09'),
-('OpenCV', 69, 5, '2021-10-27'),
-('FastAPI', 83, 5, '2023-05-16'),
-('Hugging Face', 78, 5, '2024-01-12'),
-('BigQuery', 65, 5, '2022-07-19'),
-('Tableau', 72, 5, '2021-09-14'),
-('Looker', 67, 5, '2023-08-22'),
-('Hypothesis Testing', 80, 5, '2022-04-02'),
-('Regression', 84, 5, '2021-12-29');
+('PyTorch', 86, 1, '2023-02-17'),
+('Keras', 81, 1, '2022-06-08'),
+('NLTK', 74, 1, '2022-11-21'),
+('spaCy', 77, 1, '2023-03-09'),
+('OpenCV', 69, 1, '2021-10-27'),
+('FastAPI', 83, 1, '2023-05-16'),
+('Hugging Face', 78, 1, '2024-01-12'),
+('BigQuery', 65, 1, '2022-07-19'),
+('Tableau', 72, 1, '2021-09-14'),
+('Looker', 67, 1, '2023-08-22'),
+('Hypothesis Testing', 80, 1, '2022-04-02'),
+('Regression', 84, 1, '2021-12-29');
 
 SELECT * FROM USERS;
 SELECT * FROM documents;
@@ -333,7 +335,6 @@ INSERT INTO Users (
     graduationYear,
     country,
     address,
-    sexualOrientation,
     disabilities,
     parsedCV,
     personalityTestResult,
@@ -359,7 +360,6 @@ VALUES (
     2026,
     'Romania',
     'Str. Universitatii, Nr. 1, Cluj-Napoca',
-    NULL,
     0,
     'Ioana Gavrila  Babes-Bolyai University  HTML, JavaScript, CSS, TypeScript, React, Git, GitHub, Jest, Webpack, Vite, Figma, REST, SQL, PostgreSQL, Docker',
     'BackendDeveloper',
@@ -373,3 +373,7 @@ VALUES (
     'Cluj-Napoca',
     'I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.'
 );
+
+
+DELETE FROM USERS
+SELECT * FROM USERS

@@ -276,14 +276,6 @@ namespace PussyCatsApp.repositories
         }
 
         
-        private static string BuildParsedCVText(UserProfile profile)
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine($"{profile.FirstName} {profile.LastName}".Trim());
-            sb.AppendLine(profile.University ?? string.Empty);
-            sb.AppendLine(string.Join(", ", profile.Skills ?? new List<string>()));
-            return sb.ToString().TrimEnd();
-        }
 
         private static List<string> LoadSkills(SqlConnection connection, int userId)
         {
@@ -354,8 +346,6 @@ namespace PussyCatsApp.repositories
         private static void UpsertUserRow(SqlConnection connection, SqlTransaction transaction,
             int userId, UserProfile profile)
         {
-            var parsedCVText = BuildParsedCVText(profile);
-
             var formDataJson = JsonSerializer.Serialize(new FormDataSnapshot(
                 profile.FirstName, profile.LastName, profile.Age, profile.Gender,
                 profile.Email, profile.PhoneNumber, profile.GitHub, profile.LinkedIn,
@@ -439,7 +429,7 @@ namespace PussyCatsApp.repositories
             cmd.Parameters.AddWithValue("@personalityTestResult", (object)profile.PersonalityTestResult ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@activeAccount", profile.ActiveAccount);
             cmd.Parameters.AddWithValue("@profilePicture", (object)profile.ProfilePicture ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@parsedCV", parsedCVText);
+            cmd.Parameters.AddWithValue("@parsedCV", (object)profile.ParsedCV ?? DBNull.Value); 
             cmd.Parameters.AddWithValue("@formDataJson", formDataJson);
             cmd.ExecuteNonQuery();
         }

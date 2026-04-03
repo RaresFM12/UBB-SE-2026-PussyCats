@@ -41,8 +41,7 @@ namespace PussyCatsApp.views
         {
             _isBinding = true;
 
-            int dummyUserId = 1;
-            await viewModel.LoadUserAsync(dummyUserId);
+            await viewModel.LoadUserAsync(currentUserId);
 
             if (!string.IsNullOrEmpty(viewModel.ErrorMessage))
             {
@@ -193,11 +192,11 @@ namespace PussyCatsApp.views
         {
             if (viewModel._userProfile != null)
             {
-                Frame.Navigate(typeof(ProfileFormPage), viewModel._userProfile);
+                Frame.Navigate(typeof(ProfileFormView), viewModel._userProfile);
             }
             else
             {
-                Frame.Navigate(typeof(ProfileFormPage));
+                Frame.Navigate(typeof(ProfileFormView));
             }
         }
 
@@ -205,7 +204,7 @@ namespace PussyCatsApp.views
         {
             if (viewModel._userProfile != null)
             {
-                Frame.Navigate(typeof(ExportCVTestPage), viewModel._userProfile.UserId);
+                Frame.Navigate(typeof(ExportCVView), viewModel._userProfile.UserId);
             }
         }
 
@@ -214,6 +213,7 @@ namespace PussyCatsApp.views
             if (viewModel._userProfile == null)
                 return;
 
+            //viewModel._userProfile.UserId = currentUserId;
             this.Frame.Navigate(typeof(TestDashboardView), viewModel._userProfile);
         }
 
@@ -236,7 +236,7 @@ namespace PussyCatsApp.views
 
         private void OnViewDocumentsClick(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(DocumentsPage));
+            Frame.Navigate(typeof(DocumentsListView));
         }
 
         private void OnMatchmakingHistoryClick(object sender, RoutedEventArgs e)

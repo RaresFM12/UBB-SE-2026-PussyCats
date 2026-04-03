@@ -58,8 +58,19 @@ namespace PussyCatsApp.services
             userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
         }
 
+        public string GenerateParsedCVText(UserProfile profile)
+        {
+            if (profile == null) return string.Empty;
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"{profile.FirstName} {profile.LastName}".Trim());
+            sb.AppendLine(profile.University ?? string.Empty);
+            sb.AppendLine(string.Join(", ", profile.Skills ?? new List<string>()));
+            return sb.ToString().TrimEnd();
+        }
         public void SaveProfile(int userId, UserProfile profile)
         {
+            profile.ParsedCV = GenerateParsedCVText(profile);
             userProfileRepository.save(userId, profile);
             userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
         }

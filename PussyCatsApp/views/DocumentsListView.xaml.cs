@@ -19,12 +19,12 @@ namespace PussyCatsApp.views
     ///   • handling UI events (file picker, Process.Start, dialogs)
     ///   • forwarding user intent to ViewModel methods
     /// </summary>
-    public sealed partial class DocumentsPage : Page
+    public sealed partial class DocumentsListView : Page
     {
         private readonly DocumentListViewModel listViewModel;
         private readonly UploadDocumentViewModel uploadViewModel;
 
-        public DocumentsPage()
+        public DocumentsListView()
         {
             this.InitializeComponent();
 
