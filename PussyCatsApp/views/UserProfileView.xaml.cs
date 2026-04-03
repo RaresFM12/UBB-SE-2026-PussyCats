@@ -214,6 +214,7 @@ namespace PussyCatsApp.views
             if (viewModel._userProfile == null)
                 return;
 
+            //viewModel._userProfile.UserId = currentUserId;
             this.Frame.Navigate(typeof(TestDashboardView), viewModel._userProfile);
         }
 
