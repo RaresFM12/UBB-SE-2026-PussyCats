@@ -276,7 +276,7 @@ namespace PussyCatsApp.views
 
         private void NameTextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
-            args.Cancel = args.NewText.Any(c => char.IsDigit(c));
+            args.Cancel = args.NewText.Any(c => !char.IsLetter(c) && c != ' ' && c != '\'' && c != '-');
         }
 
         private void PhoneNumberTextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
