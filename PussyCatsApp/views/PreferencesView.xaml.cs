@@ -293,7 +293,7 @@ namespace PussyCatsApp.views
                     Value = location
                 });
 
-                SuccessMessage.Text = "Preferences successfully saved to the database! 🎉";
+                SuccessMessage.Text = "Preferences successfully saved to the database!";
                 SuccessMessage.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Green);
                 SuccessMessage.Visibility = Visibility.Visible;
             }
