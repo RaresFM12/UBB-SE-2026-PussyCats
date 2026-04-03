@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <None Remove="views\MatchHistoryView.xaml" />
+    <None Remove="views\PreferencesView.xaml" />
     <None Remove="views\PublicProfileView.xaml" />
     <None Remove="views\UserProfileView.xaml" />
     <None Remove="views\CompatibilityDetailView.xaml" />
@@ -84,6 +85,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="views\PreferencesView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="views\MatchHistoryView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>

@@ -20,7 +20,7 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PussyCatsApp.views
+/*namespace PussyCatsApp.views
 {
     /// <summary>
     /// Personality Test page where users answer 24 questions to receive role recommendations.
@@ -96,3 +96,4 @@ namespace PussyCatsApp.views
         }
     }
 }
+*/

@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Networking.Sockets;
 
-namespace PussyCatsApp.viewModels
+/*namespace PussyCatsApp.viewModels
 {
     public partial class PersonalityTestViewModel : ObservableObject
     {
@@ -114,3 +114,4 @@ namespace PussyCatsApp.viewModels
     }
 
 }
+*/
