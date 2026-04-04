@@ -161,7 +161,7 @@ namespace PussyCatsApp.views
 
                 // Roluri
                 var savedRoles = preferences
-                    .Where(p => p.PreferenceType == "Role")
+                    .Where(p => p.PreferenceType == "JobRole")
                     .Select(p => p.Value)
                     .ToList();
 
@@ -274,7 +274,7 @@ namespace PussyCatsApp.views
                     repo.AddPreference(new models.Preference
                     {
                         UserId = currentUserId,
-                        PreferenceType = "Role",
+                        PreferenceType = "JobRole",
                         Value = role
                     });
                 }

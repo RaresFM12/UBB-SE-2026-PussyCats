@@ -9,6 +9,12 @@ GO
 USE PussyCatsDB;
 GO
 
+DROP TABLE SKILLS
+DROP TABLE PREFERENCES
+DROP TABLE MATCHES
+DROP TABLE DOCUMENTS
+DROP TABLE USERS
+
 -- =============================================
 -- USERS table
 -- =============================================
@@ -336,7 +342,6 @@ INSERT INTO Users (
     graduationYear,
     country,
     address,
-    sexualOrientation,
     disabilities,
     parsedCV,
     personalityTestResult,
@@ -362,7 +367,6 @@ VALUES (
     2026,
     'Romania',
     'Str. Universitatii, Nr. 1, Cluj-Napoca',
-    NULL,
     0,
     'Ioana Gavrila  Babes-Bolyai University  HTML, JavaScript, CSS, TypeScript, React, Git, GitHub, Jest, Webpack, Vite, Figma, REST, SQL, PostgreSQL, Docker',
     'BackendDeveloper',
@@ -376,3 +380,5 @@ VALUES (
     'Cluj-Napoca',
     'I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.'
 );
+
+DELETE FROM USERS
