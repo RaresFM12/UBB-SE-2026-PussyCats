@@ -1,3 +1,4 @@
+using PussyCatsApp.Models;
 using PussyCatsApp.models;
 using PussyCatsApp.repositories;
 using System;
@@ -84,7 +85,7 @@ namespace PussyCatsApp.services
             List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
             foreach (SkillTest test in tests)
             {
-                totalXP += test.getXP();
+                totalXP += test.GetExperiencePoints();
             }
 
             profile.UserLevel = UserLevel.calculateLevel(totalXP);

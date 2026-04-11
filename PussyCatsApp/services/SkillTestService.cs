@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.repositories;
+using PussyCatsApp.Models;
 using PussyCatsApp.models;
 
 namespace PussyCatsApp.services
@@ -30,7 +31,7 @@ namespace PussyCatsApp.services
             if (skill == null)
                 throw new Exception($"No test found for ID {skillId}");
 
-            return skill.isRetakeEligible();
+            return skill.IsRetakeEligible();
         }
 
         public Badge submitRetake(int skillId, int newScore)

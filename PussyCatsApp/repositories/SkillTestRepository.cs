@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Models;
 using PussyCatsApp.models;
 using System;
 using System.Collections.Generic;
@@ -28,10 +29,10 @@ namespace PussyCatsApp.repositories
             if (reader.Read())
             {
                 var test = new SkillTest(
-                    skillId: (int)reader["skillID"],
+                    skillTestId: (int)reader["skillID"],
                     userId: (int)reader["userID"],
-                    name: reader["name"].ToString(),
-                    score: (int)reader["score"],
+                    testName: reader["name"].ToString(),
+                    testScore: (int)reader["score"],
                     achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
                 );
                 sqlConnection.Close();
@@ -65,10 +66,10 @@ namespace PussyCatsApp.repositories
             while (reader.Read())
             {
                 tests.Add(new SkillTest(
-                    skillId: (int)reader["skillID"],
+                    skillTestId: (int)reader["skillID"],
                     userId: (int)reader["userID"],
-                    name: reader["name"].ToString(),
-                    score: (int)reader["score"],
+                    testName: reader["name"].ToString(),
+                    testScore: (int)reader["score"],
                     achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
                 ));
             }
