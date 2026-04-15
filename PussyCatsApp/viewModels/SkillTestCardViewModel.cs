@@ -1,22 +1,21 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class SkillTestCardViewModel : INotifyPropertyChanged
     {
         private SkillTest skillTest;
         private Badge badge;
         private SkillTestService skillTestService;
-        private UserProfileViewModel userProfileViewModel;  
+        private UserProfileViewModel userProfileViewModel;
         private bool isRetakeEnabled;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,10 +29,10 @@ namespace PussyCatsApp.viewModels
         {
             this.skillTest = skillTest;
             this.skillTestService = skillTestService;
-            this.userProfileViewModel = userProfileViewModel;  
+            this.userProfileViewModel = userProfileViewModel;
 
             CheckRetakeEligible();
-            badge = Badge.assignTier(skillTest.Score);
+            badge = Badge.AssignTier(skillTest.Score);
         }
 
         public void LoadCardCommand()
@@ -43,17 +42,19 @@ namespace PussyCatsApp.viewModels
         }
         public void CheckRetakeEligible()
         {
-            isRetakeEnabled = skillTestService.canRetakeTest(skillTest.SkillTestId);
+            isRetakeEnabled = skillTestService.CanRetakeTest(skillTest.SkillTestId);
         }
 
         public void RetakeCommand()
         {
             if (!isRetakeEnabled)
+            {
                 return;
+            }
 
             int newScore = GenerateRandomScore();
 
-            badge = skillTestService.submitRetake(skillTest.SkillTestId, newScore);
+            badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newScore);
 
             skillTest.AchievedDate = DateOnly.FromDateTime(DateTime.Now);
             skillTest.Score = newScore;
@@ -64,12 +65,12 @@ namespace PussyCatsApp.viewModels
             OnPropertyChanged(nameof(Badge));
             OnPropertyChanged(nameof(SkillTest));
             OnPropertyChanged(nameof(IsRetakeEnabled));
-            userProfileViewModel.recalculateLevelCommand();  
+            userProfileViewModel.RecalculateLevelCommand();
         }
 
         public void UpdateBadge()
         {
-            badge = Badge.assignTier(skillTest.Score);
+            badge = Badge.AssignTier(skillTest.Score);
         }
 
         private int GenerateRandomScore()

@@ -1,9 +1,9 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class CompatibilityService
     {
@@ -31,17 +31,23 @@ namespace PussyCatsApp.services
             List<string> extractedSkills = new List<string>();
 
             if (string.IsNullOrWhiteSpace(parsedCv))
+            {
                 return extractedSkills;
+            }
 
             string[] lines = parsedCv.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
 
             if (lines.Length < 3)
+            {
                 return extractedSkills;
+            }
 
             string skillsLine = lines[2].Trim();
 
             if (string.IsNullOrWhiteSpace(skillsLine))
+            {
                 return extractedSkills;
+            }
 
             string[] cvSkills = skillsLine.Split(',');
 
@@ -49,7 +55,9 @@ namespace PussyCatsApp.services
             {
                 string skillName = cvSkill.Trim();
                 if (!string.IsNullOrWhiteSpace(skillName))
+                {
                     extractedSkills.Add(skillName);
+                }
             }
 
             return extractedSkills;
@@ -60,7 +68,9 @@ namespace PussyCatsApp.services
             List<UserSkill> allSkills = new List<UserSkill>();
 
             foreach (UserSkill verifiedSkill in verifiedSkills)
+            {
                 allSkills.Add(verifiedSkill);
+            }
 
             foreach (string cvSkill in cvSkills)
             {
@@ -102,16 +112,21 @@ namespace PussyCatsApp.services
                     if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                     {
                         if (userSkill.IsVerified)
+                        {
                             ci = userSkill.Score / 100.0;
+                        }
                         else
+                        {
                             ci = 0.5;
-
+                        }
                         break;
                     }
                 }
 
                 if (ci > maxCi)
+                {
                     maxCi = ci;
+                }
             }
 
             return maxCi;
@@ -121,14 +136,20 @@ namespace PussyCatsApp.services
         {
             int totalWeight = 0;
             foreach (SkillGroup group in groups)
+            {
                 totalWeight += group.Weight;
+            }
 
             if (totalWeight == 0)
+            {
                 return -1;
+            }
 
             double weightedSum = 0;
             for (int i = 0; i < groups.Count; i++)
+            {
                 weightedSum += groups[i].Weight * groupScores[i];
+            }
 
             return weightedSum * 100 / totalWeight;
         }
@@ -145,8 +166,11 @@ namespace PussyCatsApp.services
             foreach (SkillGroup group in groups)
             {
                 double groupScore = ComputeGroupScore(group, userSkills);
+
                 if (groupScore > 0.5)
+                {
                     continue;
+                }
 
                 Suggestion bestSuggestionForGroup = null;
 
@@ -160,14 +184,20 @@ namespace PussyCatsApp.services
                         if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                         {
                             if (userSkill.IsVerified)
+                            {
                                 userHasVerified = true;
+                            }
                             else
+                            {
                                 userHasUnverified = true;
+                            }
                         }
                     }
 
                     if (userHasVerified)
+                    {
                         continue;
+                    }
 
                     double gain = ComputeGain(group, groupScore, totalWeight);
 
@@ -189,13 +219,17 @@ namespace PussyCatsApp.services
                 }
 
                 if (bestSuggestionForGroup != null)
+                {
                     suggestions.Add(bestSuggestionForGroup);
+                }
             }
 
             suggestions.Sort((a, b) => b.GainScore.CompareTo(a.GainScore));
 
             if (suggestions.Count > 3)
+            {
                 suggestions = suggestions.GetRange(0, 3);
+            }
 
             return suggestions;
         }
@@ -207,11 +241,15 @@ namespace PussyCatsApp.services
 
             int totalWeight = 0;
             foreach (SkillGroup group in groups)
+            {
                 totalWeight += group.Weight;
+            }
 
             List<double> groupScores = new List<double>();
             foreach (SkillGroup group in groups)
+            {
                 groupScores.Add(ComputeGroupScore(group, userSkills));
+            }
 
             double matchScore = ComputeMatchScore(groups, groupScores);
 
@@ -236,7 +274,9 @@ namespace PussyCatsApp.services
             List<RoleResult> results = new List<RoleResult>();
 
             foreach (JobRole role in Enum.GetValues(typeof(JobRole)))
+            {
                 results.Add(CalculateForRole(userId, role));
+            }
 
             return results;
         }

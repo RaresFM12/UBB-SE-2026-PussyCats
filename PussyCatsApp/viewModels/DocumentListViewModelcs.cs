@@ -1,8 +1,8 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using PussyCatsApp.Models;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     /// <summary>
     /// ViewModel for the document list panel.
@@ -26,14 +26,14 @@ namespace PussyCatsApp.viewModels
 
         public void LoadDocuments()
         {
-            documents = documentService.getDocumentsByUserId(userId);
+            documents = documentService.GetDocumentsByUserId(userId);
         }
 
         public List<Document> GetDocuments() => documents;
 
         public void DeleteDocument(int id)
         {
-            documentService.deleteDocument(id);
+            documentService.DeleteDocument(id);
             LoadDocuments();
         }
 
@@ -47,7 +47,7 @@ namespace PussyCatsApp.viewModels
         {
             try
             {
-                string fullPath = documentService.getDocumentAbsolutePath(documentId);
+                string fullPath = documentService.GetDocumentAbsolutePath(documentId);
                 statusMessage = string.Empty;
                 return fullPath;
             }

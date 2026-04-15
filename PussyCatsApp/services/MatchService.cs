@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
 
-using PussyCatsApp.models;
-using PussyCatsApp.repositories;
-
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class MatchService
     {
-        private readonly MatchRepository _matchRepository;
+        private readonly MatchRepository matchRepository;
 
         public MatchService()
         {
-            _matchRepository = new MatchRepository();
+            matchRepository = new MatchRepository();
         }
 
         private int CountByPeriod(List<Match> matches, int months)
@@ -55,12 +54,12 @@ namespace PussyCatsApp.services
 
         public List<Match> GetMatchesForUser(int userId)
         {
-            return _matchRepository.GetByUserId(userId);
+            return matchRepository.GetByUserId(userId);
         }
 
         public MatchStatistics GetStatistics(int userId)
         {
-            var matches = _matchRepository.GetByUserId(userId);
+            var matches = matchRepository.GetByUserId(userId);
             var stats = new MatchStatistics();
 
             stats.TotalMatches = matches.Count;

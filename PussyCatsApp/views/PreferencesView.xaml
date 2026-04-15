@@ -1,5 +1,5 @@
 <Page
-    x:Class="PussyCatsApp.views.PreferencesView"
+    x:Class="PussyCatsApp.Views.PreferencesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -18,7 +18,7 @@
                     <TextBlock Text="Set up your filters so we can match you with the perfect jobs." Foreground="Gray"/>
                 </StackPanel>
 
-                <Button Grid.Column="1" Content="Back" Click="btnBack_Click" VerticalAlignment="Top" Margin="0,6,100,0"/>
+                <Button Grid.Column="1" Content="Back" Click="BtnBack_Click" VerticalAlignment="Top" Margin="0,6,100,0"/>
             </Grid>
 
             <StackPanel Spacing="8">
@@ -42,9 +42,9 @@
                       Header="Preferred Work Mode" 
                       Width="300" 
                       PlaceholderText="Select work mode">
-                <ComboBoxItem Content="Remote"/>
-                <ComboBoxItem Content="Hybrid"/>
-                <ComboBoxItem Content="On-site"/>
+                <ComboBoxItem Content="Remote"  Tag="Remote"/>
+                <ComboBoxItem Content="Hybrid"  Tag="Hybrid"/>
+                <ComboBoxItem Content="On-site" Tag="OnSite"/>
             </ComboBox>
 
             <AutoSuggestBox x:Name="LocationAutoSuggestBox"

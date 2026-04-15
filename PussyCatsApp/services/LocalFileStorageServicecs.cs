@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PussyCatsApp.storage
+namespace PussyCatsApp.Storage
 {
     public class LocalFileStorageService
     {
@@ -19,7 +19,7 @@ namespace PussyCatsApp.storage
         }
 
         // A GUID prefix avoids name collisions between users.
-        public string saveFile(Stream fileStream, string originalFileName)
+        public string SaveFile(Stream fileStream, string originalFileName)
         {
             string uniqueFileName = $"{Guid.NewGuid()}_{originalFileName}";
             string fullPath = Path.Combine(basePath, uniqueFileName);
@@ -30,15 +30,17 @@ namespace PussyCatsApp.storage
             // Return relative path (stored in DB)
             return Path.Combine("uploads", "documents", uniqueFileName);
         }
-        public void deleteFile(string relativePath)
+        public void DeleteFile(string relativePath)
         {
             string fullPath = Path.Combine(AppContext.BaseDirectory, relativePath);
 
             if (File.Exists(fullPath))
+            {
                 File.Delete(fullPath);
+            }
         }
 
-        public string getFilePath(string relativePath)
+        public string GetFilePath(string relativePath)
         {
             return Path.Combine(AppContext.BaseDirectory, relativePath);
         }

@@ -1,13 +1,12 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class TestDashboardViewModel
     {
@@ -15,7 +14,7 @@ namespace PussyCatsApp.viewModels
         private SkillTestService skillTestService;
         private UserProfileViewModel userProfileViewModel;
 
-        public List<SkillTestCardViewModel> TestCards { get; private set; } = new();
+        public List<SkillTestCardViewModel> TestCards { get; private set; } = new ();
 
         public TestDashboardViewModel(SkillTestService skillTestService, UserProfileViewModel userProfileViewModel)
         {
@@ -25,7 +24,7 @@ namespace PussyCatsApp.viewModels
 
         public void LoadTests(UserProfile userProfile)
         {
-            tests = skillTestService.getTestsForUser(userProfile.UserId);
+            tests = skillTestService.GetTestsForUser(userProfile.UserId);
 
             TestCards = new List<SkillTestCardViewModel>();
             foreach (SkillTest test in tests)
@@ -34,7 +33,7 @@ namespace PussyCatsApp.viewModels
             }
         }
 
-        public void goToAllTestsCommand()
+        public void GoToAllTestsCommand()
         {
         }
     }

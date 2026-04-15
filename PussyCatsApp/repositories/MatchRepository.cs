@@ -1,35 +1,36 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public class MatchRepository
     {
         private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
 
         public MatchRepository()
-        {}
+        {
+        }
 
         public List<Match> GetByUserId(int userId)
         {
             var matches = new List<Match>();
 
-            string query = "SELECT id, userID, companyName, jobRole, matchDate FROM MATCHES WHERE userID = @UserId ORDER BY matchDate DESC";
+            string query = "SELECT id, userID, companyName, jobRole, matchDate FROM MATCHES WHERE userID = @userId ORDER BY matchDate DESC";
 
             Debug.WriteLine($"query for {userId}: {query}");
-            
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@userId", userId);
 
                     conn.Open();
                     using (SqlDataReader reader = cmd.ExecuteReader())

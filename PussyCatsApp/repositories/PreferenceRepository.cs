@@ -1,29 +1,29 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public class PreferenceRepository : IPreferenceRepository
     {
-        private readonly string _connectionString;
+        private readonly string connectionString;
 
         public PreferenceRepository(string connectionString)
         {
-            _connectionString = connectionString;
+            this.connectionString = connectionString;
         }
 
         public List<Preference> GetPreferencesByUserId(int userId)
         {
             var preferences = new List<Preference>();
-            string query = "SELECT pID, userID, preferanceType, value FROM PREFERENCES WHERE userID = @UserId";
+            string query = "SELECT pID, userID, preferanceType, value FROM PREFERENCES WHERE userID = @userId";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@userId", userId);
                     conn.Open();
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -45,13 +45,13 @@ namespace PussyCatsApp.repositories
 
         public void AddPreference(Preference preference)
         {
-            string query = "INSERT INTO PREFERENCES (userID, preferanceType, value) VALUES (@UserId, @PreferenceType, @Value)";
+            string query = "INSERT INTO PREFERENCES (userID, preferanceType, value) VALUES (@userId, @PreferenceType, @Value)";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", preference.UserId);
+                    cmd.Parameters.AddWithValue("@userId", preference.UserId);
                     cmd.Parameters.AddWithValue("@PreferenceType", preference.PreferenceType);
                     cmd.Parameters.AddWithValue("@Value", preference.Value);
 
@@ -65,7 +65,7 @@ namespace PussyCatsApp.repositories
         {
             string query = "DELETE FROM PREFERENCES WHERE pID = @PId";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -78,13 +78,13 @@ namespace PussyCatsApp.repositories
 
         public void DeleteAllByUserId(int userId)
         {
-            string query = "DELETE FROM PREFERENCES WHERE userID = @UserId";
+            string query = "DELETE FROM PREFERENCES WHERE userID = @userId";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@userId", userId);
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -96,12 +96,12 @@ namespace PussyCatsApp.repositories
             throw new NotImplementedException("Use DeleteAllByUserId and AddPreference instead.");
         }
 
-        public Preference load(int id)
+        public Preference Load(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void save(int id, Preference data)
+        public void Save(int id, Preference data)
         {
             throw new NotImplementedException();
         }

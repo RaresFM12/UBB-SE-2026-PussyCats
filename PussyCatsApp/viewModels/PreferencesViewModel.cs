@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
 
-using PussyCatsApp.models;
-using PussyCatsApp.services;
-
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class PreferencesViewModel
     {
@@ -19,14 +20,27 @@ namespace PussyCatsApp.viewModels
         private int currentUserId;
         private PreferenceService preferencesService;
 
-        public PreferencesViewModel(PreferenceService service, int userId)
+        public PreferencesViewModel(int userId)
         {
-            preferencesService = service;
+            string connectionString = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build()
+                .GetConnectionString("raresConnectionString");
+
+            var repository = new PreferenceRepository(connectionString);
+            preferencesService = new PreferenceService(repository);
+
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();
             preferredLocation = string.Empty;
             errorMessage = string.Empty;
+        }
+
+        public string GetPreferredLocation()
+        {
+            return preferredLocation;
         }
 
         public void LoadPreferences()

@@ -1,19 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
-namespace PussyCatsApp.repositories.personality_test_repo
+namespace PussyCatsApp.Repositories.Personality_test_repo
 {
     public class PersonalityTestRepository : IPersonalityTestRepository
     {
         private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
 
-        public String? load(int id)
+        public string? Load(int id)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -26,7 +26,9 @@ namespace PussyCatsApp.repositories.personality_test_repo
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
+                            {
                                 return reader["personalityTestResult"].ToString();
+                            }
                         }
                     }
                 }
@@ -39,7 +41,7 @@ namespace PussyCatsApp.repositories.personality_test_repo
             return null;
         }
 
-        public void save(int id, string personalityTestResult)
+        public void Save(int id, string personalityTestResult)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

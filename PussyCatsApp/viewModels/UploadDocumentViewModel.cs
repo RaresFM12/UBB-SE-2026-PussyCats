@@ -1,8 +1,8 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
+using PussyCatsApp.Models;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     /// <summary>
     /// ViewModel for the upload panel.
@@ -46,7 +46,9 @@ namespace PussyCatsApp.viewModels
         public void UploadDocument()
         {
             if (!ValidateDocumentInput())
+            {
                 return;
+            }
 
             var document = new Document
             {
@@ -54,7 +56,7 @@ namespace PussyCatsApp.viewModels
                 DocumentName = documentName
             };
 
-            documentService.uploadDocument(document, selectedFilePath);
+            documentService.UploadDocument(document, selectedFilePath);
         }
 
         public string GetDocumentName() => documentName;

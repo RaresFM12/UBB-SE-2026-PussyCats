@@ -1,18 +1,22 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using System.IO;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
-using System;
-using System.IO;
-using PussyCatsApp.viewModels;
-using PussyCatsApp.repositories;
+using PussyCatsApp.ViewModels;
+using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// Page that provides CV export functionality, displaying a live preview of the user's CV
+    /// using a WebView2 control and enabling PDF download of the rendered document.
+    /// </summary>
     public sealed partial class ExportCVView : Page
     {
         public ExportCVViewModel ViewModel { get; private set; }
-        private int _userId;
+        private int userId;
 
         public ExportCVView()
         {
@@ -25,7 +29,7 @@ namespace PussyCatsApp.views
             base.OnNavigatedTo(e);
             if (e.Parameter is int passedUserId)
             {
-                _userId = passedUserId;
+                userId = passedUserId;
             }
         }
 
@@ -53,7 +57,7 @@ namespace PussyCatsApp.views
             var pdfExportService = new PdfExportService(CvWebView);
 
             ViewModel = new ExportCVViewModel(pdfExportService);
-            ViewModel.UserId = _userId;
+            ViewModel.UserId = userId;
 
             this.DataContext = ViewModel;
 

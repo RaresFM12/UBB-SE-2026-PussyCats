@@ -1,35 +1,32 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.viewModels;
-using PussyCatsApp.services;
-using PussyCatsApp.repositories.personality_test_repo;
-using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using PussyCatsApp.ViewModels;
+using PussyCatsApp.Services;
+using PussyCatsApp.Repositories.Personality_test_repo;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using PussyCatsApp.Repositories;
 
-using System;
-using System.Linq;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.viewModels;
-using PussyCatsApp.repositories;
-
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// Page that displays the user's match history, including a list of past role matches
+    /// and statistical breakdowns by time period and job position.
+    /// </summary>
     public sealed partial class MatchHistoryView : Page
     {
-        private MatchHistoryViewModel _viewModel;
+        private MatchHistoryViewModel viewModel;
 
         public MatchHistoryView()
         {
@@ -43,15 +40,15 @@ namespace PussyCatsApp.views
 
             if (e.Parameter is MatchHistoryViewModel vm)
             {
-                _viewModel = vm;
+                viewModel = vm;
             }
         }
 
         private void MatchHistoryView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_viewModel == null)
+            if (viewModel == null)
             {
-                _viewModel = new MatchHistoryViewModel(1);
+                viewModel = new MatchHistoryViewModel(1);
             }
 
             LoadMatches();
@@ -60,31 +57,36 @@ namespace PussyCatsApp.views
 
         private void LoadMatches()
         {
-            _viewModel.LoadMatches();
+            viewModel.LoadMatches();
 
-            string error = _viewModel.GetErrorMessage();
+            string error = viewModel.GetErrorMessage();
             if (!string.IsNullOrEmpty(error))
+            {
                 return;
+            }
 
-            MatchesListView.ItemsSource = _viewModel.GetMatches();
+            MatchesListView.ItemsSource = viewModel.GetMatches();
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             if (Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
         }
 
         private void LoadStatistics()
         {
-            _viewModel.LoadStatistics();
+            viewModel.LoadStatistics();
 
-            string error = _viewModel.GetErrorMessage();
+            string error = viewModel.GetErrorMessage();
             if (!string.IsNullOrEmpty(error))
+            {
                 return;
-            
+            }
 
-            var stats = _viewModel.GetStatistics();
+            var stats = viewModel.GetStatistics();
 
             if (stats != null)
             {

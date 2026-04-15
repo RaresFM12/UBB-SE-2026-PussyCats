@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public interface IRepository<T>
     {
-        T? load(int id);
-        void save(int id, T data);
+        T? Load(int id);
+        void Save(int id, T data);
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class UserSkill
     {
@@ -12,8 +12,17 @@ namespace PussyCatsApp.models
         private bool isVerified;
         private int score;
 
-        public string SkillName { get { return skillName; } set { skillName = value; } }
-        public bool IsVerified { get { return isVerified; } set { isVerified = value; } }
-        public int Score { get { return score; } set { score = value; } }
+        public string SkillName
+        {
+            get { return skillName; } set { skillName = value; }
+        }
+        public bool IsVerified
+        {
+            get { return isVerified; } set { isVerified = value; }
+        }
+        public int Score
+        {
+            get { return score; } set { score = value; }
+        }
     }
 }

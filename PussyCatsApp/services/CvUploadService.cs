@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class CvUploadService
     {

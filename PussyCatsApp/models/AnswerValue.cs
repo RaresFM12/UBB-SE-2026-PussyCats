@@ -4,14 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public enum AnswerValue
     {
-        STRONGLY_DISAGREE = 1, 
-        DISAGREE = 2, 
-        NEUTRAL = 3, 
-        AGREE = 4, 
+        /// <summary>
+        /// Strongly disagree with the statement.
+        /// </summary>
+        STRONGLY_DISAGREE = 1,
+
+        /// <summary>
+        /// Disagree with the statement.
+        /// </summary>
+        DISAGREE = 2,
+
+        /// <summary>
+        /// Neither agree nor disagree with the statement.
+        /// </summary>
+        NEUTRAL = 3,
+
+        /// <summary>
+        /// Agree with the statement.
+        /// </summary>
+        AGREE = 4,
+
+        /// <summary>
+        /// Strongly agree with the statement.
+        /// </summary>
         STRONGLY_AGREE = 5
     }
 }

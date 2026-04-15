@@ -1,13 +1,17 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// Page that displays a read-only view of a user's profile information,
+    /// including personal details, skills, and motivation, with navigation to edit the profile.
+    /// </summary>
     public sealed partial class ViewProfilePage : Page
     {
-        private UserProfile _userProfile;
+        private UserProfile userProfile;
 
         public ViewProfilePage()
         {
@@ -19,34 +23,34 @@ namespace PussyCatsApp.views
             base.OnNavigatedTo(e);
             if (e.Parameter is UserProfile profile)
             {
-                _userProfile = profile;
+                userProfile = profile;
             }
             else
             {
-                _userProfile = new UserProfile();
+                userProfile = new UserProfile();
             }
             LoadProfileData();
         }
 
         private void LoadProfileData()
         {
-            FirstNameText.Text = string.IsNullOrEmpty(_userProfile.FirstName) ? "\u2014" : _userProfile.FirstName;
-            LastNameText.Text = string.IsNullOrEmpty(_userProfile.LastName) ? "\u2014" : _userProfile.LastName;
-            AgeText.Text = _userProfile.Age > 0 ? _userProfile.Age.ToString() : "\u2014";
-            GenderText.Text = string.IsNullOrEmpty(_userProfile.Gender) ? "\u2014" : _userProfile.Gender;
-            EmailText.Text = string.IsNullOrEmpty(_userProfile.Email) ? "\u2014" : _userProfile.Email;
-            PhoneText.Text = string.IsNullOrEmpty(_userProfile.PhoneNumber) ? "\u2014" : _userProfile.PhoneNumber;
-            CountryText.Text = string.IsNullOrEmpty(_userProfile.Country) ? "\u2014" : _userProfile.Country;
-            UniversityText.Text = string.IsNullOrEmpty(_userProfile.University) ? "\u2014" : _userProfile.University;
-            GraduationYearText.Text = _userProfile.ExpectedGraduationYear > 0 ? _userProfile.ExpectedGraduationYear.ToString() : "\u2014";
-            AddressText.Text = string.IsNullOrEmpty(_userProfile.Address) ? "\u2014" : _userProfile.Address;
-            GitHubText.Text = string.IsNullOrEmpty(_userProfile.GitHub) ? "\u2014" : _userProfile.GitHub;
-            LinkedInText.Text = string.IsNullOrEmpty(_userProfile.LinkedIn) ? "\u2014" : _userProfile.LinkedIn;
-            MotivationText.Text = string.IsNullOrEmpty(_userProfile.Motivation) ? "No motivation provided." : _userProfile.Motivation;
+            FirstNameText.Text = string.IsNullOrEmpty(userProfile.FirstName) ? "\u2014" : userProfile.FirstName;
+            LastNameText.Text = string.IsNullOrEmpty(userProfile.LastName) ? "\u2014" : userProfile.LastName;
+            AgeText.Text = userProfile.Age > 0 ? userProfile.Age.ToString() : "\u2014";
+            GenderText.Text = string.IsNullOrEmpty(userProfile.Gender) ? "\u2014" : userProfile.Gender;
+            EmailText.Text = string.IsNullOrEmpty(userProfile.Email) ? "\u2014" : userProfile.Email;
+            PhoneText.Text = string.IsNullOrEmpty(userProfile.PhoneNumber) ? "\u2014" : userProfile.PhoneNumber;
+            CountryText.Text = string.IsNullOrEmpty(userProfile.Country) ? "\u2014" : userProfile.Country;
+            UniversityText.Text = string.IsNullOrEmpty(userProfile.University) ? "\u2014" : userProfile.University;
+            GraduationYearText.Text = userProfile.ExpectedGraduationYear > 0 ? userProfile.ExpectedGraduationYear.ToString() : "\u2014";
+            AddressText.Text = string.IsNullOrEmpty(userProfile.Address) ? "\u2014" : userProfile.Address;
+            GitHubText.Text = string.IsNullOrEmpty(userProfile.GitHub) ? "\u2014" : userProfile.GitHub;
+            LinkedInText.Text = string.IsNullOrEmpty(userProfile.LinkedIn) ? "\u2014" : userProfile.LinkedIn;
+            MotivationText.Text = string.IsNullOrEmpty(userProfile.Motivation) ? "No motivation provided." : userProfile.Motivation;
 
-            if (_userProfile.Skills != null && _userProfile.Skills.Count > 0)
+            if (userProfile.Skills != null && userProfile.Skills.Count > 0)
             {
-                SkillsRepeater.ItemsSource = _userProfile.Skills;
+                SkillsRepeater.ItemsSource = userProfile.Skills;
                 NoSkillsText.Visibility = Visibility.Collapsed;
             }
             else
@@ -57,7 +61,7 @@ namespace PussyCatsApp.views
 
         private void EditProfileButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(ProfileFormView), _userProfile);
+            Frame.Navigate(typeof(ProfileFormView), userProfile);
         }
     }
 }

@@ -1,26 +1,28 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.converters;
-using PussyCatsApp.models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.Converters;
+using PussyCatsApp.Models;
+using PussyCatsApp.Services;
 using Windows.Networking.Sockets;
-
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for the personality test that manages questions, answer selection, and role scoring.
+    /// </summary>
     public partial class PersonalityTestViewModel : ObservableObject
     {
-        private readonly PersonalityTestService PersonalityTestService;
-        private readonly int UserId;
+        private readonly PersonalityTestService personalityTestService;
+        private readonly int userId;
 
         public List<QuestionViewModel> Questions { get; }
 
         [ObservableProperty]
-        public partial List<RoleResultViewModel> TopRoles { get; set; } = new();
+        public partial List<RoleResultViewModel> TopRoles { get; set; } = new ();
 
         [ObservableProperty]
         public partial RoleResultViewModel? SelectedRole { get; set; }
@@ -37,8 +39,8 @@ namespace PussyCatsApp.viewModels
 
         public PersonalityTestViewModel(int userId)
         {
-            PersonalityTestService = new PersonalityTestService();
-            UserId = userId;
+            personalityTestService = new PersonalityTestService();
+            this.userId = userId;
 
             Questions = PersonalityTestService.LoadQuestions()
                 .Select(question => new QuestionViewModel(question))
@@ -64,15 +66,17 @@ namespace PussyCatsApp.viewModels
             // Collect answers from questions
             var answers = new Dictionary<Question, AnswerValue>();
             foreach (var questionVm in Questions)
+            {
                 answers[questionVm.Question] = (AnswerValue)questionVm.SelectedAnswer!;
+            }
 
             // Calculate trait scores
-            var traitScores = PersonalityTestService.CalculateTraitScores(answers);
+            var traitScores = personalityTestService.CalculateTraitScores(answers);
 
             // Calculate role scores
-            var roleScores = PersonalityTestService.CalculateRoleScores(traitScores);
+            var roleScores = personalityTestService.CalculateRoleScores(traitScores);
 
-            TopRoles = PersonalityTestService.GetTopRoles(roleScores, 3)
+            TopRoles = personalityTestService.GetTopRoles(roleScores, 3)
                 .Select(role => new RoleResultViewModel(role.Key, role.Value))
                 .ToList();
 
@@ -85,7 +89,9 @@ namespace PussyCatsApp.viewModels
         {
             // Deselect all roles
             foreach (var topRole in TopRoles)
+            {
                 topRole.IsSelected = false;
+            }
 
             // Select the clicked role
             role.IsSelected = true;
@@ -100,7 +106,7 @@ namespace PussyCatsApp.viewModels
         {
             if (SelectedRole != null)
             {
-                PersonalityTestService.SaveResult(UserId, SelectedRole.Role.ToString());
+                personalityTestService.SaveResult(userId, SelectedRole.Role.ToString());
 
                 // Convert role to a friendly display name using the existing converter
                 var converter = new JobRoleToDisplayNameConverter();
@@ -112,5 +118,4 @@ namespace PussyCatsApp.viewModels
             }
         }
     }
-
 }

@@ -1,13 +1,12 @@
-using PussyCatsApp.Models;
-using PussyCatsApp.models;
-using PussyCatsApp.repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class UserProfileService
     {
@@ -22,7 +21,7 @@ namespace PussyCatsApp.services
 
         public UserProfile GetProfile(int userId)
         {
-            return userProfileRepository.getProfileById(userId);
+            return userProfileRepository.GetProfileById(userId);
         }
 
         public List<SkillTest> GetSkillTestsForUser(int userId)
@@ -32,10 +31,12 @@ namespace PussyCatsApp.services
 
         public bool IsProfileAvailable(int userId)
         {
-            UserProfile userProfile = userProfileRepository.getProfileById(userId);
+            UserProfile userProfile = userProfileRepository.GetProfileById(userId);
 
             if (userProfile == null)
+            {
                 throw new Exception($"No profile found for ID {userId}");
+            }
 
             return userProfile.ActiveAccount;
         }
@@ -43,25 +44,28 @@ namespace PussyCatsApp.services
         public void ToggleAccountStatus(int userId, string currentStatus)
         {
             string newStatus = currentStatus == "ACTIVE" ? "INACTIVE" : "ACTIVE";
-            userProfileRepository.updateAccountStatus(userId, newStatus);
-            userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
+            userProfileRepository.UpdateAccountStatus(userId, newStatus);
+            userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
         public void UpdateAvatarPath(int userId, string newPath)
         {
-            userProfileRepository.updateProfilePicture(userId, newPath);
-            userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
+            userProfileRepository.UpdateProfilePicture(userId, newPath);
+            userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
         public void RemoveAvatarPath(int userId)
         {
-            userProfileRepository.updateProfilePicture(userId, null);
-            userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
+            userProfileRepository.UpdateProfilePicture(userId, null);
+            userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
         public string GenerateParsedCVText(UserProfile profile)
         {
-            if (profile == null) return string.Empty;
+            if (profile == null)
+            {
+                return string.Empty;
+            }
 
             var sb = new StringBuilder();
             sb.AppendLine($"{profile.FirstName} {profile.LastName}".Trim());
@@ -72,26 +76,28 @@ namespace PussyCatsApp.services
         public void SaveProfile(int userId, UserProfile profile)
         {
             profile.ParsedCV = GenerateParsedCVText(profile);
-            userProfileRepository.save(userId, profile);
-            userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
+            userProfileRepository.Save(userId, profile);
+            userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
         public int RecalculateLevel(UserProfile profile)
         {
-            if (profile == null) return 0;
+            if (profile == null)
+            {
+                return 0;
+            }
+
             int totalXP = 0;
 
-           
             List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
             foreach (SkillTest test in tests)
             {
                 totalXP += test.GetExperiencePoints();
             }
 
-            profile.UserLevel = UserLevel.calculateLevel(totalXP);
+            profile.UserLevel = UserLevel.CalculateLevel(totalXP);
 
             return totalXP;
-            
         }
     }
 }

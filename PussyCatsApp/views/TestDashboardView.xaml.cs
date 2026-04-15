@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -5,22 +10,16 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.models;
-using PussyCatsApp.repositories;
-using PussyCatsApp.services;
-using PussyCatsApp.viewModels;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
+using PussyCatsApp.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
-
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -36,7 +35,7 @@ namespace PussyCatsApp.views
             var skillTestRepo = new SkillTestRepository();
             var skillTestService = new SkillTestService(skillTestRepo);
 
-            IUserProileRepository user = new UserProfileRepository();
+            IUserProfileRepository user = new UserProfileRepository();
             WebView2 view = new WebView2();
             var userProfileViewModel = new UserProfileViewModel();
 
@@ -46,7 +45,6 @@ namespace PussyCatsApp.views
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
            // testDashboardViewModel.LoadTests();
-            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -55,19 +53,17 @@ namespace PussyCatsApp.views
             if (e.Parameter is UserProfile profile && profile.UserId != 0)
             {
                 testDashboardViewModel.LoadTests(profile);
-                renderTestCards();
+                RenderTestCards();
             }
             else
             {
                 System.Diagnostics.Debug.WriteLine("Warning: Navigated to Dashboard without a valid UserID.");
-
             }
         }
-        private void renderTestCards()
+        private void RenderTestCards()
         {
             TestCardsContainer.Children.Clear();
-            
-           
+
             foreach (SkillTestCardViewModel cardViewModel in testDashboardViewModel.TestCards)
             {
                 SkillTestCardView cardView = new SkillTestCardView(cardViewModel);
@@ -77,13 +73,12 @@ namespace PussyCatsApp.views
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-
             this.Frame.Navigate(typeof(UserProfileView));
         }
 
         private void GoToAllTestsButton_Click(object sender, RoutedEventArgs e)
         {
-            testDashboardViewModel.goToAllTestsCommand();
+            testDashboardViewModel.GoToAllTestsCommand();
         }
     }
 }

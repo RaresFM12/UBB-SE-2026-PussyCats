@@ -1,13 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PussyCatsApp.Models;
-using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public class SkillTestRepository : ISkillTestRepository
     {
@@ -19,7 +18,7 @@ namespace PussyCatsApp.repositories
             sqlConnection = new SqlConnection(connectionString);
         }
 
-        public SkillTest load(int skillId)
+        public SkillTest Load(int skillId)
         {
             string query = "SELECT * FROM SKILLS WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
@@ -33,8 +32,7 @@ namespace PussyCatsApp.repositories
                     userId: (int)reader["userID"],
                     testName: reader["name"].ToString(),
                     testScore: (int)reader["score"],
-                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
-                );
+                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default);
                 sqlConnection.Close();
                 return test;
             }
@@ -42,13 +40,12 @@ namespace PussyCatsApp.repositories
             throw new Exception($"SkillTest with ID {skillId} not found.");
         }
 
-
-        public void save(int skillId, SkillTest data)
+        public void Save(int skillId, SkillTest data)
         {
             string query = "UPDATE SKILLS SET score = @score, achievedDate = @date WHERE skillID = @id";
             using SqlCommand cmd = new SqlCommand(query, sqlConnection);
             cmd.Parameters.AddWithValue("@score", data.Score);
-            cmd.Parameters.AddWithValue("@date", data.AchievedDate); 
+            cmd.Parameters.AddWithValue("@date", data.AchievedDate);
             cmd.Parameters.AddWithValue("@id", skillId);
             sqlConnection.Open();
             cmd.ExecuteNonQuery();
@@ -70,8 +67,7 @@ namespace PussyCatsApp.repositories
                     userId: (int)reader["userID"],
                     testName: reader["name"].ToString(),
                     testScore: (int)reader["score"],
-                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
-                ));
+                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default));
             }
             sqlConnection.Close();
             return tests;
@@ -99,7 +95,5 @@ namespace PussyCatsApp.repositories
             sqlConnection.Close();
         }
     }
-
-
 }
 

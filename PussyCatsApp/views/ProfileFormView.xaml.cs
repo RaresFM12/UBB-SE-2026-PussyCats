@@ -1,26 +1,31 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.models;
-using PussyCatsApp.viewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Models;
+using PussyCatsApp.ViewModels;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// Page that provides a comprehensive form for users to create or edit their profile,
+    /// including personal information, skills, work experience, projects, extracurricular activities,
+    /// and CV file upload with automatic parsing.
+    /// </summary>
     public sealed partial class ProfileFormView : Page
     {
-        private ProfileFormViewModel _viewModel;
+        private ProfileFormViewModel viewModel;
 
         public ProfileFormView()
         {
             this.InitializeComponent();
 
-            _viewModel = ProfileFormViewModel.Create();
+            viewModel = ProfileFormViewModel.Create();
 
             PopulateGraduationYears();
         }
@@ -30,18 +35,18 @@ namespace PussyCatsApp.views
             base.OnNavigatedTo(e);
             if (e.Parameter is UserProfile profile)
             {
-                _viewModel.LoadProfile(profile);
+                viewModel.LoadProfile(profile);
                 LoadViewFromViewModel();
             }
             else
             {
-                _viewModel.LoadProfile(new UserProfile());
+                viewModel.LoadProfile(new UserProfile());
             }
         }
 
         private void PopulateGraduationYears()
         {
-            foreach (var year in _viewModel.GraduationYears)
+            foreach (var year in viewModel.GraduationYears)
             {
                 GraduationYearComboBox.Items.Add(year.ToString());
             }
@@ -49,58 +54,66 @@ namespace PussyCatsApp.views
 
         private void LoadViewFromViewModel()
         {
-            FirstNameTextBox.Text = _viewModel.FirstName;
-            LastNameTextBox.Text = _viewModel.LastName;
-            AgeNumberBox.Value = _viewModel.Age;
+            FirstNameTextBox.Text = viewModel.FirstName;
+            LastNameTextBox.Text = viewModel.LastName;
+            AgeNumberBox.Value = viewModel.Age;
 
-            if (!string.IsNullOrEmpty(_viewModel.Gender))
-                SelectGender(_viewModel.Gender);
+            if (!string.IsNullOrEmpty(viewModel.Gender))
+            {
+                SelectGender(viewModel.Gender);
+            }
 
-            EmailTextBox.Text = _viewModel.Email;
-            GitHubTextBox.Text = _viewModel.GitHub;
-            LinkedInTextBox.Text = _viewModel.LinkedIn;
-            UniversityAutoSuggest.Text = _viewModel.University;
-            AddressTextBox.Text = _viewModel.Address;
-            MotivationTextBox.Text = _viewModel.Motivation;
+            EmailTextBox.Text = viewModel.Email;
+            GitHubTextBox.Text = viewModel.GitHub;
+            LinkedInTextBox.Text = viewModel.LinkedIn;
+            UniversityAutoSuggest.Text = viewModel.University;
+            AddressTextBox.Text = viewModel.Address;
+            MotivationTextBox.Text = viewModel.Motivation;
 
-            if (!string.IsNullOrEmpty(_viewModel.PhonePrefix))
-                SelectPhonePrefix(_viewModel.PhonePrefix);
-            PhoneNumberTextBox.Text = _viewModel.PhoneNumber;
+            if (!string.IsNullOrEmpty(viewModel.PhonePrefix))
+            {
+                SelectPhonePrefix(viewModel.PhonePrefix);
+            }
+            PhoneNumberTextBox.Text = viewModel.PhoneNumber;
 
-            if (!string.IsNullOrEmpty(_viewModel.Country))
-                SelectCountry(_viewModel.Country);
+            if (!string.IsNullOrEmpty(viewModel.Country))
+            {
+                SelectCountry(viewModel.Country);
+            }
 
             // Set city AFTER country selection to avoid CountryComboBox_SelectionChanged clearing it
-            CityTextBox.Text = _viewModel.City;
+            CityTextBox.Text = viewModel.City;
 
-            if (_viewModel.ExpectedGraduationYear > 0)
-                SelectGraduationYear(_viewModel.ExpectedGraduationYear);
+            if (viewModel.ExpectedGraduationYear > 0)
+            {
+                SelectGraduationYear(viewModel.ExpectedGraduationYear);
+            }
 
-            SkillsItemsRepeater.ItemsSource = _viewModel.Skills;
-            WorkExperienceItemsRepeater.ItemsSource = _viewModel.WorkExperiences;
-            ProjectsItemsRepeater.ItemsSource = _viewModel.Projects;
-            ActivitiesItemsRepeater.ItemsSource = _viewModel.ExtraCurricularActivities;
-            DisabilitiesCheckBox.IsChecked = _viewModel.HasDisabilities;
+            SkillsItemsRepeater.ItemsSource = viewModel.Skills;
+            WorkExperienceItemsRepeater.ItemsSource = viewModel.WorkExperiences;
+            ProjectsItemsRepeater.ItemsSource = viewModel.Projects;
+            ActivitiesItemsRepeater.ItemsSource = viewModel.ExtraCurricularActivities;
+            DisabilitiesCheckBox.IsChecked = viewModel.HasDisabilities;
         }
 
         private void SyncViewToViewModel()
         {
-            _viewModel.FirstName = FirstNameTextBox.Text;
-            _viewModel.LastName = LastNameTextBox.Text;
-            _viewModel.Age = AgeNumberBox.Value;
-            _viewModel.Gender = (GenderComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "";
-            _viewModel.Email = EmailTextBox.Text;
-            _viewModel.PhonePrefix = (PhonePrefixComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "";
-            _viewModel.PhoneNumber = PhoneNumberTextBox.Text;
-            _viewModel.GitHub = GitHubTextBox.Text;
-            _viewModel.LinkedIn = LinkedInTextBox.Text;
-            _viewModel.Country = (CountryComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "";
-            _viewModel.City = CityTextBox.Text;
-            _viewModel.University = UniversityAutoSuggest.Text;
-            _viewModel.Address = AddressTextBox.Text;
-            _viewModel.Motivation = MotivationTextBox.Text;
-            _viewModel.ExpectedGraduationYear = int.TryParse(GraduationYearComboBox.SelectedItem?.ToString(), out var yr) ? yr : 0;
-            //_viewModel.HasDisabilities = DisabilitiesCheckBox.IsChecked == true;
+            viewModel.FirstName = FirstNameTextBox.Text;
+            viewModel.LastName = LastNameTextBox.Text;
+            viewModel.Age = AgeNumberBox.Value;
+            viewModel.Gender = (GenderComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
+            viewModel.Email = EmailTextBox.Text;
+            viewModel.PhonePrefix = (PhonePrefixComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
+            viewModel.PhoneNumber = PhoneNumberTextBox.Text;
+            viewModel.GitHub = GitHubTextBox.Text;
+            viewModel.LinkedIn = LinkedInTextBox.Text;
+            viewModel.Country = (CountryComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
+            viewModel.City = CityTextBox.Text;
+            viewModel.University = UniversityAutoSuggest.Text;
+            viewModel.Address = AddressTextBox.Text;
+            viewModel.Motivation = MotivationTextBox.Text;
+            viewModel.ExpectedGraduationYear = int.TryParse(GraduationYearComboBox.SelectedItem?.ToString(), out var yr) ? yr : 0;
+            // ViewModel.HasDisabilities = DisabilitiesCheckBox.IsChecked == true;
         }
 
         private async void UploadCVButton_Click(object sender, RoutedEventArgs e)
@@ -118,7 +131,7 @@ namespace PussyCatsApp.views
             if (file != null)
             {
                 string content = await FileIO.ReadTextAsync(file);
-                _viewModel.ProcessCVFile(content, file.FileType);
+                viewModel.ProcessCVFile(content, file.FileType);
                 LoadViewFromViewModel();
                 ShowInfoBarFromViewModel();
             }
@@ -126,10 +139,10 @@ namespace PussyCatsApp.views
 
         private void ShowInfoBarFromViewModel()
         {
-            CVUploadInfoBar.Message = _viewModel.InfoBarMessage;
-            CVUploadInfoBar.Severity = (InfoBarSeverity)_viewModel.InfoBarSeverity;
-            CVUploadInfoBar.IsOpen = _viewModel.IsInfoBarOpen;
-            CVStatusText.Text = _viewModel.CvStatusText;
+            CVUploadInfoBar.Message = viewModel.InfoBarMessage;
+            CVUploadInfoBar.Severity = (InfoBarSeverity)viewModel.InfoBarSeverity;
+            CVUploadInfoBar.IsOpen = viewModel.IsInfoBarOpen;
+            CVStatusText.Text = viewModel.CvStatusText;
         }
 
         private void ShowInfoBar(string message, InfoBarSeverity severity)
@@ -199,35 +212,37 @@ namespace PussyCatsApp.views
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                sender.ItemsSource = _viewModel.FilterUniversities(sender.Text);
+                sender.ItemsSource = viewModel.FilterUniversities(sender.Text);
             }
         }
 
         private void UniversityAutoSuggest_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (args.ChosenSuggestion != null)
+            {
                 sender.Text = args.ChosenSuggestion.ToString();
+            }
         }
 
         private void SkillsAutoSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                sender.ItemsSource = _viewModel.FilterSkillSuggestions(sender.Text);
+                sender.ItemsSource = viewModel.FilterSkillSuggestions(sender.Text);
             }
         }
 
         private void SkillsAutoSuggest_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             string skillToAdd = args.ChosenSuggestion?.ToString() ?? sender.Text;
-            _viewModel.AddSkill(skillToAdd);
+            viewModel.AddSkill(skillToAdd);
             sender.Text = string.Empty;
             ShowInfoBarFromViewModel();
         }
 
         private void AddSkillButton_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.AddSkill(SkillsAutoSuggest.Text);
+            viewModel.AddSkill(SkillsAutoSuggest.Text);
             SkillsAutoSuggest.Text = string.Empty;
             ShowInfoBarFromViewModel();
         }
@@ -235,43 +250,51 @@ namespace PussyCatsApp.views
         private void RemoveSkillButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is string skill)
-                _viewModel.RemoveSkill(skill);
+            {
+                viewModel.RemoveSkill(skill);
+            }
         }
 
         private void AddWorkExperienceButton_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.AddWorkExperience();
+            viewModel.AddWorkExperience();
             ShowInfoBarFromViewModel();
         }
 
         private void RemoveWorkExperienceButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is WorkExperience we)
-                _viewModel.RemoveWorkExperience(we);
+            {
+                viewModel.RemoveWorkExperience(we);
+            }
         }
 
         private void AddProjectButton_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.AddProject();
+            viewModel.AddProject();
             ShowInfoBarFromViewModel();
         }
 
         private void RemoveProjectButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is Project project)
-                _viewModel.RemoveProject(project);
+            {
+                viewModel.RemoveProject(project);
+            }
         }
 
         private void AddActivityButton_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.AddExtraCurricularActivity();
+            viewModel.AddExtraCurricularActivity();
             ShowInfoBarFromViewModel();
         }
 
         private void RemoveActivityButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is ExtraCurricularActivity activity)
-                _viewModel.RemoveExtraCurricularActivity(activity);
+            {
+                viewModel.RemoveExtraCurricularActivity(activity);
+            }
         }
 
         private void NameTextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
@@ -316,35 +339,43 @@ namespace PussyCatsApp.views
         {
             SyncViewToViewModel();
 
-            bool success = _viewModel.SaveProfile();
+            bool success = viewModel.SaveProfile();
             ShowInfoBarFromViewModel();
 
             if (!success)
             {
-                ShowFormValidation(_viewModel.InfoBarMessage, (InfoBarSeverity)_viewModel.InfoBarSeverity);
+                ShowFormValidation(viewModel.InfoBarMessage, (InfoBarSeverity)viewModel.InfoBarSeverity);
                 return;
             }
 
             FormValidationInfoBar.IsOpen = false;
 
             if (Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
             else
+            {
                 Frame.Navigate(typeof(UserProfileView));
+            }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             if (Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
             else
+            {
                 Frame.Navigate(typeof(UserProfileView));
+            }
         }
         private void EditPreferencesButton_Click(object sender, RoutedEventArgs e)
         {
             SyncViewToViewModel();
 
-            Frame.Navigate(typeof(views.PreferencesView));
+            Frame.Navigate(typeof(Views.PreferencesView));
         }
     }
 }

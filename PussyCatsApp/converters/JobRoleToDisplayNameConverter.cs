@@ -1,8 +1,8 @@
-using Microsoft.UI.Xaml.Data;
-using PussyCatsApp.models;
 using System;
+using Microsoft.UI.Xaml.Data;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.converters
+namespace PussyCatsApp.Converters
 {
     public class JobRoleToDisplayNameConverter : IValueConverter
     {

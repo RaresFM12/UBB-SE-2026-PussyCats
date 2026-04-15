@@ -381,4 +381,7 @@ VALUES (
     'I am passionate about software development and eager to contribute to innovative projects. My focus is on creating user-friendly applications with clean, maintainable code.'
 );
 
-DELETE FROM USERS
+--Select * from users
+--USE PussyCatsDB;
+--ALTER TABLE Users ADD motivation VARCHAR(1000) NULL;
+--SELECT motivation FROM Users WHERE userID = 1;

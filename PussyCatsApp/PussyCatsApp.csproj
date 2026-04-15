@@ -18,18 +18,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="views\MatchHistoryView.xaml" />
-    <None Remove="views\PreferencesView.xaml" />
-    <None Remove="views\PublicProfileView.xaml" />
-    <None Remove="views\UserProfileView.xaml" />
-    <None Remove="views\CompatibilityDetailView.xaml" />
-    <None Remove="views\CompatibilityOverviewView.xaml" />
+    <None Remove="Views\MatchHistoryView.xaml" />
+    <None Remove="Views\PreferencesView.xaml" />
+    <None Remove="Views\PublicProfileView.xaml" />
+    <None Remove="Views\UserProfileView.xaml" />
+    <None Remove="Views\CompatibilityDetailView.xaml" />
+    <None Remove="Views\CompatibilityOverviewView.xaml" />
     <None Remove="SampleCVs\sample_cv.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="views\CompatibilityDetailPage.xaml" />
-    <Page Remove="views\CompatibilityOverviewPage.xaml" />
+    <Page Remove="Views\CompatibilityDetailPage.xaml" />
+    <Page Remove="Views\CompatibilityOverviewPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -90,15 +90,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="views\PreferencesView.xaml">
+    <Page Update="Views\PreferencesView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="views\MatchHistoryView.xaml">
+    <Page Update="Views\MatchHistoryView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
 
-    <Page Update="views\UserProfileView.xaml">
+    <Page Update="Views\UserProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
@@ -110,15 +110,15 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
 
-    <Page Update="views\PublicProfileView.xaml">
+    <Page Update="Views\PublicProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
-    <Page Update="views\ProfileCompletenessBar.xaml">
+    <Page Update="Views\ProfileCompletenessBar.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
-    <Page Update="views\CompatibilityDetailView.xaml">
+    <Page Update="Views\CompatibilityDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
@@ -126,19 +126,19 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
 
-    <Page Update="views\CompatibilityOverviewView.xaml">
+    <Page Update="Views\CompatibilityOverviewView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
-    <Page Update="views\ExportCVView.xaml">
+    <Page Update="Views\ExportCVView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
-    <Page Update="views\DocumentsListView.xaml">
+    <Page Update="Views\DocumentsListView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
 
-    <Page Update="views\ViewProfilePage.xaml">
+    <Page Update="Views\ViewProfilePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

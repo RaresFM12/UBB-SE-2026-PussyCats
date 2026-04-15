@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class Badge
     {
@@ -19,17 +19,23 @@ namespace PussyCatsApp.models
             XpValue = xpValue;
         }
 
-        public static Badge assignTier(float score)
+        public static Badge AssignTier(float score)
         {
             if (score >= 90)
+            {
                 return new Badge(BadgeTier.GOLD, "ms-appx:///Assets/badges/gold.svg", 100);
+            }
 
             if (score >= 70)
+            {
                 return new Badge(BadgeTier.SILVER, "ms-appx:///Assets/badges/silver.svg", 60);
+            }
 
             if (score >= 50)
+            {
                 return new Badge(BadgeTier.BRONZE, "ms-appx:///Assets/badges/bronze.svg", 30);
-         
+            }
+
             return new Badge(BadgeTier.PARTICIPANT, "ms-appx:///Assets/badges/participant.svg", 10);
         }
     }

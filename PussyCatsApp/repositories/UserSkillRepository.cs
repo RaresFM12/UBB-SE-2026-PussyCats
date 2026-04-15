@@ -1,10 +1,10 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public class UserSkillRepository
     {
@@ -27,9 +27,9 @@ namespace PussyCatsApp.repositories
             {
                 connection.Open();
 
-                string query = "SELECT name, score FROM SKILLS WHERE userID = @UserId";
+                string query = "SELECT name, score FROM SKILLS WHERE userID = @userId";
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@UserId", userId);
+                command.Parameters.AddWithValue("@userId", userId);
 
                 using SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -54,15 +54,16 @@ namespace PussyCatsApp.repositories
             {
                 connection.Open();
 
-                string query = "SELECT ParsedCV FROM Users WHERE userID = @UserId";
+                string query = "SELECT ParsedCV FROM Users WHERE userID = @userId";
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@UserId", userId);
+                command.Parameters.AddWithValue("@userId", userId);
 
                 object result = command.ExecuteScalar();
 
                 if (result == null || result == DBNull.Value)
+                {
                     return null;
-
+                }
                 return result.ToString();
             }
         }

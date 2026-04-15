@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class Suggestion
     {
@@ -12,8 +12,17 @@ namespace PussyCatsApp.models
         private string groupName;
         private double gainScore;
 
-        public string SkillName { get { return skillName; } set { skillName = value; } }
-        public string GroupName { get { return groupName; } set { groupName = value; } }
-        public double GainScore { get { return gainScore; } set { gainScore = value; } }
+        public string SkillName
+        {
+            get { return skillName; } set { skillName = value; }
+        }
+        public string GroupName
+        {
+            get { return groupName; } set { groupName = value; }
+        }
+        public double GainScore
+        {
+            get { return gainScore; } set { gainScore = value; }
+        }
     }
 }

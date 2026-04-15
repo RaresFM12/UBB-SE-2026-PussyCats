@@ -1,13 +1,13 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class CompatibilityOverviewViewModel : INotifyPropertyChanged
     {
@@ -49,7 +49,9 @@ namespace PussyCatsApp.viewModels
             foreach (RoleResult result in roleResults)
             {
                 if (result.JobRole == role)
+                {
                     return result;
+                }
             }
             return null;
         }
