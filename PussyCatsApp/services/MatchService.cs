@@ -9,13 +9,13 @@ using PussyCatsApp.repositories;
 
 namespace PussyCatsApp.services
 {
-    public class MatchService
+    public class MatchService : IMatchService
     {
-        private readonly MatchRepository _matchRepository;
+        private readonly IMatchRepository _matchRepository;
 
-        public MatchService()
+        public MatchService(IMatchRepository matchRepository)
         {
-            _matchRepository = new MatchRepository();
+            _matchRepository = matchRepository;
         }
 
         private int CountByPeriod(List<Match> matches, int months)

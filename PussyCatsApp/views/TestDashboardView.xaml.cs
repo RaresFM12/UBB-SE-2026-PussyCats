@@ -36,7 +36,7 @@ namespace PussyCatsApp.views
             var skillTestRepo = new SkillTestRepository();
             var skillTestService = new SkillTestService(skillTestRepo);
 
-            IUserProileRepository user = new UserProfileRepository();
+            IUserProfileRepository user = new UserProfileRepository();
             WebView2 view = new WebView2();
             var userProfileViewModel = new UserProfileViewModel();
 

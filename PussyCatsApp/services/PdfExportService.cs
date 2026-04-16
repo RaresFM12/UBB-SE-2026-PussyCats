@@ -11,7 +11,7 @@ using Windows.Storage.Pickers;
 public class PdfExportService
 {
     private readonly WebView2 _webView;
-    private readonly IUserProileRepository _profileRepository;
+    private readonly IUserProfileRepository _profileRepository;
     private UserProfile _currentProfile;
 
     public PdfExportService(WebView2 webView)

@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.services
 {
-    public class UserProfileService
+    public class UserProfileService: IUserProfileService
     {
-        private readonly SkillTestRepository skillTestRepository;
-        private readonly UserProfileRepository userProfileRepository;
+        private readonly ISkillTestRepository skillTestRepository;
+        private readonly IUserProfileRepository userProfileRepository;
 
-        public UserProfileService()
+        public UserProfileService(ISkillTestRepository skillTestRepository, IUserProfileRepository userProfileRepository)
         {
-            this.userProfileRepository = new UserProfileRepository();
-            this.skillTestRepository = new SkillTestRepository();
+            this.skillTestRepository = skillTestRepository;
+            this.userProfileRepository = userProfileRepository;
         }
 
         public UserProfile GetProfile(int userId)
@@ -59,7 +59,7 @@ namespace PussyCatsApp.services
             userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
         }
 
-        public string GenerateParsedCVText(UserProfile profile)
+        public string GenerateParsedCvText(UserProfile profile)
         {
             if (profile == null) return string.Empty;
 
@@ -71,7 +71,7 @@ namespace PussyCatsApp.services
         }
         public void SaveProfile(int userId, UserProfile profile)
         {
-            profile.ParsedCV = GenerateParsedCVText(profile);
+            profile.ParsedCV = GenerateParsedCvText(profile);
             userProfileRepository.save(userId, profile);
             userProfileRepository.updateProfileLastModified(userId, DateTime.Now);
         }

@@ -8,14 +8,14 @@ using PussyCatsApp.models;
 using PussyCatsApp.repositories;
 namespace PussyCatsApp.services
 {
-    public class PreferenceService
+    public class PreferenceService: IPreferenceService
     {
-        private readonly PreferenceRepository _preferencesRepository;
+        private readonly IPreferenceRepository _preferencesRepository;
         private List<string> _predefinedLocations = new List<string>();
 
-        public PreferenceService(PreferenceRepository repository)
+        public PreferenceService(IPreferenceRepository preferenceRepository)
         {
-            _preferencesRepository = repository;
+            _preferencesRepository = preferenceRepository;
             LoadPredefinedLocations();
         }
 
