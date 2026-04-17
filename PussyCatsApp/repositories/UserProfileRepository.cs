@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace PussyCatsApp.repositories
 {
-    public class UserProfileRepository : IUserProileRepository
+    public class UserProfileRepository : IUserProfileRepository
     {
         private static readonly JsonSerializerOptions _jsonOptions = new()
         {
