@@ -64,7 +64,7 @@ namespace PussyCatsApp.viewModels
             OnPropertyChanged(nameof(Badge));
             OnPropertyChanged(nameof(SkillTest));
             OnPropertyChanged(nameof(IsRetakeEnabled));
-            userProfileViewModel.recalculateLevelCommand();  
+            userProfileViewModel.RecalculateLevelCommand();  
         }
 
         public void UpdateBadge()
