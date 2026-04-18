@@ -43,7 +43,7 @@ namespace PussyCatsApp.services
             skillTestRepository.UpdateSkillTestScore(skillId, newScore);
             skillTestRepository.UpdateAchievedDate(skillId, DateOnly.FromDateTime(DateTime.Now));
 
-            return Badge.assignTier(newScore);
+            return Badge.AssignTier(newScore);
         }
     }
 }

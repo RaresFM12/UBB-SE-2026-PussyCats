@@ -33,7 +33,7 @@ namespace PussyCatsApp.viewModels
             this.userProfileViewModel = userProfileViewModel;  
 
             CheckRetakeEligible();
-            badge = Badge.assignTier(skillTest.Score);
+            badge = Badge.AssignTier(skillTest.Score);
         }
 
         public void LoadCardCommand()
@@ -69,7 +69,7 @@ namespace PussyCatsApp.viewModels
 
         public void UpdateBadge()
         {
-            badge = Badge.assignTier(skillTest.Score);
+            badge = Badge.AssignTier(skillTest.Score);
         }
 
         private int GenerateRandomScore()
