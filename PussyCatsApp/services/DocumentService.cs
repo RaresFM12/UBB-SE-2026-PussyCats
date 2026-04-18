@@ -1,5 +1,5 @@
 ﻿using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using PussyCatsApp.storage;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace PussyCatsApp.services
 
         public List<Document> getDocumentsByUserId(int userId)
         {
-            return repository.getDocumentsByUserId(userId);
+            return repository.GetDocumentsByUserId(userId);
         }
 
         public void uploadDocument(Document document, string filePath)
@@ -44,12 +44,12 @@ namespace PussyCatsApp.services
             document.FilePath = relativePath;
             document.UploadDate = DateTime.Now;
 
-            repository.addDocument(document);
+            repository.AddDocument(document);
         }
 
         public void deleteDocument(int documentId)
         {
-            Document document = repository.getDocumentById(documentId);
+            Document document = repository.GetDocumentById(documentId);
 
             if (document == null)
                 throw new InvalidOperationException("Document not found.");
@@ -58,12 +58,12 @@ namespace PussyCatsApp.services
             if (!string.IsNullOrEmpty(document.FilePath))
                 fileStorage.deleteFile(document.FilePath);
 
-            repository.deleteDocument(documentId);
+            repository.DeleteDocument(documentId);
         }
 
         public string getDocumentAbsolutePath(int documentId)
         {
-            Document document = repository.getDocumentById(documentId);
+            Document document = repository.GetDocumentById(documentId);
 
             if (document == null)
                 throw new InvalidOperationException("Document not found.");

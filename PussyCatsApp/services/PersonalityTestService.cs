@@ -1,5 +1,5 @@
 ﻿using PussyCatsApp.models;
-using PussyCatsApp.repositories.personality_test_repo;
+using PussyCatsApp.Repositories.PersonalityTestRepo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -165,7 +165,7 @@ namespace PussyCatsApp.services
 
         public void SaveResult(int userId, string personalityTestResult)
         {
-            Repository.save(userId, personalityTestResult);
+            Repository.Save(userId, personalityTestResult);
         }
     }
 }

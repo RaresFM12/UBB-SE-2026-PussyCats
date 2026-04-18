@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.services;
-using PussyCatsApp.repositories; 
+using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.viewModels
 {

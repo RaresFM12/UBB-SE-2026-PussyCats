@@ -1,53 +1,55 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Configuration;
+using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
-    public class MatchRepository
+    public class MatchRepository : IMatchRepository
     {
-        private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
+        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
 
-        public MatchRepository()
-        {}
-
-        public List<Match> GetByUserId(int userId)
+        // public MatchRepository() {}
+        public List<models.Match> GetMatchesByUserId(int userId)
         {
             var matches = new List<Match>();
 
-            string query = "SELECT id, userID, companyName, jobRole, matchDate FROM MATCHES WHERE userID = @UserId ORDER BY matchDate DESC";
+            const string query = "SELECT id, userID, companyName, jobRole, matchDate FROM MATCHES WHERE userID = @UserId ORDER BY matchDate DESC";
 
-            Debug.WriteLine($"query for {userId}: {query}");
-            
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@UserId", userId);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    cmd.Parameters.AddWithValue("@UserId", userId);
-
-                    conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    matches.Add(new Match
                     {
-                        while (reader.Read())
-                        {
-                            var match = new Match();
-
-                            match.Id = Convert.ToInt32(reader["id"]);
-                            match.UserId = Convert.ToInt32(reader["userID"]);
-                            match.CompanyName = reader["companyName"].ToString();
-                            match.JobRole = reader["jobRole"].ToString();
-                            match.MatchDate = Convert.ToDateTime(reader["matchDate"]);
-
-                            matches.Add(match);
-                        }
-                    }
+                        Id = Convert.ToInt32(reader["id"]),
+                        UserId = Convert.ToInt32(reader["userID"]),
+                        CompanyName = reader["companyName"].ToString(),
+                        JobRole = reader["jobRole"].ToString(),
+                        MatchDate = Convert.ToDateTime(reader["matchDate"]),
+                    });
                 }
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error retrieving matches for user {userId}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred retrieving matches for user {userId}: {ex.Message}");
             }
 
             return matches;

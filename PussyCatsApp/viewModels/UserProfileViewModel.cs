@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.views;
 using System;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
-using PussyCatsApp.repositories; 
+using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.viewModels
 {
