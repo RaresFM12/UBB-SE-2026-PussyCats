@@ -1,4 +1,4 @@
-﻿using PussyCatsApp.models;
+﻿using PussyCatsApp.Models;
 using PussyCatsApp.repositories.personality_test_repo;
 using System;
 using System.Collections.Generic;

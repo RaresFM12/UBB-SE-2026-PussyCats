@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class Suggestion
     {

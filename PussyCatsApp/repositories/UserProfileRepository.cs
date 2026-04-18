@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using Microsoft.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Windows.System;

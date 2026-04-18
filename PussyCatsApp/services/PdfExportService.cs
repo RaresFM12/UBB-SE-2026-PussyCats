@@ -1,7 +1,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using PussyCatsApp;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.repositories;
 using System;
 using System.Text.Json;

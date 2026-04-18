@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
 namespace PussyCatsApp.repositories
 {

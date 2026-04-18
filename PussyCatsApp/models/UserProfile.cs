@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Printing.PrintTicket;
 using Windows.System.Profile;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class UserProfile
     {

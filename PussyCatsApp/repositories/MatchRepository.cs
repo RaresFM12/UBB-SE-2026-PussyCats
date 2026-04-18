@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
