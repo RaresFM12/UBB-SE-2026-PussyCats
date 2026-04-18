@@ -8,33 +8,9 @@ namespace PussyCatsApp.Models
 {
     public class UserPreference
     {
-        private int pId;
-        private int userId;
-        private string preferenceType = string.Empty;
-        private string value = string.Empty;
-
-        public int PId
-        {
-            get { return pId; }
-            set { pId = value; }
-        }
-
-        public int UserId
-        {
-            get { return userId; }
-            set { userId = value; }
-        }
-
-        public string PreferenceType
-        {
-            get { return preferenceType; }
-            set { preferenceType = value; }
-        }
-
-        public string Value
-        {
-            get { return this.value; }
-            set { this.value = value; }
-        }
+        public int PId { get; set; }
+        public int UserId { get; set; }
+        public string PreferenceType { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
     }
 }
