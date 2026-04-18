@@ -8,12 +8,8 @@ namespace PussyCatsApp.Models
 {
     public class Suggestion
     {
-        private string skillName;
-        private string groupName;
-        private double gainScore;
-
-        public string SkillName { get { return skillName; } set { skillName = value; } }
-        public string GroupName { get { return groupName; } set { groupName = value; } }
-        public double GainScore { get { return gainScore; } set { gainScore = value; } }
+        public string SkillName { get; set; }
+        public string GroupName { get; set; }
+        public double GainScore { get; set; }
     }
 }
