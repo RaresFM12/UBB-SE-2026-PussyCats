@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 
-public class PdfExportService
+public class PdfExportService : IPdfExportService
 {
     private readonly WebView2 _webView;
     private readonly IUserProfileRepository _profileRepository;

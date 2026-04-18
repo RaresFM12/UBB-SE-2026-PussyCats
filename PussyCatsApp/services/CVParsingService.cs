@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace PussyCatsApp.services
 {
-    public class CVParsingService
+    public class CVParsingService : ICVParsingService
     {
         /// <summary>
         /// Parses a CV file (JSON or XML) and returns a UserProfile object

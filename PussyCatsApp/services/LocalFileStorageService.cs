@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PussyCatsApp.storage
 {
-    public class LocalFileStorageService
+    public class LocalFileStorageService : ILocalFileStorageService
     {
         private readonly string basePath;
 
