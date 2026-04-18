@@ -8,7 +8,7 @@ using PussyCatsApp.models;
 
 namespace PussyCatsApp.services
 {
-    public interface ICvParsingService
+    public interface ICVParsingService
     {
         UserProfile ParseCVFile(string content, string fileType);
     }
