@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.services
 {
@@ -55,12 +55,12 @@ namespace PussyCatsApp.services
 
         public List<Match> GetMatchesForUser(int userId)
         {
-            return _matchRepository.GetByUserId(userId);
+            return _matchRepository.GetMatchesByUserId(userId);
         }
 
         public MatchStatistics GetMatchStatistics(int userId)
         {
-            var matches = _matchRepository.GetByUserId(userId);
+            var matches = _matchRepository.GetMatchesByUserId(userId);
             var stats = new MatchStatistics();
 
             stats.TotalMatches = matches.Count;

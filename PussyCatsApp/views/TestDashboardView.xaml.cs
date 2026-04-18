@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;

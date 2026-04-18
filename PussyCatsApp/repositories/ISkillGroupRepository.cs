@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public interface ISkillGroupRepository
     {

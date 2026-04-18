@@ -2,7 +2,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using PussyCatsApp;
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;

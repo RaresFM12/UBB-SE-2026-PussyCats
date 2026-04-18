@@ -18,7 +18,7 @@ namespace PussyCatsApp.services
 
         void RemoveAvatarPath(int userId);
 
-        string GenerateParsedCvText(UserProfile profile);
+        string GenerateParsedCVText(UserProfile profile);
 
         void SaveProfile(int userId, UserProfile profile);
 

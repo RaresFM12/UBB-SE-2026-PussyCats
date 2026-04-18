@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     internal interface ISkillRepository : IRepository<Skill>
     {

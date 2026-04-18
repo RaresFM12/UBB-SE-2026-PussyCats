@@ -149,7 +149,7 @@ namespace PussyCatsApp.views
                     .Build()
                     .GetConnectionString("raresConnectionString");
 
-                var repo = new repositories.PreferenceRepository(connectionString);
+                var repo = new Repositories.PreferenceRepository(connectionString);
 
                 int currentUserId = 1;
 
@@ -263,7 +263,7 @@ namespace PussyCatsApp.views
                     .Build()
                     .GetConnectionString("raresConnectionString");
 
-                var repo = new repositories.PreferenceRepository(connectionString);
+                var repo = new Repositories.PreferenceRepository(connectionString);
 
                 int currentUserId = 1;
 
