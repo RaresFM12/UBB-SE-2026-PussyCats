@@ -13,9 +13,24 @@ namespace PussyCatsApp.Models
         private int weight;
         private JobRole jobRole;
 
-        public string GroupName { get { return groupName; } set { groupName = value; } }
-        public List<string> Skills { get { return skills; } set { skills = value; } }
-        public int Weight { get { return weight; } set { weight = value; } }
-        public JobRole JobRole { get { return jobRole; } set { jobRole = value; } }
+        public string GroupName
+        {
+            get { return groupName; } set { groupName = value; }
+        }
+
+        public List<string> Skills
+        {
+            get { return skills; } set { skills = value; }
+        }
+
+        public int Weight
+        {
+            get { return weight; } set { weight = value; }
+        }
+
+        public JobRole JobRole
+        {
+            get { return jobRole; } set { jobRole = value; }
+        }
     }
 }
