@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.repositories;
 using PussyCatsApp.Models;
-using PussyCatsApp.models;
 
 namespace PussyCatsApp.services
 {
