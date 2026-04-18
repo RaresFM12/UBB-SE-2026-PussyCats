@@ -1,16 +1,11 @@
-﻿using Microsoft.UI.Xaml;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace PussyCatsApp.Models
 {
     public class Question
     {
         public int Id { get; }
-        public String QuestionText { get; }
+        public string QuestionText { get; }
         public TraitType Trait { get; }
         public int SortOrder { get; set; }
 
