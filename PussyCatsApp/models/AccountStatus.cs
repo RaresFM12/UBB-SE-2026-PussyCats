@@ -11,8 +11,4 @@ namespace PussyCatsApp.Models
         ACTIVE,
         INACTIVE
     }
-
-
-
-
 }
