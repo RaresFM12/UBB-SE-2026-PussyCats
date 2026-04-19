@@ -51,7 +51,8 @@ namespace PussyCatsApp.views
         {
             if (_viewModel == null)
             {
-                _viewModel = new MatchHistoryViewModel(1);
+                IMatchService matchService = new MatchService(new MatchRepository());
+                _viewModel = new MatchHistoryViewModel(1, matchService);
             }
 
             LoadMatches();
