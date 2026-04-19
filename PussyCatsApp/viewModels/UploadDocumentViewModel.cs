@@ -14,10 +14,10 @@ namespace PussyCatsApp.viewModels
         private string documentName;
         private string selectedFilePath;
         private string errorMessage;
-        private readonly DocumentService documentService;
+        private readonly IDocumentService documentService;
         private readonly int userId;
 
-        public UploadDocumentViewModel(DocumentService documentService, int userId)
+        public UploadDocumentViewModel(IDocumentService documentService, int userId)
         {
             this.documentService = documentService;
             this.userId = userId;
