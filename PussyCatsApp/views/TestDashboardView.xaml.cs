@@ -32,13 +32,17 @@ namespace PussyCatsApp.views
         public TestDashboardView()
         {
             this.InitializeComponent();
-            var userProfileRepo = new UserProfileRepository();
-            var skillTestRepo = new SkillTestRepository();
-            var skillTestService = new SkillTestService(skillTestRepo);
+            var userProfileRepository = new UserProfileRepository();
+            var skillTestRepository = new SkillTestRepository();
+            var skillTestService = new SkillTestService(skillTestRepository);
 
-            IUserProfileRepository user = new UserProfileRepository();
             WebView2 view = new WebView2();
-            var userProfileViewModel = new UserProfileViewModel();
+
+            IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
+            IImageStorageService imageStorageService = new ImageStorageService();
+            ICompletenessService completenessService = new CompletenessService();
+
+            var userProfileViewModel = new UserProfileViewModel(userProfileService, imageStorageService, completenessService);
 
             testDashboardViewModel = new TestDashboardViewModel(skillTestService, userProfileViewModel);
         }

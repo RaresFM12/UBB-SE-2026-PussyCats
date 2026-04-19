@@ -9,5 +9,7 @@ namespace PussyCatsApp.Repositories
         void AddPreference(Preference preference);
         void RemovePreference(int preferenceId);
         void UpdatePreference(int preferenceId, string value);
+
+        void DeleteAllByUserId(int userId);
     }
 }
