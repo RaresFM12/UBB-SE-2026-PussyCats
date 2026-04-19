@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.Repositories;
+using PussyCatsApp.services;
 
 namespace PussyCatsApp.views
 {
@@ -50,9 +51,12 @@ namespace PussyCatsApp.views
                 templateFolder,
                 CoreWebView2HostResourceAccessKind.Allow);
 
-            var pdfExportService = new PdfExportService(CvWebView);
+            IPdfExportService pdfExportService = new PdfExportService(CvWebView);
+            ISkillTestRepository skillTestRepository = new SkillTestRepository();
+            IUserProfileRepository userProfileRepository = new UserProfileRepository();
+            IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
 
-            ViewModel = new ExportCVViewModel(pdfExportService);
+            ViewModel = new ExportCVViewModel(pdfExportService, userProfileService);
             ViewModel.UserId = _userId;
 
             this.DataContext = ViewModel;
