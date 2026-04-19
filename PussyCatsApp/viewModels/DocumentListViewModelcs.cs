@@ -21,7 +21,7 @@ namespace PussyCatsApp.viewModels
         {
             this.documentService = documentService;
             this.userId = userId;
-            documents = new List<Document>();
+            this.documents = new List<Document>();
         }
 
         public void LoadDocuments()

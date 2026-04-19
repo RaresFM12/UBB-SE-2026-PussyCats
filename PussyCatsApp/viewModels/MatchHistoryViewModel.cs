@@ -19,7 +19,7 @@ namespace PussyCatsApp.viewModels
 
         public MatchHistoryViewModel(int userId, IMatchService matchService)
         {
-            matchService = matchService;
+            this.matchService = matchService;
             currentUserId = userId;
             matches = new List<Match>();
             errorMessage = string.Empty;

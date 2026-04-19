@@ -29,8 +29,8 @@ namespace PussyCatsApp.viewModels
 
         public ExportCVViewModel(IPdfExportService pdfExportService, IUserProfileService userProfileService)
         {
-            pdfExportService = pdfExportService;
-            userProfileService = userProfileService;
+            this.pdfExportService = pdfExportService;
+            this.userProfileService = userProfileService;
         }
 
         public async Task LoadAndRenderCVAsync()

@@ -21,7 +21,7 @@ namespace PussyCatsApp.viewModels
 
         public CompatibilityOverviewViewModel(int userId, ICompatibilityService compatibilityService)
         {
-            this.compatibilityService = compatibilityService = compatibilityService;
+            this.compatibilityService = compatibilityService;
             this.currentUserId = userId;
             this.roleResults = new List<RoleResult>();
         }
