@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 using Microsoft.UI.Xaml.Controls;
 
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
+
 using PussyCatsApp.Models;
 using PussyCatsApp.models;
 
@@ -30,7 +31,7 @@ namespace PussyCatsApp.services
 
         public bool CanRetakeTest(int skillId)
         {
-            SkillTest skill = skillTestRepository.load(skillId);
+            SkillTest skill = skillTestRepository.Load(skillId);
 
             if (skill == null)
                 throw new Exception($"No test found for ID {skillId}");

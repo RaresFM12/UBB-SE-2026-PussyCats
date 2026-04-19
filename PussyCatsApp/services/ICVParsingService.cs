@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using PussyCatsApp.models;
 
-namespace PussyCatsApp.Repositories
+namespace PussyCatsApp.services
 {
-    public interface ISkillGroupRepository
+    public interface ICVParsingService
     {
-        List<SkillGroup> GetByRole(JobRole role);
+        UserProfile ParseCVFile(string content, string fileType);
     }
 }

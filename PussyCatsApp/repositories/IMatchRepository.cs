@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
 using PussyCatsApp.models;
-namespace PussyCatsApp.repositories;
 
-
-public interface IMatchRepository
+namespace PussyCatsApp.Repositories
 {
-    List<Match> GetByUserId(int userId);
+    public interface IMatchRepository
+    {
+        List<models.Match> GetMatchesByUserId(int userId);
+    }
 }

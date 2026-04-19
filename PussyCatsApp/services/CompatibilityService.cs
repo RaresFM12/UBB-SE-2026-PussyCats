@@ -1,5 +1,5 @@
 ﻿using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace PussyCatsApp.services
     public class CompatibilityService: ICompatibilityService
     {
         private IUserSkillRepository userSkillRepository;
-        private  ISkillGroupRepository skillGroupRepository;
+        private ISkillGroupRepository skillGroupRepository;
 
         public CompatibilityService(IUserSkillRepository userSkillRepository, ISkillGroupRepository skillGroupRepository)
         {

@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

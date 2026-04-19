@@ -1,19 +1,15 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Configuration;
+using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
-    public class UserSkillRepository
+    public class UserSkillRepository : IUserSkillRepository
     {
-        private readonly string connectionString =
-            new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build()
-                .GetConnectionString("raresConnectionString");
+        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
 
         public UserSkillRepository()
         {
@@ -61,7 +57,9 @@ namespace PussyCatsApp.repositories
                 object result = command.ExecuteScalar();
 
                 if (result == null || result == DBNull.Value)
+                {
                     return null;
+                }
 
                 return result.ToString();
             }

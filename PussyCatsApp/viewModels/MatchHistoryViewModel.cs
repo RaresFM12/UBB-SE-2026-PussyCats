@@ -43,7 +43,7 @@ namespace PussyCatsApp.viewModels
             errorMessage = string.Empty; 
             try
             {
-                statistics = matchService.GetStatistics(currentUserId);
+                statistics = matchService.GetMatchStatistics(currentUserId);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;

@@ -8,6 +8,6 @@ namespace PussyCatsApp.services
     {
         List<Match> GetMatchesForUser(int userId);
 
-        MatchStatistics GetStatistics(int userId);
+        MatchStatistics GetMatchStatistics(int userId);
     }
 }

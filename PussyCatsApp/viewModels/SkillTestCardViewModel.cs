@@ -43,7 +43,7 @@ namespace PussyCatsApp.viewModels
         }
         public void CheckRetakeEligible()
         {
-            isRetakeEnabled = skillTestService.canRetakeTest(skillTest.SkillTestId);
+            isRetakeEnabled = skillTestService.CanRetakeTest(skillTest.SkillTestId);
         }
 
         public void RetakeCommand()
@@ -53,7 +53,7 @@ namespace PussyCatsApp.viewModels
 
             int newScore = GenerateRandomScore();
 
-            badge = skillTestService.submitRetake(skillTest.SkillTestId, newScore);
+            badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newScore);
 
             skillTest.AchievedDate = DateOnly.FromDateTime(DateTime.Now);
             skillTest.Score = newScore;

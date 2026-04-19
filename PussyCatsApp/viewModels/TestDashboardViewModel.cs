@@ -25,7 +25,7 @@ namespace PussyCatsApp.viewModels
 
         public void LoadTests(UserProfile userProfile)
         {
-            tests = skillTestService.getTestsForUser(userProfile.UserId);
+            tests = skillTestService.GetTestsForUser(userProfile.UserId);
 
             TestCards = new List<SkillTestCardViewModel>();
             foreach (SkillTest test in tests)

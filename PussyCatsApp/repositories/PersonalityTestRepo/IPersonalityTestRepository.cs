@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
 
-namespace PussyCatsApp.repositories.personality_test_repo
+namespace PussyCatsApp.Repositories.PersonalityTestRepo;
+
+public interface IPersonalityTestRepository : IRepository<string>
 {
-    internal interface IPersonalityTestRepository : IRepository<String>
-    {}
 }
