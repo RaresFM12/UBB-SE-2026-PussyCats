@@ -15,10 +15,10 @@ namespace PussyCatsApp.viewModels
 {
     public partial class UserProfileViewModel : ObservableObject
     {
-        private UserProfileService profileService;
-        private ImageStorageService imageStorageService;
+        private IUserProfileService profileService;
+        private IImageStorageService imageStorageService;
         private CvUploadService cvUploadService;
-        private CompletenessService completenessService;
+        private ICompletenessService completenessService;
 
         // Nested Export ViewModel
         public ExportCVViewModel ExportVM { get; }
@@ -38,17 +38,12 @@ namespace PussyCatsApp.viewModels
         public string FreshnessText { get; set; } = "";
         public int TotalXP { get; private set; } = 0;
 
-        public UserProfileViewModel()
+        public UserProfileViewModel(IUserProfileService userProfileService, IImageStorageService imageStorageService, ICompletenessService completenessService)
         {
-            this.profileService = new UserProfileService();
-            this.imageStorageService = new ImageStorageService();
+            this.profileService = userProfileService;
+            this.imageStorageService = imageStorageService;
             this.cvUploadService = new CvUploadService();
-            this.completenessService = new CompletenessService();
-        }
-
-        public static UserProfileViewModel Create()
-        {
-            return new UserProfileViewModel();
+            this.completenessService = completenessService;
         }
 
         public event Action OnLevelUpdated;

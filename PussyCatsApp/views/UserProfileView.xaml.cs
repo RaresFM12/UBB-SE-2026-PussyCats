@@ -2,6 +2,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;
 using System.Diagnostics;
@@ -18,8 +20,12 @@ namespace PussyCatsApp.views
         public UserProfileView()
         {
             this.InitializeComponent();
-
-            viewModel = new UserProfileViewModel();
+            ISkillTestRepository skillTestRepository = new SkillTestRepository();
+            IUserProfileRepository userProfileRepository = new UserProfileRepository();
+            UserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
+            IImageStorageService imageStorageService = new ImageStorageService();
+            ICompletenessService completenessService = new CompletenessService();
+            viewModel = new UserProfileViewModel(userProfileService, imageStorageService, completenessService);
 
             viewModel.OnLevelUpdated += renderLevelDisplay;
             this.DataContext = viewModel;
@@ -28,7 +34,6 @@ namespace PussyCatsApp.views
             btnOldTests.Click += OnGoToOldTestsClick;
             btnPublicProfile.Click += OnSeePublicProfileClick;
             btnViewDocuments.Click += OnViewDocumentsClick;
-
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
