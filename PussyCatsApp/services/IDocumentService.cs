@@ -10,7 +10,7 @@ namespace PussyCatsApp.services
 {
     public interface IDocumentService
     {
-        List<Document> GetDocumentsByUser(int userId);
+        List<Document> GetDocumentsByUserId(int userId);
 
         void UploadDocument(Document document, string filePath);
 

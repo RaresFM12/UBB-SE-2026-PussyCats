@@ -3,7 +3,7 @@ using PussyCatsApp.models;
 
 namespace PussyCatsApp.Repositories
 {
-    internal interface IPreferenceRepository : IRepository<Preference>
+    public interface IPreferenceRepository : IRepository<Preference>
     {
         List<Preference> GetPreferencesByUserId(int userId);
         void AddPreference(Preference preference);
