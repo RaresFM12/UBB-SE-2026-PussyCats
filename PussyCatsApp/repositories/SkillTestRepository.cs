@@ -1,104 +1,164 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Data.SqlClient;
+using PussyCatsApp.Configuration;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public class SkillTestRepository : ISkillTestRepository
     {
-        private SqlConnection sqlConnection;
-        private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
+        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
 
-        public SkillTestRepository()
+        public SkillTest Load(int skillId)
         {
-            sqlConnection = new SqlConnection(connectionString);
-        }
+            const string query = "SELECT * FROM SKILLS WHERE skillID = @id";
 
-        public SkillTest load(int skillId)
-        {
-            string query = "SELECT * FROM SKILLS WHERE skillID = @id";
-            using SqlCommand cmd = new SqlCommand(query, sqlConnection);
-            cmd.Parameters.AddWithValue("@id", skillId);
-            sqlConnection.Open();
-            using SqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+            try
             {
-                var test = new SkillTest(
-                    skillId: (int)reader["skillID"],
-                    userId: (int)reader["userID"],
-                    name: reader["name"].ToString(),
-                    score: (int)reader["score"],
-                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
-                );
-                sqlConnection.Close();
-                return test;
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id", skillId);
+
+                using var reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    return new SkillTest(
+                        skillTestId: (int)reader["skillID"],
+                        userId: (int)reader["userID"],
+                        testName: reader["name"].ToString(),
+                        testScore: (int)reader["score"],
+                        achievedDate: reader["achievedDate"] != DBNull.Value
+                            ? DateOnly.FromDateTime((DateTime)reader["achievedDate"])
+                            : default);
+                }
             }
-            sqlConnection.Close();
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error loading skill {skillId}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred loading skill {skillId}: {ex.Message}");
+            }
+
             throw new Exception($"SkillTest with ID {skillId} not found.");
         }
 
-
-        public void save(int skillId, SkillTest data)
+        public void Save(int skillId, SkillTest data)
         {
-            string query = "UPDATE SKILLS SET score = @score, achievedDate = @date WHERE skillID = @id";
-            using SqlCommand cmd = new SqlCommand(query, sqlConnection);
-            cmd.Parameters.AddWithValue("@score", data.Score);
-            cmd.Parameters.AddWithValue("@date", data.AchievedDate); 
-            cmd.Parameters.AddWithValue("@id", skillId);
-            sqlConnection.Open();
-            cmd.ExecuteNonQuery();
-            sqlConnection.Close();
+            const string query = "UPDATE SKILLS SET score = @score, achievedDate = @date WHERE skillID = @id";
+
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@score", data.Score);
+                command.Parameters.AddWithValue("@date", data.AchievedDate);
+                command.Parameters.AddWithValue("@id", skillId);
+
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error saving skill {skillId}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred saving skill {skillId}: {ex.Message}");
+            }
         }
+
         public List<SkillTest> GetSkillTestsByUserId(int userId)
         {
             var tests = new List<SkillTest>();
-            string query = "SELECT * FROM SKILLS WHERE userID = @userId";
-            using SqlCommand cmd = new SqlCommand(query, sqlConnection);
-            cmd.Parameters.AddWithValue("@userId", userId);
+            const string query = "SELECT * FROM SKILLS WHERE userID = @userId";
 
-            sqlConnection.Open();
-            using SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                tests.Add(new SkillTest(
-                    skillId: (int)reader["skillID"],
-                    userId: (int)reader["userID"],
-                    name: reader["name"].ToString(),
-                    score: (int)reader["score"],
-                    achievedDate: reader["achievedDate"] != DBNull.Value ? DateOnly.FromDateTime((DateTime)reader["achievedDate"]) : default
-                ));
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@userId", userId);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    tests.Add(new SkillTest(
+                        skillTestId: (int)reader["skillID"],
+                        userId: (int)reader["userID"],
+                        testName: reader["name"].ToString(),
+                        testScore: (int)reader["score"],
+                        achievedDate: reader["achievedDate"] != DBNull.Value
+                            ? DateOnly.FromDateTime((DateTime)reader["achievedDate"])
+                            : default));
+                }
             }
-            sqlConnection.Close();
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error retrieving skills for user {userId}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred retrieving skills for user {userId}: {ex.Message}");
+            }
+
             return tests;
         }
 
         public void UpdateSkillTestScore(int skillId, int score)
         {
-            string query = "UPDATE SKILLS SET score = @score WHERE skillID = @id";
-            using SqlCommand cmd = new SqlCommand(query, sqlConnection);
-            cmd.Parameters.AddWithValue("@score", score);
-            cmd.Parameters.AddWithValue("@id", skillId);
-            sqlConnection.Open();
-            cmd.ExecuteNonQuery();
-            sqlConnection.Close();
+            const string query = "UPDATE SKILLS SET score = @score WHERE skillID = @id";
+
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@score", score);
+                command.Parameters.AddWithValue("@id", skillId);
+
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error updating score for skill {skillId}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred updating score for skill {skillId}: {ex.Message}");
+            }
         }
 
         public void UpdateAchievedDate(int skillId, DateOnly date)
         {
-            string query = "UPDATE SKILLS SET achievedDate = @date WHERE skillID = @id";
-            using SqlCommand cmd = new SqlCommand(query, sqlConnection);
-            cmd.Parameters.AddWithValue("@date", date);
-            cmd.Parameters.AddWithValue("@id", skillId);
-            sqlConnection.Open();
-            cmd.ExecuteNonQuery();
-            sqlConnection.Close();
+            const string query = "UPDATE SKILLS SET achievedDate = @date WHERE skillID = @id";
+
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@date", date);
+                command.Parameters.AddWithValue("@id", skillId);
+
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error updating achieved date for skill {skillId}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred updating achieved date for skill {skillId}: {ex.Message}");
+            }
         }
     }
-
-
 }
-

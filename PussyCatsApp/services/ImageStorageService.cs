@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace PussyCatsApp.services
 {
-    public class ImageStorageService
+    public class ImageStorageService: IImageStorageService
     {
         private string basePath = Path.Combine("uploads", "avatars");
 

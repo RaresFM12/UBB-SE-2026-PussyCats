@@ -1,8 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
-using PussyCatsApp.repositories;
-using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,46 +7,51 @@ using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using PussyCatsApp.models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace PussyCatsApp.viewModels
 {
     public partial class ProfileFormViewModel : ObservableObject
     {
-        private readonly UserProfileService _profileService;
-        private readonly CVParsingService _cvParsingService;
-        private UserProfile _userProfile;
+        private readonly IUserProfileService profileService;
+        private readonly ICVParsingService cvParsingService;
+        private UserProfile userProfile;
 
         // Required Fields
-        [ObservableProperty] private string _firstName = string.Empty;
-        [ObservableProperty] private string _lastName = string.Empty;
-        [ObservableProperty] private double _age;
-        [ObservableProperty] private string _gender = string.Empty;
-        [ObservableProperty] private string _email = string.Empty;
-        [ObservableProperty] private string _phonePrefix = string.Empty;
-        [ObservableProperty] private string _phoneNumber = string.Empty;
-        [ObservableProperty] private string _gitHub = string.Empty;
-        [ObservableProperty] private string _linkedIn = string.Empty;
-        [ObservableProperty] private string _country = string.Empty;
-        [ObservableProperty] private string _city = string.Empty;
-        [ObservableProperty] private string _university = string.Empty;
-        [ObservableProperty] private string _address = string.Empty;
-        [ObservableProperty] private int _expectedGraduationYear;
-        [ObservableProperty] private string _motivation = string.Empty;
-        [ObservableProperty] private bool _hasDisabilities;
+        [ObservableProperty] private string firstName = string.Empty;
+        [ObservableProperty] private string lastName = string.Empty;
+        [ObservableProperty] private double age;
+        [ObservableProperty] private string gender = string.Empty;
+        [ObservableProperty] private string email = string.Empty;
+        [ObservableProperty] private string phonePrefix = string.Empty;
+        [ObservableProperty] private string phoneNumber = string.Empty;
+        [ObservableProperty] private string gitHub = string.Empty;
+        [ObservableProperty] private string linkedIn = string.Empty;
+        [ObservableProperty] private string country = string.Empty;
+        [ObservableProperty] private string city = string.Empty;
+        [ObservableProperty] private string university = string.Empty;
+        [ObservableProperty] private string address = string.Empty;
+        [ObservableProperty] private int expectedGraduationYear;
+        [ObservableProperty] private string motivation = string.Empty;
+        [ObservableProperty] private bool hasDisabilities;
 
         // Status
-        [ObservableProperty] private string _errorMessage = string.Empty;
-        [ObservableProperty] private string _cvStatusText = string.Empty;
-        [ObservableProperty] private string _infoBarMessage = string.Empty;
-        [ObservableProperty] private int _infoBarSeverity; // 0=Info, 1=Success, 2=Warning, 3=Error
-        [ObservableProperty] private bool _isInfoBarOpen;
+        [ObservableProperty] private string errorMessage = string.Empty;
+        [ObservableProperty] private string cvStatusText = string.Empty;
+        [ObservableProperty] private string infoBarMessage = string.Empty;
+        [ObservableProperty] private int infoBarSeverity; // 0=Info, 1=Success, 2=Warning, 3=Error
+        [ObservableProperty] private bool isInfoBarOpen;
 
-        public ObservableCollection<string> Skills { get; } = new();
-        public ObservableCollection<WorkExperience> WorkExperiences { get; } = new();
-        public ObservableCollection<Project> Projects { get; } = new();
-        public ObservableCollection<ExtraCurricularActivity> ExtraCurricularActivities { get; } = new();
+        public ObservableCollection<string> Skills { get; } = new ();
+        public ObservableCollection<WorkExperience> WorkExperiences { get; } = new ();
+        public ObservableCollection<Project> Projects { get; } = new ();
+        public ObservableCollection<ExtraCurricularActivity> ExtraCurricularActivities { get; } = new ();
 
-        public List<string> UniversityList { get; } = new()
+        public List<string> UniversityList { get; } = new ()
         {
             "Babes-Bolyai University",
             "Technical University of Cluj-Napoca",
@@ -63,7 +63,7 @@ namespace PussyCatsApp.viewModels
             "Academy of Economic Studies Bucharest"
         };
 
-        public List<string> SkillSuggestions { get; } = new()
+        public List<string> SkillSuggestions { get; } = new ()
         {
             // Languages
             "JavaScript", "TypeScript", "Python", "Java", "C#", "Go", "R", "Julia",
@@ -133,12 +133,12 @@ namespace PussyCatsApp.viewModels
             "MS Project"
         };
 
-        public List<int> GraduationYears { get; } = new();
+        public List<int> GraduationYears { get; } = new ();
 
-        public ProfileFormViewModel(UserProfileService profileService, CVParsingService cvParsingService)
+        public ProfileFormViewModel(IUserProfileService profileService, ICVParsingService cvParsingService)
         {
-            _profileService = profileService;
-            _cvParsingService = cvParsingService;
+            this.profileService = profileService;
+            this.cvParsingService = cvParsingService;
 
             int currentYear = DateTime.Now.Year;
             for (int year = currentYear; year <= currentYear + 10; year++)
@@ -151,52 +151,52 @@ namespace PussyCatsApp.viewModels
         {
             var userProfileRepo = new UserProfileRepository();
             var skillTestRepo = new SkillTestRepository();
-            var profileService = new UserProfileService();
+            var profileService = new UserProfileService(skillTestRepo, userProfileRepo);
             var cvParsingService = new CVParsingService();
             return new ProfileFormViewModel(profileService, cvParsingService);
         }
 
         public void LoadProfile(UserProfile profile)
         {
-            _userProfile = profile ?? new UserProfile();
+            userProfile = profile ?? new UserProfile();
 
-            FirstName = _userProfile.FirstName;
-            LastName = _userProfile.LastName;
-            Age = _userProfile.Age;
-            Gender = _userProfile.Gender;
-            Email = _userProfile.Email;
-            GitHub = _userProfile.GitHub;
-            LinkedIn = _userProfile.LinkedIn;
-            University = _userProfile.University;
-            Address = _userProfile.Address;
-            Motivation = _userProfile.Motivation;
-            Country = _userProfile.Country;
-            City = _userProfile.City;
-            ExpectedGraduationYear = _userProfile.ExpectedGraduationYear;
-            HasDisabilities = _userProfile.HasDisabilities;
+            FirstName = userProfile.FirstName;
+            LastName = userProfile.LastName;
+            Age = userProfile.Age;
+            Gender = userProfile.Gender;
+            Email = userProfile.Email;
+            GitHub = userProfile.GitHub;
+            LinkedIn = userProfile.LinkedIn;
+            University = userProfile.University;
+            Address = userProfile.Address;
+            Motivation = userProfile.Motivation;
+            Country = userProfile.Country;
+            City = userProfile.City;
+            ExpectedGraduationYear = userProfile.ExpectedGraduationYear;
+            HasDisabilities = userProfile.HasDisabilities;
 
             // Extract phone prefix and number
-            if (!string.IsNullOrEmpty(_userProfile.PhoneNumber))
+            if (!string.IsNullOrEmpty(userProfile.PhoneNumber))
             {
-                var parts = ExtractPhonePrefixAndNumber(_userProfile.PhoneNumber);
+                var parts = ExtractPhonePrefixAndNumber(userProfile.PhoneNumber);
                 PhonePrefix = parts.prefix;
                 PhoneNumber = parts.number;
             }
 
             Skills.Clear();
-            foreach (var skill in _userProfile.Skills)
+            foreach (var skill in userProfile.Skills)
                 Skills.Add(skill);
 
             WorkExperiences.Clear();
-            foreach (var we in _userProfile.WorkExperiences)
+            foreach (var we in userProfile.WorkExperiences)
                 WorkExperiences.Add(we);
 
             Projects.Clear();
-            foreach (var project in _userProfile.Projects)
+            foreach (var project in userProfile.Projects)
                 Projects.Add(project);
 
             ExtraCurricularActivities.Clear();
-            foreach (var activity in _userProfile.ExtraCurricularActivities)
+            foreach (var activity in userProfile.ExtraCurricularActivities)
                 ExtraCurricularActivities.Add(activity);
         }
 
@@ -332,7 +332,7 @@ namespace PussyCatsApp.viewModels
 
             try
             {
-                _profileService.SaveProfile(_userProfile.UserId, _userProfile);
+                profileService.SaveProfile(userProfile.UserId, userProfile);
                 ShowInfoBar("Profile saved successfully!", 1);
                 return true;
             }
@@ -346,38 +346,38 @@ namespace PussyCatsApp.viewModels
         public UserProfile GetUpdatedProfile()
         {
             UpdateProfileFromForm();
-            return _userProfile;
+            return userProfile;
         }
 
         private void UpdateProfileFromForm()
         {
-            _userProfile.FirstName = FirstName.Trim();
-            _userProfile.LastName = LastName.Trim();
-            _userProfile.Age = (int)Age;
-            _userProfile.Gender = Gender;
-            _userProfile.Email = Email.Trim().ToLowerInvariant();
-            _userProfile.PhoneNumber = PhonePrefix + PhoneNumber.Trim();
-            _userProfile.GitHub = GitHub.Trim();
-            _userProfile.LinkedIn = LinkedIn.Trim();
-            _userProfile.Country = Country;
-            _userProfile.City = City.Trim();
-            _userProfile.University = University.Trim();
-            _userProfile.ExpectedGraduationYear = ExpectedGraduationYear;
-            _userProfile.Address = Address.Trim();
-            _userProfile.Motivation = Motivation.Trim();
-            _userProfile.HasDisabilities = HasDisabilities;
-            _userProfile.Skills = Skills.ToList();
-            _userProfile.WorkExperiences = WorkExperiences.ToList();
-            _userProfile.Projects = Projects.ToList();
-            _userProfile.ExtraCurricularActivities = ExtraCurricularActivities.ToList();
-            _userProfile.LastUpdated = DateTime.Now;
+            userProfile.FirstName = FirstName.Trim();
+            userProfile.LastName = LastName.Trim();
+            userProfile.Age = (int)Age;
+            userProfile.Gender = Gender;
+            userProfile.Email = Email.Trim().ToLowerInvariant();
+            userProfile.PhoneNumber = PhonePrefix + PhoneNumber.Trim();
+            userProfile.GitHub = GitHub.Trim();
+            userProfile.LinkedIn = LinkedIn.Trim();
+            userProfile.Country = Country;
+            userProfile.City = City.Trim();
+            userProfile.University = University.Trim();
+            userProfile.ExpectedGraduationYear = ExpectedGraduationYear;
+            userProfile.Address = Address.Trim();
+            userProfile.Motivation = Motivation.Trim();
+            userProfile.HasDisabilities = HasDisabilities;
+            userProfile.Skills = Skills.ToList();
+            userProfile.WorkExperiences = WorkExperiences.ToList();
+            userProfile.Projects = Projects.ToList();
+            userProfile.ExtraCurricularActivities = ExtraCurricularActivities.ToList();
+            userProfile.LastUpdated = DateTime.Now;
         }
 
         public void ProcessCVFile(string content, string fileType)
         {
             try
             {
-                var parsedProfile = _cvParsingService.ParseCVFile(content, fileType);
+                var parsedProfile = cvParsingService.ParseCVFile(content, fileType);
                 PopulateFromParsedProfile(parsedProfile);
                 CvStatusText = "CV loaded successfully!";
                 ShowInfoBar("CV data has been loaded. Please review and complete any missing fields.", 1);

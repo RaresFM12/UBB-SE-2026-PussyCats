@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
-    internal interface IDocumentRepository : IRepository<Document>
+    public interface IDocumentRepository // : IRepository<Document>
     {
         List<Document> GetDocumentsByUserId(int userId);
         void AddDocument(Document document);
-        void RemoveDocument(int documentId);
-        void RenameDocument(int documentId, string newName);
+        void DeleteDocument(int documentId);
+        Document GetDocumentById(int documentId);
+        // void RenameDocument(int documentId, string newName);
     }
 }

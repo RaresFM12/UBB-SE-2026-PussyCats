@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;
@@ -32,13 +32,17 @@ namespace PussyCatsApp.views
         public TestDashboardView()
         {
             this.InitializeComponent();
-            var userProfileRepo = new UserProfileRepository();
-            var skillTestRepo = new SkillTestRepository();
-            var skillTestService = new SkillTestService(skillTestRepo);
+            var userProfileRepository = new UserProfileRepository();
+            var skillTestRepository = new SkillTestRepository();
+            var skillTestService = new SkillTestService(skillTestRepository);
 
-            IUserProileRepository user = new UserProfileRepository();
             WebView2 view = new WebView2();
-            var userProfileViewModel = new UserProfileViewModel();
+
+            IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
+            IImageStorageService imageStorageService = new ImageStorageService();
+            ICompletenessService completenessService = new CompletenessService();
+
+            var userProfileViewModel = new UserProfileViewModel(userProfileService, imageStorageService, completenessService);
 
             testDashboardViewModel = new TestDashboardViewModel(skillTestService, userProfileViewModel);
         }

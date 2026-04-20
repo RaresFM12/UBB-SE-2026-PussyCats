@@ -1,13 +1,13 @@
-﻿using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
-    public class SkillGroupRepository
+    public class SkillGroupRepository : ISkillGroupRepository
     {
         private List<SkillGroup> skillGroups;
 
@@ -90,7 +90,9 @@ namespace PussyCatsApp.repositories
             foreach (SkillGroup group in skillGroups)
             {
                 if (group.JobRole == role)
+                {
                     result.Add(group);
+                }
             }
             return result;
         }

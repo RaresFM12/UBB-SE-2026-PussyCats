@@ -1,4 +1,5 @@
 ﻿using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace PussyCatsApp.viewModels
 
         public void LoadTests(UserProfile userProfile)
         {
-            tests = skillTestService.getTestsForUser(userProfile.UserId);
+            tests = skillTestService.GetTestsForUser(userProfile.UserId);
 
             TestCards = new List<SkillTestCardViewModel>();
             foreach (SkillTest test in tests)

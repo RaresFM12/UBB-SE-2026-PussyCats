@@ -1,13 +1,13 @@
-﻿using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
-    public interface ISkillTestRepository:IRepository<SkillTest>
+    public interface ISkillTestRepository : IRepository<SkillTest>
     {
         List<SkillTest> GetSkillTestsByUserId(int userId);
         void UpdateSkillTestScore(int skillId, int score);

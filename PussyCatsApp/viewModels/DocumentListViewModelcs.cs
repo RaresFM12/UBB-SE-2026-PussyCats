@@ -15,25 +15,25 @@ namespace PussyCatsApp.viewModels
         private List<Document> documents;
         private string statusMessage;
         private readonly int userId;
-        private readonly DocumentService documentService;
+        private readonly IDocumentService documentService;
 
-        public DocumentListViewModel(DocumentService documentService, int userId)
+        public DocumentListViewModel(IDocumentService documentService, int userId)
         {
             this.documentService = documentService;
             this.userId = userId;
-            documents = new List<Document>();
+            this.documents = new List<Document>();
         }
 
         public void LoadDocuments()
         {
-            documents = documentService.getDocumentsByUserId(userId);
+            documents = documentService.GetDocumentsByUserId(userId);
         }
 
         public List<Document> GetDocuments() => documents;
 
         public void DeleteDocument(int id)
         {
-            documentService.deleteDocument(id);
+            documentService.DeleteDocument(id);
             LoadDocuments();
         }
 
@@ -47,7 +47,7 @@ namespace PussyCatsApp.viewModels
         {
             try
             {
-                string fullPath = documentService.getDocumentAbsolutePath(documentId);
+                string fullPath = documentService.GetDocumentAbsolutePath(documentId);
                 statusMessage = string.Empty;
                 return fullPath;
             }
