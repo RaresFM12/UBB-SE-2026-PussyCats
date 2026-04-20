@@ -22,29 +22,29 @@ namespace PussyCatsApp.viewModels
         private UserProfile userProfile;
 
         // Required Fields
-        [ObservableProperty] private string _firstName = string.Empty;
-        [ObservableProperty] private string _lastName = string.Empty;
-        [ObservableProperty] private double _age;
-        [ObservableProperty] private string _gender = string.Empty;
-        [ObservableProperty] private string _email = string.Empty;
-        [ObservableProperty] private string _phonePrefix = string.Empty;
-        [ObservableProperty] private string _phoneNumber = string.Empty;
-        [ObservableProperty] private string _gitHub = string.Empty;
-        [ObservableProperty] private string _linkedIn = string.Empty;
-        [ObservableProperty] private string _country = string.Empty;
-        [ObservableProperty] private string _city = string.Empty;
-        [ObservableProperty] private string _university = string.Empty;
-        [ObservableProperty] private string _address = string.Empty;
-        [ObservableProperty] private int _expectedGraduationYear;
-        [ObservableProperty] private string _motivation = string.Empty;
-        [ObservableProperty] private bool _hasDisabilities;
+        [ObservableProperty] private string firstName = string.Empty;
+        [ObservableProperty] private string lastName = string.Empty;
+        [ObservableProperty] private double age;
+        [ObservableProperty] private string gender = string.Empty;
+        [ObservableProperty] private string email = string.Empty;
+        [ObservableProperty] private string phonePrefix = string.Empty;
+        [ObservableProperty] private string phoneNumber = string.Empty;
+        [ObservableProperty] private string gitHub = string.Empty;
+        [ObservableProperty] private string linkedIn = string.Empty;
+        [ObservableProperty] private string country = string.Empty;
+        [ObservableProperty] private string city = string.Empty;
+        [ObservableProperty] private string university = string.Empty;
+        [ObservableProperty] private string address = string.Empty;
+        [ObservableProperty] private int expectedGraduationYear;
+        [ObservableProperty] private string motivation = string.Empty;
+        [ObservableProperty] private bool hasDisabilities;
 
         // Status
-        [ObservableProperty] private string _errorMessage = string.Empty;
-        [ObservableProperty] private string _cvStatusText = string.Empty;
-        [ObservableProperty] private string _infoBarMessage = string.Empty;
-        [ObservableProperty] private int _infoBarSeverity; // 0=Info, 1=Success, 2=Warning, 3=Error
-        [ObservableProperty] private bool _isInfoBarOpen;
+        [ObservableProperty] private string errorMessage = string.Empty;
+        [ObservableProperty] private string cvStatusText = string.Empty;
+        [ObservableProperty] private string infoBarMessage = string.Empty;
+        [ObservableProperty] private int infoBarSeverity; // 0=Info, 1=Success, 2=Warning, 3=Error
+        [ObservableProperty] private bool isInfoBarOpen;
 
         public ObservableCollection<string> Skills { get; } = new();
         public ObservableCollection<WorkExperience> WorkExperiences { get; } = new();
