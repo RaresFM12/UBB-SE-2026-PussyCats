@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
-using PussyCatsApp.repositories.personality_test_repo;
+using PussyCatsApp.Repositories.PersonalityTestRepo;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;

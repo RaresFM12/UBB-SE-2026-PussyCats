@@ -1,5 +1,5 @@
 ﻿using PussyCatsApp.models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using System;
 using System.Collections.Generic;
 

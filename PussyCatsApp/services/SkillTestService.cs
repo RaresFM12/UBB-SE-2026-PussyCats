@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using PussyCatsApp.Models;
 using PussyCatsApp.models;
 
@@ -26,7 +26,7 @@ namespace PussyCatsApp.services
 
         public bool canRetakeTest(int skillId)
         {
-            SkillTest skill = skillTestRepository.load(skillId);
+            SkillTest skill = skillTestRepository.Load(skillId);
 
             if (skill == null)
                 throw new Exception($"No test found for ID {skillId}");
