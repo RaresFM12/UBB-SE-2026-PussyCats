@@ -1,8 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
-using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +7,11 @@ using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using PussyCatsApp.models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace PussyCatsApp.viewModels
 {
@@ -46,12 +46,12 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty] private int infoBarSeverity; // 0=Info, 1=Success, 2=Warning, 3=Error
         [ObservableProperty] private bool isInfoBarOpen;
 
-        public ObservableCollection<string> Skills { get; } = new();
-        public ObservableCollection<WorkExperience> WorkExperiences { get; } = new();
-        public ObservableCollection<Project> Projects { get; } = new();
-        public ObservableCollection<ExtraCurricularActivity> ExtraCurricularActivities { get; } = new();
+        public ObservableCollection<string> Skills { get; } = new ();
+        public ObservableCollection<WorkExperience> WorkExperiences { get; } = new ();
+        public ObservableCollection<Project> Projects { get; } = new ();
+        public ObservableCollection<ExtraCurricularActivity> ExtraCurricularActivities { get; } = new ();
 
-        public List<string> UniversityList { get; } = new()
+        public List<string> UniversityList { get; } = new ()
         {
             "Babes-Bolyai University",
             "Technical University of Cluj-Napoca",
@@ -63,7 +63,7 @@ namespace PussyCatsApp.viewModels
             "Academy of Economic Studies Bucharest"
         };
 
-        public List<string> SkillSuggestions { get; } = new()
+        public List<string> SkillSuggestions { get; } = new ()
         {
             // Languages
             "JavaScript", "TypeScript", "Python", "Java", "C#", "Go", "R", "Julia",
@@ -133,7 +133,7 @@ namespace PussyCatsApp.viewModels
             "MS Project"
         };
 
-        public List<int> GraduationYears { get; } = new();
+        public List<int> GraduationYears { get; } = new ();
 
         public ProfileFormViewModel(IUserProfileService profileService, ICVParsingService cvParsingService)
         {
