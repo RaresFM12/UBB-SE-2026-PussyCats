@@ -15,13 +15,13 @@ namespace PussyCatsApp.viewModels
         private List<Document> documents;
         private string statusMessage;
         private readonly int userId;
-        private readonly DocumentService documentService;
+        private readonly IDocumentService documentService;
 
-        public DocumentListViewModel(DocumentService documentService, int userId)
+        public DocumentListViewModel(IDocumentService documentService, int userId)
         {
             this.documentService = documentService;
             this.userId = userId;
-            documents = new List<Document>();
+            this.documents = new List<Document>();
         }
 
         public void LoadDocuments()

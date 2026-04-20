@@ -16,7 +16,7 @@ namespace PussyCatsApp.viewModels
         private SkillTest skillTest;
         private Badge badge;
         private SkillTestService skillTestService;
-        private UserProfileViewModel userProfileViewModel;  
+        private UserProfileViewModel userProfileViewModel;
         private bool isRetakeEnabled;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,7 +30,7 @@ namespace PussyCatsApp.viewModels
         {
             this.skillTest = skillTest;
             this.skillTestService = skillTestService;
-            this.userProfileViewModel = userProfileViewModel;  
+            this.userProfileViewModel = userProfileViewModel;
 
             CheckRetakeEligible();
             badge = Badge.assignTier(skillTest.Score);
@@ -64,7 +64,7 @@ namespace PussyCatsApp.viewModels
             OnPropertyChanged(nameof(Badge));
             OnPropertyChanged(nameof(SkillTest));
             OnPropertyChanged(nameof(IsRetakeEnabled));
-            userProfileViewModel.recalculateLevelCommand();  
+            userProfileViewModel.RecalculateLevelCommand();  
         }
 
         public void UpdateBadge()

@@ -1,11 +1,11 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.models;
+using PussyCatsApp.services;
 
 namespace PussyCatsApp.viewModels
 {
@@ -15,13 +15,13 @@ namespace PussyCatsApp.viewModels
         private RoleResult selectedResult;
         private string errorMessage;
         private int currentUserId;
-        private CompatibilityService compatibilityService;
+        private ICompatibilityService compatibilityService;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public CompatibilityOverviewViewModel(int userId)
+        public CompatibilityOverviewViewModel(int userId, ICompatibilityService compatibilityService)
         {
-            this.compatibilityService = compatibilityService = new CompatibilityService();
+            this.compatibilityService = compatibilityService;
             this.currentUserId = userId;
             this.roleResults = new List<RoleResult>();
         }
@@ -49,7 +49,9 @@ namespace PussyCatsApp.viewModels
             foreach (RoleResult result in roleResults)
             {
                 if (result.JobRole == role)
+                {
                     return result;
+                }
             }
             return null;
         }
