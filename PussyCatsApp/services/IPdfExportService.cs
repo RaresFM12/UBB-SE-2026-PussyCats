@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using System.Threading.Tasks;
 using PussyCatsApp.models;
 
-namespace PussyCatsApp.Repositories
+public interface IPdfExportService
 {
-    public interface ISkillGroupRepository
-    {
-        List<SkillGroup> GetByRole(JobRole role);
-    }
+    Task RenderProfileAsync(UserProfile profile);
+    Task DownloadPdfAsync();
 }

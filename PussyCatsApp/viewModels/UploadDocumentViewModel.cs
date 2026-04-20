@@ -54,7 +54,7 @@ namespace PussyCatsApp.viewModels
                 DocumentName = documentName
             };
 
-            documentService.uploadDocument(document, selectedFilePath);
+            documentService.UploadDocument(document, selectedFilePath);
         }
 
         public string GetDocumentName() => documentName;

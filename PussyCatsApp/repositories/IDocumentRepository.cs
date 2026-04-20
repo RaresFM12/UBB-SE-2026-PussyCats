@@ -8,6 +8,7 @@ namespace PussyCatsApp.Repositories
         List<Document> GetDocumentsByUserId(int userId);
         void AddDocument(Document document);
         void DeleteDocument(int documentId);
+        Document GetDocumentById(int documentId);
         // void RenameDocument(int documentId, string newName);
     }
 }
