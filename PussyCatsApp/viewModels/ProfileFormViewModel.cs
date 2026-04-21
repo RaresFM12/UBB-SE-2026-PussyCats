@@ -104,25 +104,35 @@ namespace PussyCatsApp.viewModels
 
             Skills.Clear();
             foreach (var skill in userProfile.Skills)
+            {
                 Skills.Add(skill);
+            }
 
             WorkExperiences.Clear();
             foreach (var we in userProfile.WorkExperiences)
+            {
                 WorkExperiences.Add(we);
+            }
 
             Projects.Clear();
             foreach (var project in userProfile.Projects)
+            {
                 Projects.Add(project);
+            }
 
             ExtraCurricularActivities.Clear();
             foreach (var activity in userProfile.ExtraCurricularActivities)
+            {
                 ExtraCurricularActivities.Add(activity);
+            }
         }
 
         public void AddSkill(string skill)
         {
             if (string.IsNullOrWhiteSpace(skill))
+            {
                 return;
+            }
 
             skill = skill.Trim();
 
@@ -276,25 +286,77 @@ namespace PussyCatsApp.viewModels
 
         private void PopulateFromParsedProfile(UserProfile parsed)
         {
-            if (!string.IsNullOrEmpty(parsed.FirstName)) FirstName = parsed.FirstName;
-            if (!string.IsNullOrEmpty(parsed.LastName)) LastName = parsed.LastName;
-            if (parsed.Age > 0) Age = parsed.Age;
-            if (!string.IsNullOrEmpty(parsed.Gender)) Gender = parsed.Gender;
-            if (!string.IsNullOrEmpty(parsed.Email)) Email = parsed.Email;
+            if (!string.IsNullOrEmpty(parsed.FirstName))
+            {
+                FirstName = parsed.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.LastName))
+            {
+                LastName = parsed.LastName;
+            }
+
+            if (parsed.Age > 0)
+            {
+                Age = parsed.Age;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Gender))
+            {
+                Gender = parsed.Gender;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Email))
+            {
+                Email = parsed.Email;
+            }
+
             if (!string.IsNullOrEmpty(parsed.PhoneNumber))
             {
                 var parts = PhoneNumberHelper.ExtractPhonePrefixAndNumber(parsed.PhoneNumber);
                 PhonePrefix = parts.prefix;
                 PhoneNumber = parts.number;
             }
-            if (!string.IsNullOrEmpty(parsed.GitHub)) GitHub = parsed.GitHub;
-            if (!string.IsNullOrEmpty(parsed.LinkedIn)) LinkedIn = parsed.LinkedIn;
-            if (!string.IsNullOrEmpty(parsed.Country)) Country = parsed.Country;
-            if (!string.IsNullOrEmpty(parsed.City)) City = parsed.City;
-            if (!string.IsNullOrEmpty(parsed.University)) University = parsed.University;
-            if (parsed.ExpectedGraduationYear > 0) ExpectedGraduationYear = parsed.ExpectedGraduationYear;
-            if (!string.IsNullOrEmpty(parsed.Address)) Address = parsed.Address;
-            if (!string.IsNullOrEmpty(parsed.Motivation)) Motivation = parsed.Motivation;
+
+            if (!string.IsNullOrEmpty(parsed.GitHub))
+            {
+                GitHub = parsed.GitHub;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.LinkedIn))
+            {
+                LinkedIn = parsed.LinkedIn;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Country))
+            {
+                Country = parsed.Country;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.City))
+            {
+                City = parsed.City;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.University))
+            {
+                University = parsed.University;
+            }
+
+            if (parsed.ExpectedGraduationYear > 0)
+            {
+                ExpectedGraduationYear = parsed.ExpectedGraduationYear;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Address))
+            {
+                Address = parsed.Address;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Motivation))
+            {
+                Motivation = parsed.Motivation;
+            }
 
             // Clear existing collections before loading new CV data
             Skills.Clear();
@@ -308,7 +370,9 @@ namespace PussyCatsApp.viewModels
                 foreach (var skill in parsed.Skills)
                 {
                     if (!Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase)) && Skills.Count < 30)
+                    {
                         Skills.Add(skill);
+                    }
                 }
             }
 
@@ -317,7 +381,9 @@ namespace PussyCatsApp.viewModels
                 foreach (var we in parsed.WorkExperiences)
                 {
                     if (WorkExperiences.Count < 10)
+                    {
                         WorkExperiences.Add(we);
+                    }
                 }
             }
 
@@ -326,7 +392,9 @@ namespace PussyCatsApp.viewModels
                 foreach (var proj in parsed.Projects)
                 {
                     if (Projects.Count < 10)
+                    {
                         Projects.Add(proj);
+                    }
                 }
             }
 
@@ -335,22 +403,43 @@ namespace PussyCatsApp.viewModels
                 foreach (var activity in parsed.ExtraCurricularActivities)
                 {
                     if (ExtraCurricularActivities.Count < 10)
+                    {
                         ExtraCurricularActivities.Add(activity);
+                    }
                 }
             }
 
             // List missing fields (R18)
             var missingFields = new List<string>();
-            if (string.IsNullOrEmpty(FirstName)) missingFields.Add("First Name");
-            if (string.IsNullOrEmpty(LastName)) missingFields.Add("Last Name");
-            if (Age == 0) missingFields.Add("Age");
-            if (string.IsNullOrEmpty(Gender)) missingFields.Add("Gender");
-            if (string.IsNullOrEmpty(Email)) missingFields.Add("Email");
-            if (string.IsNullOrEmpty(PhoneNumber)) missingFields.Add("Phone Number");
-            if (string.IsNullOrEmpty(Country)) missingFields.Add("Country");
-            if (string.IsNullOrEmpty(City)) missingFields.Add("City");
-            if (string.IsNullOrEmpty(University)) missingFields.Add("University");
-            if (ExpectedGraduationYear == 0) missingFields.Add("Expected Graduation Year");
+            var stringFields = new Dictionary<string, string>
+            {
+                { "First Name", FirstName },
+                { "Last Name", LastName },
+                { "Gender", Gender },
+                { "Email", Email },
+                { "Phone Number", PhoneNumber },
+                { "Country", Country },
+                { "City", City },
+                { "University", University }
+            };
+
+            foreach (var field in stringFields)
+            {
+                if (string.IsNullOrEmpty(field.Value))
+                {
+                    missingFields.Add(field.Key);
+                }
+            }
+
+            if (Age == 0)
+            {
+                missingFields.Add("Age");
+            }
+
+            if (ExpectedGraduationYear == 0)
+            {
+                missingFields.Add("Expected Graduation Year");
+            }
 
             if (missingFields.Any())
             {
@@ -360,23 +449,25 @@ namespace PussyCatsApp.viewModels
 
         public List<string> FilterUniversities(string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return new List<string>();
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return new List<string>();
+            }
 
             var splitText = query.ToLower().Split(' ');
-            return ProfileFormData.UniversityList.Where(uni =>
-                splitText.All(key => uni.ToLower().Contains(key))
-            ).ToList();
+            return ProfileFormData.UniversityList.Where(uni => splitText.All(key => uni.ToLower().Contains(key))).ToList();
         }
 
         public List<string> FilterSkillSuggestions(string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return new List<string>();
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return new List<string>();
+            }
 
             var searchText = query.ToLower();
-            return ProfileFormData.SkillSuggestions.Where(skill =>
-                skill.ToLower().Contains(searchText) &&
-                !Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase))
-            ).ToList();
+            return ProfileFormData.SkillSuggestions.Where(skill => skill.ToLower().Contains(searchText) &&
+                !Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
         private void ShowInfoBar(string message, int severity)
