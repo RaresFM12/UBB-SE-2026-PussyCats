@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using PussyCatsApp.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace PussyCatsApp.views
 {
@@ -143,13 +146,13 @@ namespace PussyCatsApp.views
         {
             try
             {
-                string connectionString = new ConfigurationBuilder()
-                    .SetBasePath(AppContext.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build()
-                    .GetConnectionString("raresConnectionString");
+                //string connectionString = new ConfigurationBuilder()
+                //    .SetBasePath(AppContext.BaseDirectory)
+                //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                //    .Build()
+                //    .GetConnectionString("raresConnectionString");
 
-                var repo = new Repositories.PreferenceRepository(connectionString);
+                var repo = new Repositories.PreferenceRepository(DatabaseConfiguration.GetConnectionString());
 
                 int currentUserId = 1;
 
@@ -257,13 +260,13 @@ namespace PussyCatsApp.views
 
             try
             {
-                string connectionString = new ConfigurationBuilder()
-                    .SetBasePath(AppContext.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build()
-                    .GetConnectionString("raresConnectionString");
+                //string connectionString = new ConfigurationBuilder()
+                //    .SetBasePath(AppContext.BaseDirectory)
+                //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                //    .Build()
+                //    .GetConnectionString("raresConnectionString");
 
-                var repo = new Repositories.PreferenceRepository(connectionString);
+                var repo = new Repositories.PreferenceRepository(DatabaseConfiguration.GetConnectionString());
 
                 int currentUserId = 1;
 
