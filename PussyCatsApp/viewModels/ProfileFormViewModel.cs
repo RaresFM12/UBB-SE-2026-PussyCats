@@ -55,7 +55,7 @@ namespace PussyCatsApp.viewModels
         public List<int> GraduationYears { get; } = new ();
 
         private readonly int maximumNumberOfExtraCurricularActivitiesAllowed = 10;
-        private readonly int maxiumNumberOfSkillsAllowed = 30;
+        private readonly int maximumNumberOfSkillsAllowed = 30;
         private readonly int maximumSkillNameLength = 60;
         private readonly int maximumNumberOfWorkExperiencesAllowed = 10;
         private readonly int maximumNumberOfProjectsAllowed = 10;
@@ -66,7 +66,8 @@ namespace PussyCatsApp.viewModels
             this.cvParsingService = cvParsingService;
 
             int currentYear = DateTime.Now.Year;
-            for (int year = currentYear; year <= currentYear + 10; year++)
+            int numberOfYearsToShow = 10;
+            for (int year = currentYear; year <= currentYear + numberOfYearsToShow; year++)
             {
                 GraduationYears.Add(year);
             }
@@ -142,15 +143,15 @@ namespace PussyCatsApp.viewModels
 
             skill = skill.Trim();
 
-            if (Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase)))
+            if (IsDuplicateSkill(skill))
             {
                 ShowInfoBar("This skill has already been added.", 2);
                 return;
             }
 
-            if (Skills.Count >= maxiumNumberOfSkillsAllowed)
+            if (Skills.Count >= maximumNumberOfSkillsAllowed)
             {
-                ShowInfoBar($"Maximum of {maxiumNumberOfSkillsAllowed} skills allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfSkillsAllowed} skills allowed.", 2);
                 return;
             }
 
@@ -375,7 +376,7 @@ namespace PussyCatsApp.viewModels
             {
                 foreach (var skill in parsed.Skills)
                 {
-                    if (!Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase)) && Skills.Count < 30)
+                    if (!IsDuplicateSkill(skill) && Skills.Count < maximumNumberOfSkillsAllowed)
                     {
                         Skills.Add(skill);
                     }
@@ -460,8 +461,16 @@ namespace PussyCatsApp.viewModels
                 return new List<string>();
             }
 
-            var splitText = query.ToLower().Split(' ');
-            return ProfileFormData.UniversityList.Where(uni => splitText.All(key => uni.ToLower().Contains(key))).ToList();
+            var queryWords = query.ToLower().Split(' ');
+            var results = new List<string>();
+            foreach (string university in ProfileFormData.UniversityList)
+            {
+                if (ProfileFormHelpers.UniversityMatchesAllWords(university, queryWords))
+                {
+                    results.Add(university);
+                }
+            }
+            return results;
         }
 
         public List<string> FilterSkillSuggestions(string query)
@@ -472,8 +481,15 @@ namespace PussyCatsApp.viewModels
             }
 
             var searchText = query.ToLower();
-            return ProfileFormData.SkillSuggestions.Where(skill => skill.ToLower().Contains(searchText) &&
-                !Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase))).ToList();
+            var results = new List<string>();
+            foreach (string skill in ProfileFormData.SkillSuggestions)
+            {
+                if (SkillMatchesSearch(skill, searchText))
+                {
+                    results.Add(skill);
+                }
+            }
+            return results;
         }
 
         private void ShowInfoBar(string message, int severity)
@@ -481,6 +497,22 @@ namespace PussyCatsApp.viewModels
             InfoBarMessage = message;
             InfoBarSeverity = severity;
             IsInfoBarOpen = true;
+        }
+
+        private bool IsDuplicateSkill(string skill)
+        {
+            foreach (string existingSkill in Skills)
+            {
+                if (existingSkill.Equals(skill, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool SkillMatchesSearch(string skill, string searchText)
+        {
+            return skill.ToLower().Contains(searchText) && !IsDuplicateSkill(skill);
         }
     }
 }
