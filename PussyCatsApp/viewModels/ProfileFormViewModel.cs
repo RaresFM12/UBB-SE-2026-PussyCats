@@ -104,9 +104,9 @@ namespace PussyCatsApp.viewModels
             // Extract phone prefix and number
             if (!string.IsNullOrEmpty(userProfile.PhoneNumber))
             {
-                var parts = PhoneNumberHelper.ExtractPhonePrefixAndNumber(userProfile.PhoneNumber);
-                PhonePrefix = parts.prefix;
-                PhoneNumber = parts.number;
+                var phoneNumberParts = PhoneNumberHelper.ExtractPhonePrefixAndNumber(userProfile.PhoneNumber);
+                PhonePrefix = phoneNumberParts.prefix;
+                PhoneNumber = phoneNumberParts.number;
             }
 
             Skills.Clear();
@@ -116,9 +116,9 @@ namespace PussyCatsApp.viewModels
             }
 
             WorkExperiences.Clear();
-            foreach (var we in userProfile.WorkExperiences)
+            foreach (var workExperience in userProfile.WorkExperiences)
             {
-                WorkExperiences.Add(we);
+                WorkExperiences.Add(workExperience);
             }
 
             Projects.Clear();
@@ -385,40 +385,40 @@ namespace PussyCatsApp.viewModels
 
             if (parsed.WorkExperiences != null)
             {
-                foreach (var we in parsed.WorkExperiences)
+                foreach (var workExperience in parsed.WorkExperiences)
                 {
                     if (WorkExperiences.Count < maximumNumberOfWorkExperiencesAllowed)
                     {
-                        WorkExperiences.Add(we);
+                        WorkExperiences.Add(workExperience);
                     }
                 }
             }
 
             if (parsed.Projects != null)
             {
-                foreach (var proj in parsed.Projects)
+                foreach (var project in parsed.Projects)
                 {
                     if (Projects.Count < maximumNumberOfProjectsAllowed)
                     {
-                        Projects.Add(proj);
+                        Projects.Add(project);
                     }
                 }
             }
 
             if (parsed.ExtraCurricularActivities != null)
             {
-                foreach (var activity in parsed.ExtraCurricularActivities)
+                foreach (var extraCurricularActivity in parsed.ExtraCurricularActivities)
                 {
                     if (ExtraCurricularActivities.Count < maximumNumberOfExtraCurricularActivitiesAllowed)
                     {
-                        ExtraCurricularActivities.Add(activity);
+                        ExtraCurricularActivities.Add(extraCurricularActivity);
                     }
                 }
             }
 
             // List missing fields (R18)
             var missingFields = new List<string>();
-            var stringFields = new Dictionary<string, string>
+            var fieldsOfTypeString = new Dictionary<string, string>
             {
                 { "First Name", FirstName },
                 { "Last Name", LastName },
@@ -430,7 +430,7 @@ namespace PussyCatsApp.viewModels
                 { "University", University }
             };
 
-            foreach (var field in stringFields)
+            foreach (var field in fieldsOfTypeString)
             {
                 if (string.IsNullOrEmpty(field.Value))
                 {
