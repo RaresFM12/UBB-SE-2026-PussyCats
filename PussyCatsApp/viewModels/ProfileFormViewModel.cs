@@ -204,43 +204,9 @@ namespace PussyCatsApp.viewModels
             ExtraCurricularActivities.Remove(activity);
         }
 
-        public List<string> ValidateForm()
-        {
-            var errors = new List<string>();
-
-            if (string.IsNullOrWhiteSpace(FirstName))
-                errors.Add("First Name");
-            if (string.IsNullOrWhiteSpace(LastName))
-                errors.Add("Last Name");
-            if (Age < 16 || Age > 60)
-                errors.Add("Age (must be between 16-60)");
-            if (string.IsNullOrWhiteSpace(Gender))
-                errors.Add("Gender");
-            if (string.IsNullOrWhiteSpace(Email) || !ProfileFormValidator.IsValidEmail(Email))
-                errors.Add("Valid Email");
-            if (string.IsNullOrWhiteSpace(PhonePrefix) || string.IsNullOrWhiteSpace(PhoneNumber))
-                errors.Add("Phone Number");
-            if (string.IsNullOrWhiteSpace(Country))
-                errors.Add("Country");
-            if (string.IsNullOrWhiteSpace(City))
-                errors.Add("City");
-            if (string.IsNullOrWhiteSpace(University))
-                errors.Add("University");
-            if (ExpectedGraduationYear == 0)
-                errors.Add("Expected Graduation Year");
-
-            foreach (var we in WorkExperiences)
-            {
-                if (!we.CurrentlyWorking && we.EndDate.HasValue && we.EndDate.Value < we.StartDate)
-                    errors.Add($"Work Experience \"{we.Company}\": End date is before start date");
-            }
-
-            return errors;
-        }
-
         public bool SaveProfile()
         {
-            var errors = ValidateForm();
+            var errors = ProfileFormValidator.ValidateForm(FirstName, LastName, Age, Gender, Email, PhonePrefix, PhoneNumber, Country, City, University, ExpectedGraduationYear, WorkExperiences.ToList());
             if (errors.Any())
             {
                 ShowInfoBar($"Please fill in required fields: {string.Join(", ", errors)}", 3);
