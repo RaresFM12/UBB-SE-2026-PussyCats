@@ -44,7 +44,7 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty] private string errorMessage = string.Empty;
         [ObservableProperty] private string cvStatusText = string.Empty;
         [ObservableProperty] private string infoBarMessage = string.Empty;
-        [ObservableProperty] private int infoBarSeverity; // 0=Info, 1=Success, 2=Warning, 3=Error
+        [ObservableProperty] private InformationBarSeverityStatus infoBarSeverity; // 1=Success, 2=Warning, 3=Error
         [ObservableProperty] private bool isInfoBarOpen;
 
         public ObservableCollection<string> Skills { get; } = new ();
@@ -145,19 +145,19 @@ namespace PussyCatsApp.viewModels
 
             if (IsDuplicateSkill(skill))
             {
-                ShowInfoBar("This skill has already been added.", 2);
+                ShowInfoBar("This skill has already been added.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
             if (Skills.Count >= maximumNumberOfSkillsAllowed)
             {
-                ShowInfoBar($"Maximum of {maximumNumberOfSkillsAllowed} skills allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfSkillsAllowed} skills allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
             if (skill.Length > maximumSkillNameLength)
             {
-                ShowInfoBar($"Skill name must be less than {maximumSkillNameLength} characters.", 2);
+                ShowInfoBar($"Skill name must be less than {maximumSkillNameLength} characters.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -173,7 +173,7 @@ namespace PussyCatsApp.viewModels
         {
             if (WorkExperiences.Count >= maximumNumberOfWorkExperiencesAllowed)
             {
-                ShowInfoBar($"Maximum of {maximumNumberOfWorkExperiencesAllowed} work experiences allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfWorkExperiencesAllowed} work experiences allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -193,7 +193,7 @@ namespace PussyCatsApp.viewModels
         {
             if (Projects.Count >= maximumNumberOfProjectsAllowed)
             {
-                ShowInfoBar($"Maximum of {maximumNumberOfProjectsAllowed} projects allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfProjectsAllowed} projects allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -209,7 +209,7 @@ namespace PussyCatsApp.viewModels
         {
             if (ExtraCurricularActivities.Count >= maximumNumberOfExtraCurricularActivitiesAllowed)
             {
-                ShowInfoBar($"Maximum of {maximumNumberOfExtraCurricularActivitiesAllowed} extra-curricular activities allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfExtraCurricularActivitiesAllowed} extra-curricular activities allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -226,7 +226,7 @@ namespace PussyCatsApp.viewModels
             var errors = ProfileFormValidator.ValidateForm(FirstName, LastName, Age, Gender, Email, PhonePrefix, PhoneNumber, Country, City, University, ExpectedGraduationYear, WorkExperiences.ToList());
             if (errors.Any())
             {
-                ShowInfoBar($"Please fill in required fields: {string.Join(", ", errors)}", 3);
+                ShowInfoBar($"Please fill in required fields: {string.Join(", ", errors)}", InformationBarSeverityStatus.Error);
                 return false;
             }
 
@@ -235,12 +235,12 @@ namespace PussyCatsApp.viewModels
             try
             {
                 profileService.SaveProfile(userProfile.UserId, userProfile);
-                ShowInfoBar("Profile saved successfully!", 1);
+                ShowInfoBar("Profile saved successfully!", InformationBarSeverityStatus.Success);
                 return true;
             }
             catch (Exception ex)
             {
-                ShowInfoBar($"Error saving profile: {ex.Message}", 3);
+                ShowInfoBar($"Error saving profile: {ex.Message}", InformationBarSeverityStatus.Error);
                 return false;
             }
         }
@@ -282,12 +282,12 @@ namespace PussyCatsApp.viewModels
                 var parsedProfile = cvParsingService.ParseCVFile(content, fileType);
                 PopulateFromParsedProfile(parsedProfile);
                 CvStatusText = "CV loaded successfully!";
-                ShowInfoBar("CV data has been loaded. Please review and complete any missing fields.", 1);
+                ShowInfoBar("CV data has been loaded. Please review and complete any missing fields.", InformationBarSeverityStatus.Success);
             }
             catch (Exception ex)
             {
                 var errorMsg = ex.InnerException?.Message ?? ex.Message;
-                ShowInfoBar($"Error processing CV file: {errorMsg}", 3);
+                ShowInfoBar($"Error processing CV file: {errorMsg}", InformationBarSeverityStatus.Error);
             }
         }
 
@@ -450,7 +450,7 @@ namespace PussyCatsApp.viewModels
 
             if (missingFields.Any())
             {
-                ShowInfoBar($"Missing fields: {string.Join(", ", missingFields)}", 2);
+                ShowInfoBar($"Missing fields: {string.Join(", ", missingFields)}", InformationBarSeverityStatus.Warning);
             }
         }
 
@@ -492,7 +492,7 @@ namespace PussyCatsApp.viewModels
             return results;
         }
 
-        private void ShowInfoBar(string message, int severity)
+        private void ShowInfoBar(string message, InformationBarSeverityStatus severity)
         {
             InfoBarMessage = message;
             InfoBarSeverity = severity;
@@ -513,6 +513,32 @@ namespace PussyCatsApp.viewModels
         private bool SkillMatchesSearch(string skill, string searchText)
         {
             return skill.ToLower().Contains(searchText) && !IsDuplicateSkill(skill);
+        }
+
+        /// <summary>
+        /// Severity Status codes for the Information Bar.
+        /// </summary>
+        public enum InformationBarSeverityStatus
+        {
+            /// <summary>
+            /// Only an informational message should be displayed, without any specific severity.
+            /// </summary>
+            Informational = 0,
+
+            /// <summary>
+            /// Indicates that the operation completed successfully.
+            /// </summary>
+            Success = 1,
+
+            /// <summary>
+            /// Indicates that a warning should be displayed
+            /// </summary>
+            Warning = 2,
+
+            /// <summary>
+            /// Indicates that an error occurred during the operation.
+            /// </summary>
+            Error = 3
         }
     }
 }
