@@ -216,7 +216,7 @@ namespace PussyCatsApp.viewModels
                 errors.Add("Age (must be between 16-60)");
             if (string.IsNullOrWhiteSpace(Gender))
                 errors.Add("Gender");
-            if (string.IsNullOrWhiteSpace(Email) || !IsValidEmail(Email))
+            if (string.IsNullOrWhiteSpace(Email) || !ProfileFormValidator.IsValidEmail(Email))
                 errors.Add("Valid Email");
             if (string.IsNullOrWhiteSpace(PhonePrefix) || string.IsNullOrWhiteSpace(PhoneNumber))
                 errors.Add("Phone Number");
@@ -418,19 +418,6 @@ namespace PussyCatsApp.viewModels
             InfoBarMessage = message;
             InfoBarSeverity = severity;
             IsInfoBarOpen = true;
-        }
-
-        private static bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }
