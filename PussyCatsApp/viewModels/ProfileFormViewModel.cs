@@ -54,6 +54,12 @@ namespace PussyCatsApp.viewModels
 
         public List<int> GraduationYears { get; } = new ();
 
+        private readonly int maximumNumberOfExtraCurricularActivitiesAllowed = 10;
+        private readonly int maxiumNumberOfSkillsAllowed = 30;
+        private readonly int maximumSkillNameLength = 60;
+        private readonly int maximumNumberOfWorkExperiencesAllowed = 10;
+        private readonly int maximumNumberOfProjectsAllowed = 10;
+
         public ProfileFormViewModel(IUserProfileService profileService, ICVParsingService cvParsingService)
         {
             this.profileService = profileService;
@@ -142,15 +148,15 @@ namespace PussyCatsApp.viewModels
                 return;
             }
 
-            if (Skills.Count >= 30)
+            if (Skills.Count >= maxiumNumberOfSkillsAllowed)
             {
-                ShowInfoBar("Maximum of 30 skills allowed.", 2);
+                ShowInfoBar($"Maximum of {maxiumNumberOfSkillsAllowed} skills allowed.", 2);
                 return;
             }
 
-            if (skill.Length > 60)
+            if (skill.Length > maximumSkillNameLength)
             {
-                ShowInfoBar("Skill name must be less than 60 characters.", 2);
+                ShowInfoBar($"Skill name must be less than {maximumSkillNameLength} characters.", 2);
                 return;
             }
 
@@ -164,9 +170,9 @@ namespace PussyCatsApp.viewModels
 
         public void AddWorkExperience()
         {
-            if (WorkExperiences.Count >= 10)
+            if (WorkExperiences.Count >= maximumNumberOfWorkExperiencesAllowed)
             {
-                ShowInfoBar("Maximum of 10 work experiences allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfWorkExperiencesAllowed} work experiences allowed.", 2);
                 return;
             }
 
@@ -184,9 +190,9 @@ namespace PussyCatsApp.viewModels
 
         public void AddProject()
         {
-            if (Projects.Count >= 10)
+            if (Projects.Count >= maximumNumberOfProjectsAllowed)
             {
-                ShowInfoBar("Maximum of 10 projects allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfProjectsAllowed} projects allowed.", 2);
                 return;
             }
 
@@ -200,9 +206,9 @@ namespace PussyCatsApp.viewModels
 
         public void AddExtraCurricularActivity()
         {
-            if (ExtraCurricularActivities.Count >= 10)
+            if (ExtraCurricularActivities.Count >= maximumNumberOfExtraCurricularActivitiesAllowed)
             {
-                ShowInfoBar("Maximum of 10 extra-curricular activities allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfExtraCurricularActivitiesAllowed} extra-curricular activities allowed.", 2);
                 return;
             }
 
@@ -380,7 +386,7 @@ namespace PussyCatsApp.viewModels
             {
                 foreach (var we in parsed.WorkExperiences)
                 {
-                    if (WorkExperiences.Count < 10)
+                    if (WorkExperiences.Count < maximumNumberOfWorkExperiencesAllowed)
                     {
                         WorkExperiences.Add(we);
                     }
@@ -391,7 +397,7 @@ namespace PussyCatsApp.viewModels
             {
                 foreach (var proj in parsed.Projects)
                 {
-                    if (Projects.Count < 10)
+                    if (Projects.Count < maximumNumberOfProjectsAllowed)
                     {
                         Projects.Add(proj);
                     }
@@ -402,7 +408,7 @@ namespace PussyCatsApp.viewModels
             {
                 foreach (var activity in parsed.ExtraCurricularActivities)
                 {
-                    if (ExtraCurricularActivities.Count < 10)
+                    if (ExtraCurricularActivities.Count < maximumNumberOfExtraCurricularActivitiesAllowed)
                     {
                         ExtraCurricularActivities.Add(activity);
                     }
