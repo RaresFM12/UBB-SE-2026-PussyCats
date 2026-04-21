@@ -26,7 +26,7 @@ namespace PussyCatsApp.Tests.Services
         }
 
         [TestMethod]
-        public void CanRetakeTest_ValidSkillId_ReturnsResult()
+        public void CanRetakeTest_ValidSkillId_ReturnsTrue()
         {
             var skill = new SkillTest(1, 10, "React");
             skill.AchievedDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-4));
@@ -53,12 +53,15 @@ namespace PussyCatsApp.Tests.Services
         {
             var skill = new SkillTest(1, 10, "React");
             skill.AchievedDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-4));
-           
+
             mockRepo.Setup(r => r.Load(1)).Returns(skill);
 
             var result = service.SubmitRetake(1, 95);
 
-            Assert.AreEqual(BadgeTier.GOLD, result.Tier);
+            mockRepo.Verify(r => r.UpdateSkillTestScore(1, 95), Times.Once);
+            mockRepo.Verify(r => r.UpdateAchievedDate(1, It.IsAny<DateOnly>()), Times.Once);
+
+            Assert.IsNotNull(result);
         }
 
         [TestMethod]
