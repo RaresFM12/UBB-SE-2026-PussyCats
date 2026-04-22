@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,12 @@ namespace PussyCatsApp.viewModels
     {
         private readonly IPersonalityTestService personalityTestService;
         private readonly int userId;
+        private const int NumberOfTopRolesToDisplay = 3;
 
         public List<QuestionViewModel> Questions { get; }
 
         [ObservableProperty]
-        public partial List<RoleResultViewModel> TopRoles { get; set; } = new();
+        public partial List<RoleResultViewModel> TopRoles { get; set; } = new ();
 
         [ObservableProperty]
         public partial RoleResultViewModel? SelectedRole { get; set; }
@@ -31,55 +33,70 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty]
         public partial bool IsTestSubmitted { get; set; }
 
-        public bool CanSubmit => Questions.All(q => q.IsAnswered == true);
+        public bool CanSubmit
+        {
+            get
+            {
+                foreach (var question in Questions)
+                {
+                    if (question.IsAnswered == false)
+                    {
+                        return false; // At least one question is unanswered
+                    }
+                }
+                return true;
+            }
+        }
 
-        public bool CanSave => SelectedRole != null;
+        public bool CanSave
+        {
+            get
+            {
+                return SelectedRole != null;
+            }
+        }
 
         public PersonalityTestViewModel(int userId, IPersonalityTestService personalityTestService)
         {
             this.personalityTestService = personalityTestService;
             this.userId = userId;
 
-            Questions = PersonalityTestService.LoadQuestions()
-                .Select(question => new QuestionViewModel(question))
-                .ToList();
-
-            // Subscribe to answer changes to trigger CanSubmit validation
-            // WHEN to re-evaluate the CanSubmit condition
-            foreach (var question in Questions)
-            {
-                question.PropertyChanged += (s, e) =>
-                {
-                    if (e.PropertyName == nameof(QuestionViewModel.SelectedAnswer))
-                    {
-                        SubmitCommand.NotifyCanExecuteChanged();
-                    }
-                };
-            }
+            var rawQuestionsList = PersonalityTestService.LoadQuestions();
+            Questions = WrapQuestionsInViewModels(rawQuestionsList);
+            SubscribeToAnswerChanges();
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private void Submit()
         {
-            // Collect answers from questions
-            var answers = new Dictionary<Question, AnswerValue>();
-            foreach (var questionVm in Questions)
-            {
-                answers[questionVm.Question] = (AnswerValue)questionVm.SelectedAnswer!;
-            }
-
-            // Calculate trait scores
+            var answers = CollectAnswers();
             var traitScores = personalityTestService.CalculateTraitScores(answers);
-
-            // Calculate role scores
             var roleScores = personalityTestService.CalculateRoleScores(traitScores);
 
-            TopRoles = personalityTestService.GetTopRoles(roleScores, 3)
-                .Select(role => new RoleResultViewModel(role.Key, role.Value))
-                .ToList();
+            var topRolePairs = personalityTestService.GetTopRoles(roleScores, NumberOfTopRolesToDisplay);
+            TopRoles = WrapRolesInViewModels(topRolePairs);
 
-            // Mark test as submitted
             IsTestSubmitted = true;
+        }
+
+        private Dictionary<Question, AnswerValue> CollectAnswers()
+        {
+            var answers = new Dictionary<Question, AnswerValue>();
+            foreach (QuestionViewModel questionViewModel in Questions)
+            {
+                answers[questionViewModel.Question] = (AnswerValue)questionViewModel.SelectedAnswer!;
+            }
+            return answers;
+        }
+
+        private static List<RoleResultViewModel> WrapRolesInViewModels(IEnumerable<KeyValuePair<JobRole, double>> rolePairs)
+        {
+            var roleViewModels = new List<RoleResultViewModel>();
+            foreach (KeyValuePair<JobRole, double> rolePair in rolePairs)
+            {
+                roleViewModels.Add(new RoleResultViewModel(rolePair.Key, rolePair.Value));
+            }
+            return roleViewModels;
         }
 
         [RelayCommand]
@@ -115,6 +132,31 @@ namespace PussyCatsApp.viewModels
                 SaveMessage = $"Your personality test result has been updated to {displayName}.";
             }
         }
-    }
 
+        private static List<QuestionViewModel> WrapQuestionsInViewModels(List<Question> rawQuestions)
+        {
+            var questionViewModels = new List<QuestionViewModel>();
+            foreach (Question question in rawQuestions)
+            {
+                questionViewModels.Add(new QuestionViewModel(question));
+            }
+            return questionViewModels;
+        }
+
+        private void SubscribeToAnswerChanges()
+        {
+            foreach (QuestionViewModel questionViewModel in Questions)
+            {
+                questionViewModel.PropertyChanged += OnQuestionAnswerChanged;
+            }
+        }
+
+        private void OnQuestionAnswerChanged(object? sender, PropertyChangedEventArgs eventArgs)
+        {
+            if (eventArgs.PropertyName == nameof(QuestionViewModel.SelectedAnswer))
+            {
+                SubmitCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
 }
