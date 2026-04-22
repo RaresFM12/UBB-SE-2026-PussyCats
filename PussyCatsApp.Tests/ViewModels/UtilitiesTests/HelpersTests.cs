@@ -16,15 +16,25 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         {
             int lowerBound = 1, upperBound = 10;
             int randomScore = Helpers.GenerateRandomScore(lowerBound, upperBound);
-            Assert.IsTrue(lowerBound <=  randomScore && randomScore <= upperBound);
+            Assert.IsTrue(lowerBound <= randomScore && randomScore <= upperBound);
         }
 
         [TestMethod]
-        public void TestGetFormattedNameFromJobRole()
+        public void TestGetFormattedNameFromJobRoleUIAndAI()
         {
             Assert.AreEqual("UI/UX Designer", Helpers.GetFormattedNameFromJobRole(JobRole.UIUXDesigner));
             Assert.AreEqual("AI/ML Engineer", Helpers.GetFormattedNameFromJobRole(JobRole.AIMLEngineer));
+        }
+
+        [TestMethod]
+        public void TestGetFormattedNameFromJobRoleDataAnalyst()
+        {
             Assert.AreEqual("Data Analyst", Helpers.GetFormattedNameFromJobRole(JobRole.DataAnalyst));
+        }
+
+        [TestMethod]
+        public void TestGetFormattedNameFromJobRoleDevOps()
+        {
             Assert.AreEqual("Dev Ops Engineer", Helpers.GetFormattedNameFromJobRole(JobRole.DevOpsEngineer));
         }
     }

@@ -12,7 +12,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
     public class ProfileFormValidatorTests
     {
         [TestMethod]
-        public void IsValidEmail_ValidEmail_ReturnsTrue()
+        public void IsValidEmailValidEmailReturnsTrue()
         {
             // Arrange
             string validEmail1 = "validemail@gmail.com";
@@ -22,20 +22,35 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         }
 
         [TestMethod]
-        public void IsValidEmail_InvalidEmail_ReturnsFalse()
+        public void TestInvalidEmailNoDotNoAt()
         {
-            string invalidEmail1 = "invalidemail";
-            string invalidEmail2 = "invalidemail@";
-            string invalidEmail3 = "invalidemail.com";
-            string invalidEmail4 = "invalidemail@.com";
-            Assert.AreEqual(false, ProfileFormValidator.IsValidEmail(invalidEmail1));
-            Assert.AreEqual(false, ProfileFormValidator.IsValidEmail(invalidEmail2));
-            Assert.AreEqual(false, ProfileFormValidator.IsValidEmail(invalidEmail3));
-            Assert.AreEqual(false, ProfileFormValidator.IsValidEmail(invalidEmail4));
+            string invalidEmail = "invalidemail";
+            Assert.AreEqual(false, ProfileFormValidator.IsValidEmail(invalidEmail));
         }
 
         [TestMethod]
-        public void ValidateForm_MissingFields_ReturnsErrorList()
+        public void TestInvalidEmailNoDot()
+        {
+            string invalidEmail = "invalidemail@";
+            Assert.IsFalse(ProfileFormValidator.IsValidEmail(invalidEmail));
+        }
+
+        [TestMethod]
+        public void TestInvalidEmailNoAt()
+        {
+            string invalidEmail = "invalidemail.com";
+            Assert.IsFalse(ProfileFormValidator.IsValidEmail(invalidEmail));
+        }
+
+        [TestMethod]
+        public void TestInvalidEmailEmptyBetweenDotAndAt()
+        {
+            string invalidEmail = "invalidemail@.com";
+            Assert.IsFalse(ProfileFormValidator.IsValidEmail(invalidEmail));
+        }
+
+        [TestMethod]
+        public void ValidateFormReturnsEveryErrorExceptLastNameAndAge()
         {
             // Arrange
             string firstName = string.Empty;
@@ -54,13 +69,14 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
             // phone prefix and phone number are combined into one error message so they count as one error instead of two
             int numberOfExpectedErrors = 8;
 
+            double minimumAge = 16, maximumAge = 60;
             Assert.AreEqual(numberOfExpectedErrors, errors.Count);
-            Assert.IsTrue(errors.Contains("First Name"));
-            Assert.IsTrue(errors.Contains("Expected Graduation Year"));
+            Assert.IsFalse(errors.Contains("Last Name"));
+            Assert.IsFalse(errors.Contains($"Age (must be between {minimumAge}-{maximumAge})"));
         }
 
         [TestMethod]
-        public void ValidateForm_Validates_LastName_And_Age()
+        public void ValidateFormReturnsErrorLastName()
         {
             // Arrange
             string firstName = "John";
@@ -74,27 +90,50 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
             int expectedGraduationYear = 2027;
             List<WorkExperience> workExperiences = new List<WorkExperience>();
             string lastName = string.Empty;
+            double age = 25;
+
+            List<string> errorsUnderage = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
+
+            int numberOfExpectedErrors = 1;
+
+            Assert.AreEqual(numberOfExpectedErrors, errorsUnderage.Count);
+            Assert.IsTrue(errorsUnderage.Contains("Last Name"));
+        }
+
+        [TestMethod]
+        public void ValidateFormReturnsErrorAge()
+        {
+            // Arrange
+            string firstName = "John";
+            string gender = "Male";
+            string email = "validemail@gmail.com";
+            string phonePrefix = "+40";
+            string phoneNumber = "12345";
+            string country = "Romania";
+            string city = "Cluj-Napoca";
+            string university = "UBB";
+            int expectedGraduationYear = 2027;
+            List<WorkExperience> workExperiences = new List<WorkExperience>();
+            string lastName = "Doe";
 
             double minimumAge = 16, maximumAge = 60;
             double ageUnderLimit = 10;
             List<string> errorsUnderage = ProfileFormValidator.ValidateForm(firstName, lastName, ageUnderLimit, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
 
-            int numberOfExpectedErrors = 2; // Last Name and Age are the only fields that should be invalid
+            int numberOfExpectedErrors = 1;
 
             Assert.AreEqual(numberOfExpectedErrors, errorsUnderage.Count);
-            Assert.IsTrue(errorsUnderage.Contains("Last Name"));
             Assert.IsTrue(errorsUnderage.Contains($"Age (must be between {minimumAge}-{maximumAge})"));
 
             double ageOverLimit = 100;
             List<string> errorsOverAge = ProfileFormValidator.ValidateForm(firstName, lastName, ageOverLimit, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
 
             Assert.AreEqual(numberOfExpectedErrors, errorsOverAge.Count);
-            Assert.IsTrue(errorsOverAge.Contains("Last Name"));
             Assert.IsTrue(errorsUnderage.Contains($"Age (must be between {minimumAge}-{maximumAge})"));
         }
 
         [TestMethod]
-        public void Validator_Catches_Experiences_With_StartDate_After_EndDate()
+        public void ValidatorCatchesExperiencesWithStartDateAfterEndDate()
         {
             // Arrange
             string firstName = "John";
@@ -120,6 +159,64 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
                 CurrentlyWorking = false
             };
 
+            
+
+            workExperiences.Add(workExperienceWrong);
+
+            List<string> errorsWithWrongWorkExperience = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
+
+            Assert.AreEqual(1, errorsWithWrongWorkExperience.Count);
+            Assert.IsTrue(errorsWithWrongWorkExperience.Contains($"Work Experience \"{workExperienceWrong.Company}\": End date is before start date"));
+        }
+
+        [TestMethod]
+        public void ValidatorReturnsZeroErrorsWhenCurrentlyWorking()
+        {
+            string firstName = "John";
+            string lastName = "Doe";
+            double age = 25;
+            string gender = "Male";
+            string email = "validemail@gmail.com";
+            string phonePrefix = "+40";
+            string phoneNumber = "12345";
+            string country = "Romania";
+            string city = "Cluj-Napoca";
+            string university = "UBB";
+            int expectedGraduationYear = 2027;
+            List<WorkExperience> workExperiences = new List<WorkExperience>();
+
+            WorkExperience workExperienceCurrentlyWorking = new WorkExperience
+            {
+                Company = "Company A",
+                JobTitle = "Developer",
+                StartDate = new DateTimeOffset(new DateTime(2019, 1, 1)),
+                EndDate = null,
+                Description = "Worked on various projects.",
+                CurrentlyWorking = true
+            };
+
+            workExperiences.Add(workExperienceCurrentlyWorking);
+
+            List<string> errorsWithWorkExperienceCurrentlyWorking = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
+            Assert.AreEqual(0, errorsWithWorkExperienceCurrentlyWorking.Count); /// Everything should be fine
+        }
+
+        [TestMethod]
+        public void ValidatorReturnsZeroErrorsWhenEndDateAfterStartDate()
+        {
+            string firstName = "John";
+            string lastName = "Doe";
+            double age = 25;
+            string gender = "Male";
+            string email = "validemail@gmail.com";
+            string phonePrefix = "+40";
+            string phoneNumber = "12345";
+            string country = "Romania";
+            string city = "Cluj-Napoca";
+            string university = "UBB";
+            int expectedGraduationYear = 2027;
+            List<WorkExperience> workExperiences = new List<WorkExperience>();
+
             WorkExperience workExperienceRight = new WorkExperience
             {
                 Company = "Company A",
@@ -130,18 +227,10 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
                 CurrentlyWorking = false
             };
 
-            workExperiences.Add(workExperienceWrong);
-
-            List<string> errorsWithWrongWorkExperience = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
-
-            Assert.AreEqual(1, errorsWithWrongWorkExperience.Count);
-            Assert.IsTrue(errorsWithWrongWorkExperience.Contains($"Work Experience \"{workExperienceWrong.Company}\": End date is before start date"));
-
-            workExperiences.Clear();
             workExperiences.Add(workExperienceRight);
 
-            List<string> errorsWithRightWorkExperience = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
-            Assert.AreEqual(0, errorsWithRightWorkExperience.Count); /// Everything should be fine.
+            List<string> errorsWithWorkExperienceCurrentlyWorking = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
+            Assert.AreEqual(0, errorsWithWorkExperienceCurrentlyWorking.Count); /// Everything should be fine
         }
     }
 }
