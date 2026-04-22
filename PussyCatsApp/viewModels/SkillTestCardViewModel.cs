@@ -1,13 +1,14 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.models;
+using PussyCatsApp.Models;
+using PussyCatsApp.services;
+using PussyCatsApp.utilities;
 
 namespace PussyCatsApp.viewModels
 {
@@ -49,14 +50,16 @@ namespace PussyCatsApp.viewModels
         public void RetakeCommand()
         {
             if (!isRetakeEnabled)
+            {
                 return;
+            }
 
-            int newScore = GenerateRandomScore();
+            int newTestScore = Helpers.GenerateRandomScore(0, 100);
 
-            badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newScore);
+            badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newTestScore);
 
             skillTest.AchievedDate = DateOnly.FromDateTime(DateTime.Now);
-            skillTest.Score = newScore;
+            skillTest.Score = newTestScore;
 
             CheckRetakeEligible();
             UpdateBadge();
@@ -64,18 +67,12 @@ namespace PussyCatsApp.viewModels
             OnPropertyChanged(nameof(Badge));
             OnPropertyChanged(nameof(SkillTest));
             OnPropertyChanged(nameof(IsRetakeEnabled));
-            userProfileViewModel.RecalculateLevelCommand();  
+            userProfileViewModel.RecalculateLevelCommand();
         }
 
         public void UpdateBadge()
         {
             badge = Badge.assignTier(skillTest.Score);
-        }
-
-        private int GenerateRandomScore()
-        {
-            Random random = new Random();
-            return random.Next(0, 101);
         }
     }
 }

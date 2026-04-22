@@ -12,9 +12,9 @@ namespace PussyCatsApp.viewModels
     /// </summary>
     public class UploadDocumentViewModel
     {
-        private string documentName;
-        private string selectedFilePath;
-        private string errorMessage;
+        private string documentName = string.Empty;
+        private string selectedFilePath = string.Empty;
+        private string errorMessage = string.Empty;
         private readonly IDocumentService documentService;
         private readonly int userId;
 

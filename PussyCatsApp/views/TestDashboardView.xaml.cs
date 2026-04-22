@@ -87,7 +87,7 @@ namespace PussyCatsApp.views
 
         private void GoToAllTestsButton_Click(object sender, RoutedEventArgs e)
         {
-            testDashboardViewModel.goToAllTestsCommand();
+            testDashboardViewModel.GoToAllTestsCommand();
         }
     }
 }
