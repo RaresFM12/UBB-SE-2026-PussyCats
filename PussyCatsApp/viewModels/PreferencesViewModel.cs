@@ -19,6 +19,8 @@ namespace PussyCatsApp.viewModels
         private int currentUserId;
         private IPreferenceService preferencesService;
 
+        private const int MaximumJobRolesAllowed = 3;
+
         public PreferencesViewModel(IPreferenceService preferencesService, int userId)
         {
             this.preferencesService = preferencesService;
@@ -69,13 +71,13 @@ namespace PussyCatsApp.viewModels
             }
             else
             {
-                if (selectedJobRoles.Count < 3)
+                if (selectedJobRoles.Count < MaximumJobRolesAllowed)
                 {
                     selectedJobRoles.Add(role);
                 }
                 else
                 {
-                    errorMessage = "You can select a maximum of 3 job roles.";
+                    errorMessage = $"You can select a maximum of {MaximumJobRolesAllowed} job roles.";
                 }
             }
         }
