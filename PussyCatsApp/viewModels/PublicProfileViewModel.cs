@@ -1,10 +1,11 @@
-﻿using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.models;
+using PussyCatsApp.Models;
+using PussyCatsApp.services;
 
 namespace PussyCatsApp.viewModels
 {
@@ -13,10 +14,10 @@ namespace PussyCatsApp.viewModels
         private readonly UserProfileService userProfileService;
 
         public UserProfile? Profile { get; private set; }
-        public List<SkillTest> Tests { get; private set; } = new();
+        public List<SkillTest> Tests { get; private set; } = new ();
 
         public bool IsAvailable { get; private set; }
-        public string ErrorMessage { get; private set; } = "";
+        public string ErrorMessage { get; private set; } = string.Empty;
 
         public PublicProfileViewModel(UserProfileService userProfileService)
         {
@@ -46,8 +47,11 @@ namespace PussyCatsApp.viewModels
         }
         public string GetAvailabilityMessage()
         {
-            return IsAvailable ? "" : "Profile Unavailable";
+            if (IsAvailable)
+            {
+                return string.Empty;
+            }
+            return "Profile Unavailable";
         }
-
     }
 }

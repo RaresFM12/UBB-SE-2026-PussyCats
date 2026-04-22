@@ -13,11 +13,11 @@ namespace PussyCatsApp.viewModels
         private readonly IUserProfileService userProfileService;
         public int UserId { get; set; }
 
-        private string _statusText = string.Empty;
+        private string statusText = string.Empty;
         public string StatusText
         {
-            get => _statusText;
-            set => SetProperty(ref _statusText, value);
+            get => statusText;
+            set => SetProperty(ref statusText, value);
         }
 
         private bool isLoading = false;
@@ -35,7 +35,8 @@ namespace PussyCatsApp.viewModels
 
         public async Task LoadAndRenderCVAsync()
         {
-            if (UserId <= 0)
+            int minimumValidUserId = 1; // Assuming user IDs start from 1
+            if (UserId < minimumValidUserId)
             {
                 return;
             }
