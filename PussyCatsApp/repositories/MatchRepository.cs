@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using PussyCatsApp.Configuration;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
 namespace PussyCatsApp.Repositories
 {
@@ -16,7 +16,7 @@ namespace PussyCatsApp.Repositories
         private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
 
         // public MatchRepository() {}
-        public List<models.Match> GetMatchesByUserId(int userId)
+        public List<Models.Match> GetMatchesByUserId(int userId)
         {
             var matches = new List<Match>();
 

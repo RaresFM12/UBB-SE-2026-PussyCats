@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PussyCatsApp.models;
-using PussyCatsApp.services;
+using PussyCatsApp.Models;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class CompatibilityOverviewViewModel : INotifyPropertyChanged
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PussyCatsApp.storage
+namespace PussyCatsApp.Storage
 {
     public class LocalFileStorageService : ILocalFileStorageService
     {
@@ -35,7 +35,9 @@ namespace PussyCatsApp.storage
             string fullPath = Path.Combine(AppContext.BaseDirectory, relativePath);
 
             if (File.Exists(fullPath))
+            {
                 File.Delete(fullPath);
+            }
         }
 
         public string GetFilePath(string relativePath)

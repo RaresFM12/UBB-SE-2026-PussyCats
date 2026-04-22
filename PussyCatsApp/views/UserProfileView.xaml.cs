@@ -1,21 +1,25 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.models;
-using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
-using PussyCatsApp.viewModels;
 using System;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
+using PussyCatsApp.ViewModels;
 
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// View for displaying and managing the user's profile, including profile details,
+    /// avatar, navigation, and related actions.
+    /// </summary>
     public sealed partial class UserProfileView : Page
     {
         private int currentUserId = 1;
-        public UserProfileViewModel viewModel { get; private set; }
-        private bool _isBinding = false;
+        public UserProfileViewModel ViewModel { get; private set; }
+        private bool isBinding = false;
 
         public UserProfileView()
         {
@@ -25,10 +29,10 @@ namespace PussyCatsApp.views
             UserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
             IImageStorageService imageStorageService = new ImageStorageService();
             ICompletenessService completenessService = new CompletenessService();
-            viewModel = new UserProfileViewModel(userProfileService, imageStorageService, completenessService);
+            ViewModel = new UserProfileViewModel(userProfileService, imageStorageService, completenessService);
 
-            viewModel.OnLevelUpdated += renderLevelDisplay;
-            this.DataContext = viewModel;
+            ViewModel.OnLevelUpdated += RenderLevelDisplay;
+            this.DataContext = ViewModel;
 
             btnEdit.Click += OnEditProfileClick;
             btnOldTests.Click += OnGoToOldTestsClick;
@@ -44,57 +48,59 @@ namespace PussyCatsApp.views
 
         private async void BindData()
         {
-            _isBinding = true;
+            isBinding = true;
 
             int dummyUserId = 1;
-            await viewModel.LoadUserAsync(dummyUserId);
+            await ViewModel.LoadUserAsync(dummyUserId);
 
-            if (!string.IsNullOrEmpty(viewModel.ErrorMessage))
+            if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
             {
-                lblError.Text = viewModel.ErrorMessage;
-                _isBinding = false;
+                lblError.Text = ViewModel.ErrorMessage;
+                isBinding = false;
                 return;
             }
 
-            if (viewModel.UserProfile != null)
+            if (ViewModel.UserProfile != null)
             {
-                lblFirstName.Text = $"First Name: {viewModel.UserProfile.FirstName}";
-                lblLastName.Text = $"Last Name: {viewModel.UserProfile.LastName}";
-                lblEmail.Text = $"Email: {viewModel.UserProfile.Email}";
-                lblPhone.Text = $"Phone: {viewModel.UserProfile.PhoneNumber}";
-                lblGithubAccount.Text = $"GitHub: {viewModel.UserProfile.GitHub}";
-                lblLinkedinAccount.Text = $"LinkedIn: {viewModel.UserProfile.LinkedIn}";
+                lblFirstName.Text = $"First Name: {ViewModel.UserProfile.FirstName}";
+                lblLastName.Text = $"Last Name: {ViewModel.UserProfile.LastName}";
+                lblEmail.Text = $"Email: {ViewModel.UserProfile.Email}";
+                lblPhone.Text = $"Phone: {ViewModel.UserProfile.PhoneNumber}";
+                lblGithubAccount.Text = $"GitHub: {ViewModel.UserProfile.GitHub}";
+                lblLinkedinAccount.Text = $"LinkedIn: {ViewModel.UserProfile.LinkedIn}";
 
-                string displayGender = viewModel.UserProfile.Gender;
+                string displayGender = ViewModel.UserProfile.Gender;
                 if (string.IsNullOrEmpty(displayGender) || (displayGender != "Male" && displayGender != "Female"))
+                {
                     displayGender = "Not specified";
+                }
 
-                Debug.WriteLine($"[BindData] ErrorMessage: '{viewModel.ErrorMessage}'");
-                Debug.WriteLine($"[BindData] userProfile is null: {viewModel.UserProfile == null}");
+                Debug.WriteLine($"[BindData] ErrorMessage: '{ViewModel.ErrorMessage}'");
+                Debug.WriteLine($"[BindData] userProfile is null: {ViewModel.UserProfile == null}");
 
                 lblGender.Text = $"Gender: {displayGender}";
-                lblUniversity.Text = $"University: {viewModel.UserProfile.University}";
-                lblCountry.Text = $"Country: {viewModel.UserProfile.Country}";
-                //lblAddress.Text = $"Address: {viewModel.UserProfile.Address}";
-                lblCity.Text = $"City: {viewModel.UserProfile.City}";
-                lblGraduationYear.Text = $"Graduation Year: {viewModel.UserProfile.ExpectedGraduationYear}";
-                lblFreshness.Text = viewModel.FreshnessText;
+                lblUniversity.Text = $"University: {ViewModel.UserProfile.University}";
+                lblCountry.Text = $"Country: {ViewModel.UserProfile.Country}";
+                // lblAddress.Text = $"Address: {ViewModel.UserProfile.Address}";
+                lblCity.Text = $"City: {ViewModel.UserProfile.City}";
+                lblGraduationYear.Text = $"Graduation Year: {ViewModel.UserProfile.ExpectedGraduationYear}";
+                lblFreshness.Text = ViewModel.FreshnessText;
 
                 string testResultDisplay = "Not taken yet";
-                if (!string.IsNullOrEmpty(viewModel.UserProfile.PersonalityTestResult))
+                if (!string.IsNullOrEmpty(ViewModel.UserProfile.PersonalityTestResult))
                 {
                     // Try parsing the string to the JobRole enum
-                    if (Enum.TryParse<JobRole>(viewModel.UserProfile.PersonalityTestResult, out var jobRole))
+                    if (Enum.TryParse<JobRole>(ViewModel.UserProfile.PersonalityTestResult, out var jobRole))
                     {
-                        var converter = new converters.JobRoleToDisplayNameConverter();
+                        var converter = new Converters.JobRoleToDisplayNameConverter();
 
                         // Convert the enum value to the display string
                         testResultDisplay = converter.Convert(jobRole, typeof(string), null, string.Empty).ToString();
                     }
                     else
                     {
-                        // Fallback if the string couldn't be parsed 
-                        testResultDisplay = viewModel.UserProfile.PersonalityTestResult;
+                        // Fallback if the string couldn't be parsed
+                        testResultDisplay = ViewModel.UserProfile.PersonalityTestResult;
                     }
                 }
                 lblPersonalityTestResult.Text = $"Personality Test Result: {testResultDisplay}";
@@ -104,20 +110,20 @@ namespace PussyCatsApp.views
                 XpProgressBar.Value = 150;
                 XpCountText.Text = "150 / 250 XP";
 
-                chkAccountStatus.IsOn = viewModel.UserProfile.ActiveAccount;
+                chkAccountStatus.IsOn = ViewModel.UserProfile.ActiveAccount;
 
-                if (!string.IsNullOrEmpty(viewModel.UserProfile.ProfilePicture))
+                if (!string.IsNullOrEmpty(ViewModel.UserProfile.ProfilePicture))
                 {
                     pbAvatar.ProfilePicture =
                         new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
-                            new Uri(viewModel.UserProfile.ProfilePicture));
+                            new Uri(ViewModel.UserProfile.ProfilePicture));
                 }
                 else
                 {
                     pbAvatar.ProfilePicture = null;
                 }
 
-                if (!string.IsNullOrEmpty(viewModel.UserProfile.PersonalityTestResult))
+                if (!string.IsNullOrEmpty(ViewModel.UserProfile.PersonalityTestResult))
                 {
                     btnPersonalityTest.Content = "Retake Personality Test";
                 }
@@ -126,32 +132,39 @@ namespace PussyCatsApp.views
                     btnPersonalityTest.Content = "Take Personality Test";
                 }
 
-                completenessBar.Update(viewModel.CompletenessPercentage, viewModel.NextEmptyFieldPrompt);
+                completenessBar.Update(ViewModel.CompletenessPercentage, ViewModel.NextEmptyFieldPrompt);
 
-                viewModel.RecalculateLevelCommand();
-                renderLevelDisplay();
+                ViewModel.RecalculateLevelCommand();
+                RenderLevelDisplay();
             }
             else
             {
-                
                 return;
             }
 
-            _isBinding = false;
+            isBinding = false;
         }
 
-        private void renderLevelDisplay()
+        private void RenderLevelDisplay()
         {
-            if (viewModel.UserProfile == null) return;          
-            if (viewModel.UserProfile.UserLevel == null) return;
-            LevelTitleText.Text = $"Level {viewModel.UserProfile.UserLevel.LevelNumber} — {viewModel.UserProfile.UserLevel.Title}";
+            if (ViewModel.UserProfile == null)
+            {
+                return;
+            }
 
-            XpProgressBar.Value = viewModel.UserProfile.UserLevel.getProgressPercent(viewModel.TotalXP);
+            if (ViewModel.UserProfile.UserLevel == null)
+            {
+                return;
+            }
 
-            int xpToNext = viewModel.UserProfile.UserLevel.getXPToNextLevel(viewModel.TotalXP);
+            LevelTitleText.Text = $"Level {ViewModel.UserProfile.UserLevel.LevelNumber} — {ViewModel.UserProfile.UserLevel.Title}";
+
+            XpProgressBar.Value = ViewModel.UserProfile.UserLevel.GetProgressPercent(ViewModel.TotalXP);
+
+            int xpToNext = ViewModel.UserProfile.UserLevel.GetXPToNextLevel(ViewModel.TotalXP);
             XpCountText.Text = xpToNext > 0
-                ? $"{viewModel.TotalXP} XP — {xpToNext} XP needed for next level"
-                : $"{viewModel.TotalXP} XP — Max level reached!";
+                ? $"{ViewModel.TotalXP} XP — {xpToNext} XP needed for next level"
+                : $"{ViewModel.TotalXP} XP — Max level reached!";
         }
 
         private async void OnAvatarUploadClick(object sender, RoutedEventArgs e)
@@ -171,7 +184,7 @@ namespace PussyCatsApp.views
             {
                 using (var stream = await file.OpenStreamForReadAsync())
                 {
-                    viewModel.UploadAvatarCommand(stream, file.Name);
+                    ViewModel.UploadAvatarCommand(stream, file.Name);
                     BindData();
                 }
             }
@@ -179,26 +192,29 @@ namespace PussyCatsApp.views
 
         private void OnAvatarRemoveClick(object sender, RoutedEventArgs e)
         {
-            viewModel.RemoveAvatarCommand();
+            ViewModel.RemoveAvatarCommand();
             BindData();
         }
 
         private void OnStatusToggle(object sender, RoutedEventArgs e)
         {
-            if (_isBinding) return;
-
-            if (viewModel?.UserProfile != null)
+            if (isBinding)
             {
-                viewModel.ToggleAccountStatusCommand();
+                return;
+            }
+
+            if (ViewModel?.UserProfile != null)
+            {
+                ViewModel.ToggleAccountStatusCommand();
                 BindData();
             }
         }
 
         private void OnEditProfileClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel.UserProfile != null)
+            if (ViewModel.UserProfile != null)
             {
-                Frame.Navigate(typeof(ProfileFormView), viewModel.UserProfile);
+                Frame.Navigate(typeof(ProfileFormView), ViewModel.UserProfile);
             }
             else
             {
@@ -208,28 +224,32 @@ namespace PussyCatsApp.views
 
         private void OnPreviewCVClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel.UserProfile != null)
+            if (ViewModel.UserProfile != null)
             {
-                Frame.Navigate(typeof(ExportCVView), viewModel.UserProfile.UserId);
+                Frame.Navigate(typeof(ExportCVView), ViewModel.UserProfile.UserId);
             }
         }
 
         private void OnGoToOldTestsClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel.UserProfile == null)
+            if (ViewModel.UserProfile == null)
+            {
                 return;
+            }
 
-            //viewModel.UserProfile.UserId = currentUserId;
-            this.Frame.Navigate(typeof(TestDashboardView), viewModel.UserProfile);
+            // ViewModel.UserProfile.UserId = currentUserId;
+            this.Frame.Navigate(typeof(TestDashboardView), ViewModel.UserProfile);
         }
 
         private void OnSeePublicProfileClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel.UserProfile == null)
+            if (ViewModel.UserProfile == null)
+            {
                 return;
-            this.Frame.Navigate(typeof(PublicProfileView), viewModel.UserProfile);
+            }
+            this.Frame.Navigate(typeof(PublicProfileView), ViewModel.UserProfile);
         }
-        
+
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(CompatibilityOverviewView), currentUserId);
@@ -237,7 +257,7 @@ namespace PussyCatsApp.views
 
         private void OnPersonalityTestClick(object sender, RoutedEventArgs e)
         {
-            viewModel.TakePersonalityTestCommand();
+            ViewModel.TakePersonalityTestCommand();
         }
 
         private void OnViewDocumentsClick(object sender, RoutedEventArgs e)

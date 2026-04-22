@@ -1,8 +1,8 @@
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
-using System;
 
-namespace PussyCatsApp.converters
+namespace PussyCatsApp.Converters
 {
     public class ObjectToVisibilityConverter : IValueConverter
     {

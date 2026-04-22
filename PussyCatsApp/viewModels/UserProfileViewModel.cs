@@ -1,18 +1,21 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
-using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
-using PussyCatsApp.views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
+using PussyCatsApp.Views;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for displaying and managing a user's profile,
+    /// including profile data, avatar, account status, and related operations.
+    /// </summary>
     public partial class UserProfileViewModel : ObservableObject
     {
         private IUserProfileService profileService;
@@ -32,10 +35,10 @@ namespace PussyCatsApp.viewModels
 
         public bool IsLoading { get; set; }
         public int CompletenessPercentage { get; set; }
-        public string NextEmptyFieldPrompt { get; set; } = "";
+        public string NextEmptyFieldPrompt { get; set; } = string.Empty;
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
-        public string ErrorMessage { get; set; } = "";
-        public string FreshnessText { get; set; } = "";
+        public string ErrorMessage { get; set; } = string.Empty;
+        public string FreshnessText { get; set; } = string.Empty;
         public int TotalXP { get; private set; } = 0;
 
         public UserProfileViewModel(IUserProfileService userProfileService, IImageStorageService imageStorageService, ICompletenessService completenessService)
@@ -49,25 +52,25 @@ namespace PussyCatsApp.viewModels
         public event Action OnLevelUpdated;
         public void RecalculateLevelCommand()
         {
-            if (UserProfile == null) return;
+            if (UserProfile == null)
+            {
+                return;
+            }
 
             try
             {
-                TotalXP = profileService.RecalculateLevel(UserProfile); 
+                TotalXP = profileService.RecalculateLevel(UserProfile);
                 OnLevelUpdated?.Invoke();
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ErrorMessage = $"Error recalculating user level: {ex.Message}";
             }
-            
         }
-        
 
         public async Task LoadUserAsync(int userId)
         {
-            ErrorMessage = "";
+            ErrorMessage = string.Empty;
             IsLoading = true;
             try
             {
@@ -75,7 +78,7 @@ namespace PussyCatsApp.viewModels
 
                 if (UserProfile != null)
                 {
-                    FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(UserProfile.LastUpdated);
+                    FreshnessText = Utilities.TimeFormatter.CalculateFreshnessLabel(UserProfile.LastUpdated);
 
                     CompletenessPercentage = completenessService.CalculateCompleteness(UserProfile);
                     NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(UserProfile);
@@ -93,7 +96,10 @@ namespace PussyCatsApp.viewModels
 
         public void ToggleAccountStatusCommand()
         {
-            if (UserProfile == null) return;
+            if (UserProfile == null)
+            {
+                return;
+            }
             string currentStatusStr = UserProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
             profileService.ToggleAccountStatus(UserProfile.UserId, currentStatusStr);
             UserProfile.ActiveAccount = !UserProfile.ActiveAccount;
@@ -101,7 +107,10 @@ namespace PussyCatsApp.viewModels
 
         public void UploadAvatarCommand(Stream fileStream, string fileName)
         {
-            if (UserProfile == null) return;
+            if (UserProfile == null)
+            {
+                return;
+            }
             try
             {
                 string newPath = imageStorageService.SaveImage(fileStream, fileName);
@@ -128,7 +137,9 @@ namespace PussyCatsApp.viewModels
         public string GetPersonalityButtonText()
         {
             if (UserProfile != null && string.IsNullOrEmpty(UserProfile.PersonalityTestResult))
+            {
                 return "TAKE PERSONALITY TEST";
+            }
             return "RETAKE PERSONALITY TEST";
         }
         public void TakePersonalityTestCommand()

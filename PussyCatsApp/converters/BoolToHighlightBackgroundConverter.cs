@@ -1,9 +1,9 @@
+using System;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
-using System;
 
-namespace PussyCatsApp.converters
+namespace PussyCatsApp.Converters
 {
     public class BoolToHighlightBackgroundConverter : IValueConverter
     {

@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public enum AccountStatus
     {
-        ACTIVE,
-        INACTIVE
+        /// <summary>
+        /// The account is active.
+        /// </summary>
+        Active,
+
+        /// <summary>
+        /// The account is inactive.
+        /// </summary>
+        Inactive
     }
-
-
-
-
 }

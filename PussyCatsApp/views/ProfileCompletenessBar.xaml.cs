@@ -1,6 +1,9 @@
 using Microsoft.UI.Xaml.Controls;
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// UserControl for displaying a profile completeness progress bar and prompt text.
+    /// </summary>
     public sealed partial class ProfileCompletenessBar : UserControl
     {
         public ProfileCompletenessBar()

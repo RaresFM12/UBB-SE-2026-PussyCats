@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PussyCatsApp.Configuration;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
 
-using PussyCatsApp.models;
-using PussyCatsApp.services;
-
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class PreferencesViewModel
     {
@@ -19,9 +17,11 @@ namespace PussyCatsApp.viewModels
         private int currentUserId;
         private IPreferenceService preferencesService;
 
-        public PreferencesViewModel(IPreferenceService preferencesService, int userId)
+        public PreferencesViewModel(int userId)
         {
-            this.preferencesService = preferencesService;
+            var repository = new PreferenceRepository(DatabaseConfiguration.GetConnectionString());
+            preferencesService = new PreferenceService(repository);
+
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();
@@ -61,7 +61,7 @@ namespace PussyCatsApp.viewModels
 
         public void ToggleJobRole(JobRole role)
         {
-            errorMessage = string.Empty; // Clear any previous errors
+            errorMessage = string.Empty;
 
             if (selectedJobRoles.Contains(role))
             {
@@ -116,6 +116,11 @@ namespace PussyCatsApp.viewModels
         public WorkMode GetSelectedWorkMode()
         {
             return selectedWorkMode;
+        }
+
+        public string GetPreferredLocation()
+        {
+            return preferredLocation;
         }
 
         public List<string> GetLocationSuggestions()

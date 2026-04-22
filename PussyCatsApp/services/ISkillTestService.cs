@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using PussyCatsApp.models;
 using PussyCatsApp.Models;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public interface ISkillTestService
     {

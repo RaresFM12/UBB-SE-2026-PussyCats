@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class UserLevel
     {
@@ -29,34 +29,47 @@ namespace PussyCatsApp.models
             NextLevelXP = 100;
         }
 
-
-        public static UserLevel calculateLevel(int xp)
+        public static UserLevel CalculateLevel(int xp)
         {
             if (xp >= 800)
+            {
                 return new UserLevel(5, "Expert", 800, 0);
+            }
             else if (xp >= 500)
+            {
                 return new UserLevel(4, "Specialist", 500, 800);
+            }
             else if (xp >= 250)
+            {
                 return new UserLevel(3, "Practitioner", 250, 500);
+            }
             else if (xp >= 100)
+            {
                 return new UserLevel(2, "Apprentice", 100, 250);
+            }
             else
+            {
                 return new UserLevel(1, "Newcomer", 0, 100);
+            }
         }
 
-        public int getProgressPercent(int totalXP)
+        public int GetProgressPercent(int totalXP)
         {
             if (NextLevelXP == 0)
+            {
                 return 100;
+            }
 
             double progress = (double)(totalXP - XpRequired) / (NextLevelXP - XpRequired) * 100;
             return (int)progress;
         }
 
-        public int getXPToNextLevel(int totalXP)
+        public int GetXPToNextLevel(int totalXP)
         {
             if (NextLevelXP == 0)
+            {
                 return 0;
+            }
 
             return NextLevelXP - totalXP;
         }

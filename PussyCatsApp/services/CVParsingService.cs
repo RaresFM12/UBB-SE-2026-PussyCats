@@ -1,4 +1,3 @@
-using PussyCatsApp.models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,8 +5,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class CVParsingService : ICVParsingService
     {
@@ -54,7 +54,9 @@ namespace PussyCatsApp.services
         private UserProfile MapCVDataToProfile(CVData cvData)
         {
             if (cvData == null)
+            {
                 return new UserProfile();
+            }
 
             var profile = new UserProfile
             {
@@ -92,12 +94,15 @@ namespace PussyCatsApp.services
         private List<string> ProcessSkills(List<string> skills)
         {
             if (skills == null || !skills.Any())
+            {
                 return new List<string>();
+            }
 
+            // Max 30 skills
             var processedSkills = new List<string>();
             var addedSkills = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var skill in skills.Take(30)) // Max 30 skills
+            foreach (var skill in skills.Take(30))
             {
                 var sanitized = SanitizeString(skill, 60);
                 if (!string.IsNullOrWhiteSpace(sanitized) && addedSkills.Add(sanitized))
@@ -115,7 +120,9 @@ namespace PussyCatsApp.services
         private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
         {
             if (experiences == null || !experiences.Any())
+            {
                 return new List<WorkExperience>();
+            }
 
             return experiences.Take(10) // Max 10 experiences
                 .Select(we => new WorkExperience
@@ -137,7 +144,9 @@ namespace PussyCatsApp.services
         private List<Project> ProcessProjects(List<Project> projects)
         {
             if (projects == null || !projects.Any())
+            {
                 return new List<Project>();
+            }
 
             return projects.Take(10) // Max 10 projects
                 .Select(p => new Project
@@ -157,7 +166,9 @@ namespace PussyCatsApp.services
         private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
         {
             if (activities == null || !activities.Any())
+            {
                 return new List<ExtraCurricularActivity>();
+            }
 
             return activities.Take(10) // Max 10 activities
                 .Select(a => new ExtraCurricularActivity
@@ -178,12 +189,16 @@ namespace PussyCatsApp.services
         private string SanitizeString(string input, int maxLength)
         {
             if (string.IsNullOrWhiteSpace(input))
+            {
                 return string.Empty;
+            }
 
             input = input.Trim();
 
             if (input.Length > maxLength)
+            {
                 input = input.Substring(0, maxLength);
+            }
 
             return input;
         }
@@ -194,16 +209,22 @@ namespace PussyCatsApp.services
         private string SanitizeEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
+            {
                 return string.Empty;
+            }
 
             email = email.Trim().ToLowerInvariant();
 
             if (email.Length > 254)
+            {
                 return string.Empty;
+            }
 
             // Basic email validation
             if (!email.Contains('@') || !email.Contains('.'))
+            {
                 return string.Empty;
+            }
 
             return email;
         }
@@ -214,7 +235,9 @@ namespace PussyCatsApp.services
         private int ValidateAge(int age)
         {
             if (age < 16 || age > 60)
+            {
                 return 0;
+            }
             return age;
         }
 
@@ -224,17 +247,23 @@ namespace PussyCatsApp.services
         private string ValidateGender(string gender)
         {
             if (string.IsNullOrWhiteSpace(gender))
+            {
                 return string.Empty;
+            }
 
             gender = gender.Trim();
 
             if (gender.Equals("Male", StringComparison.OrdinalIgnoreCase) ||
                 gender.Equals("M", StringComparison.OrdinalIgnoreCase))
+            {
                 return "Male";
+            }
 
             if (gender.Equals("Female", StringComparison.OrdinalIgnoreCase) ||
                 gender.Equals("F", StringComparison.OrdinalIgnoreCase))
+            {
                 return "Female";
+            }
 
             return string.Empty;
         }
@@ -245,13 +274,17 @@ namespace PussyCatsApp.services
         private string FormatPhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
                 return string.Empty;
+            }
 
             // Remove all non-digit characters except + at the beginning
             phoneNumber = phoneNumber.Trim();
 
             if (phoneNumber.Length > 15)
+            {
                 return string.Empty;
+            }
 
             return phoneNumber;
         }
@@ -264,7 +297,9 @@ namespace PussyCatsApp.services
             int currentYear = DateTime.Now.Year;
 
             if (year < currentYear || year > currentYear + 10)
+            {
                 return 0;
+            }
 
             return year;
         }
@@ -275,14 +310,17 @@ namespace PussyCatsApp.services
         private DateTimeOffset ValidateDate(DateTimeOffset? date)
         {
             if (!date.HasValue)
+            {
                 return DateTimeOffset.Now;
+            }
 
             var minDate = new DateTimeOffset(new DateTime(1980, 1, 1));
             var maxDate = DateTimeOffset.Now.AddYears(1);
 
             if (date < minDate || date > maxDate)
+            {
                 return DateTimeOffset.Now;
-
+            }
             return date.Value;
         }
     }

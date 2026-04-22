@@ -1,8 +1,8 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using PussyCatsApp.Services;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     /// <summary>
     /// ViewModel for the document list panel.

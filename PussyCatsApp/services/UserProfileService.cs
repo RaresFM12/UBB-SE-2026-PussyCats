@@ -1,15 +1,14 @@
-using PussyCatsApp.Models;
-using PussyCatsApp.models;
-using PussyCatsApp.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
-    public class UserProfileService: IUserProfileService
+    public class UserProfileService : IUserProfileService
     {
         private readonly ISkillTestRepository skillTestRepository;
         private readonly IUserProfileRepository userProfileRepository;
@@ -35,7 +34,9 @@ namespace PussyCatsApp.services
             UserProfile userProfile = userProfileRepository.GetProfileById(userId);
 
             if (userProfile == null)
+            {
                 throw new Exception($"No profile found for ID {userId}");
+            }
 
             return userProfile.ActiveAccount;
         }
@@ -61,7 +62,10 @@ namespace PussyCatsApp.services
 
         public string GenerateParsedCVText(UserProfile profile)
         {
-            if (profile == null) return string.Empty;
+            if (profile == null)
+            {
+                return string.Empty;
+            }
 
             var sb = new StringBuilder();
             sb.AppendLine($"{profile.FirstName} {profile.LastName}".Trim());
@@ -71,29 +75,29 @@ namespace PussyCatsApp.services
         }
         public void SaveProfile(int userId, UserProfile profile)
         {
-
             profile.ParsedCV = GenerateParsedCVText(profile);
             userProfileRepository.Save(userId, profile);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
-
         }
 
         public int RecalculateLevel(UserProfile profile)
         {
-            if (profile == null) return 0;
+            if (profile == null)
+            {
+                return 0;
+            }
+
             int totalXP = 0;
 
-           
             List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
             foreach (SkillTest test in tests)
             {
                 totalXP += test.GetExperiencePoints();
             }
 
-            profile.UserLevel = UserLevel.calculateLevel(totalXP);
+            profile.UserLevel = UserLevel.CalculateLevel(totalXP);
 
             return totalXP;
-            
         }
     }
 }

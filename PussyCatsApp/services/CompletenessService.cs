@@ -1,13 +1,13 @@
-﻿using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
-    public class CompletenessService: ICompletenessService
+    public class CompletenessService : ICompletenessService
     {
-        private static readonly List<(string Label, Func<UserProfile, bool> IsFilled)> ProfileFields = new()
+        private static readonly List<(string Label, Func<UserProfile, bool> IsFilled)> ProfileFields = new ()
         {
             ("First Name",        p => !string.IsNullOrWhiteSpace(p.FirstName)),
             ("Last Name",         p => !string.IsNullOrWhiteSpace(p.LastName)),
@@ -37,7 +37,10 @@ namespace PussyCatsApp.services
         /// </summary>
         public int CalculateCompleteness(UserProfile profile)
         {
-            if (profile == null) return 0;
+            if (profile == null)
+            {
+                return 0;
+            }
 
             int filled = ProfileFields.Count(f => f.IsFilled(profile));
             return (int)Math.Round((double)filled / ProfileFields.Count * 100);
@@ -49,13 +52,19 @@ namespace PussyCatsApp.services
         /// </summary>
         public string GetNextEmptyFieldPrompt(UserProfile profile)
         {
-            if (profile == null) return "";
+            if (profile == null)
+            {
+                return string.Empty;
+            }
 
             int currentFilled = ProfileFields.Count(f => f.IsFilled(profile));
             int total = ProfileFields.Count;
 
             var nextEmpty = ProfileFields.FirstOrDefault(f => !f.IsFilled(profile));
-            if (nextEmpty.Label == null) return "Your profile is 100% complete!";
+            if (nextEmpty.Label == null)
+            {
+                return "Your profile is 100% complete!";
+            }
 
             int nextPercentage = (int)Math.Round((double)(currentFilled + 1) / total * 100);
             return $"Add your {nextEmpty.Label} to reach {nextPercentage}% completeness!";
