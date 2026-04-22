@@ -159,9 +159,9 @@ namespace PussyCatsApp.Views
 
             LevelTitleText.Text = $"Level {ViewModel.UserProfile.UserLevel.LevelNumber} — {ViewModel.UserProfile.UserLevel.Title}";
 
-            XpProgressBar.Value = ViewModel.UserProfile.UserLevel.GetProgressPercent(ViewModel.TotalXP);
+            XpProgressBar.Value = ViewModel.UserProfile.UserLevel.GetLevelProgressPercent(ViewModel.TotalXP);
 
-            int xpToNext = ViewModel.UserProfile.UserLevel.GetXPToNextLevel(ViewModel.TotalXP);
+            int xpToNext = ViewModel.UserProfile.UserLevel.GetXpToNextLevel(ViewModel.TotalXP);
             XpCountText.Text = xpToNext > 0
                 ? $"{ViewModel.TotalXP} XP — {xpToNext} XP needed for next level"
                 : $"{ViewModel.TotalXP} XP — Max level reached!";
