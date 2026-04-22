@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Printing.PrintTicket;
 using Windows.System.Profile;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class UserProfile
     {
@@ -19,7 +19,7 @@ namespace PussyCatsApp.models
         public string Gender { get; set; } = string.Empty; // Male, Female
         public string Country { get; set; } = string.Empty;
 
-        //The city field is not a part of our app
+        // The city field is not a part of our app
         public string City { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

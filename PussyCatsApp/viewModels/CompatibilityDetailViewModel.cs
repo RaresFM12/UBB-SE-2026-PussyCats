@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.utilities;
 
 namespace PussyCatsApp.viewModels

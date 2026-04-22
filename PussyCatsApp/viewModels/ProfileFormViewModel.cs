@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
 using CommunityToolkit.Mvvm.ComponentModel;

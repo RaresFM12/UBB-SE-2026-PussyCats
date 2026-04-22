@@ -1,5 +1,5 @@
 ﻿using System;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.services;
 using PussyCatsApp.utilities;
 

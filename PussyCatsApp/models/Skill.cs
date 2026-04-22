@@ -1,6 +1,6 @@
 using System;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class Skill
     {

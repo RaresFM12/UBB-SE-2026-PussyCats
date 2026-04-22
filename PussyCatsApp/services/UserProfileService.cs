@@ -1,5 +1,4 @@
 using PussyCatsApp.Models;
-using PussyCatsApp.models;
 using PussyCatsApp.Repositories;
 using System;
 using System.Collections.Generic;
@@ -90,7 +89,7 @@ namespace PussyCatsApp.services
                 totalXP += test.GetExperiencePoints();
             }
 
-            profile.UserLevel = UserLevel.calculateLevel(totalXP);
+            profile.UserLevel = UserLevel.CalculateLevel(totalXP);
 
             return totalXP;
             

@@ -1,4 +1,4 @@
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class Preference
     {
