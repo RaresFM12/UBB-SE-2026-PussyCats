@@ -7,16 +7,15 @@ namespace PussyCatsApp.Tests.Infrastructure
 {
     public static class TestDatabaseHelper
     {
-        // Reads from appsettings.test.json — always points to PussyCatsTestDB, never PussyCatsDB
+        // Reads from appsettings.test.json — always PussyCatsTestsDB, DO NOT USE THE APPLICATION DATABASE
         public static string ConnectionString => new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.test.json", optional: false)
             .Build()
             .GetConnectionString("testConnectionString");
 
-        // ====================================================================
-        // Call in [TestInitialize] — clears all data, reseeds IDs to start at 1
-        // ====================================================================
+
+        // Clear all tables before each test runs.
         public static void ClearAllTables()
         {
             using var connection = new SqlConnection(ConnectionString);
@@ -39,16 +38,13 @@ namespace PussyCatsApp.Tests.Infrastructure
             cmd.ExecuteNonQuery();
         }
 
-        // ====================================================================
-        // Insert helpers — each returns the generated ID
-        // ====================================================================
 
         public static int InsertUser(
             string firstName = "Test",
             string lastName = "User",
             string email = null,
-            int age = 25,
-            string gender = "Male",
+            int age = 20,
+            string gender = "Female",
             string parsedCv = null,
             string personalityTestResult = null,
             bool activeAccount = true,
@@ -62,7 +58,7 @@ namespace PussyCatsApp.Tests.Infrastructure
             string address = null,
             string motivation = null)
         {
-            
+
             email ??= $"test.{Guid.NewGuid()}@test.com";
 
             using var connection = new SqlConnection(ConnectionString);
@@ -105,11 +101,7 @@ namespace PussyCatsApp.Tests.Infrastructure
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public static int InsertSkill(
-            int userId,
-            string name,
-            int score = 0,
-            DateTime? achievedDate = null)
+        public static int InsertSkill(int userId, string name, int score = 0, DateTime? achievedDate = null)
         {
             using var connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -128,11 +120,7 @@ namespace PussyCatsApp.Tests.Infrastructure
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public static int InsertDocument(
-            int userId,
-            string name,
-            string filePath = null,
-            DateTime? uploadDate = null)
+        public static int InsertDocument(int userId, string name, string filePath = null, DateTime? uploadDate = null)
         {
             using var connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -151,11 +139,7 @@ namespace PussyCatsApp.Tests.Infrastructure
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public static int InsertMatch(
-            int userId,
-            string companyName,
-            string jobRole,
-            DateTime? matchDate = null)
+        public static int InsertMatch(int userId, string companyName, string jobRole, DateTime? matchDate = null)
         {
             using var connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -174,10 +158,7 @@ namespace PussyCatsApp.Tests.Infrastructure
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public static int InsertPreference(
-            int userId,
-            string preferenceType,
-            string value)
+        public static int InsertPreference(int userId, string preferenceType, string value)
         {
             using var connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -193,6 +174,33 @@ namespace PussyCatsApp.Tests.Infrastructure
             cmd.Parameters.AddWithValue("@value", value);
 
             return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        public static string GetUserPersonalityTestResult(int userId)
+        {
+            using var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            string query = "SELECT personalityTestResult FROM USERS WHERE userID = @userId";
+            using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@userId", userId);
+
+            object result = command.ExecuteScalar();
+            return result == DBNull.Value ? null : result.ToString();
+
+        }
+
+        public static void SetUserPersonality(int userId, string result)
+        {
+            using var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            string query = "UPDATE USERS SET personalityTestResult=@result WHERE userID = @userId";
+            using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@result", result);
+            command.Parameters.AddWithValue("@userId", userId);
+
+            command.ExecuteNonQuery();
         }
     }
 }

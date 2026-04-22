@@ -84,7 +84,7 @@ namespace PussyCatsApp.Repositories
             skillGroups.Add(new SkillGroup { GroupName = "NLP / Computer Vision", Skills = new List<string> { "Hugging Face", "OpenCV", "NLTK", "spaCy" }, Weight = 10, JobRole = JobRole.AIMLEngineer });
         }
 
-        public List<SkillGroup> GetByRole(JobRole role)
+        public List<SkillGroup> GetSkillsGroupByRole(JobRole role)
         {
             List<SkillGroup> result = new List<SkillGroup>();
             foreach (SkillGroup group in skillGroups)

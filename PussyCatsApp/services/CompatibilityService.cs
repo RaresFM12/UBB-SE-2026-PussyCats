@@ -203,7 +203,7 @@ namespace PussyCatsApp.services
         public RoleResult CalculateForRole(int userId, JobRole role)
         {
             List<UserSkill> userSkills = GetUserSkills(userId);
-            List<SkillGroup> groups = skillGroupRepository.GetByRole(role);
+            List<SkillGroup> groups = skillGroupRepository.GetSkillsGroupByRole(role);
 
             int totalWeight = 0;
             foreach (SkillGroup group in groups)

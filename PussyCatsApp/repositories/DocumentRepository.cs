@@ -9,7 +9,12 @@ namespace PussyCatsApp.Repositories
 {
     public class DocumentRepository : IDocumentRepository
     {
-        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
+        private readonly string connectionString;
+
+        public DocumentRepository(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
 
         public List<Document> GetDocumentsByUserId(int userId)
         {
@@ -35,7 +40,8 @@ namespace PussyCatsApp.Repositories
                 using var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    documents.Add(MapRowToDocument(reader));
+                    Document document = MapRowToDocument(reader);
+                    documents.Add(document);
                 }
             }
             catch (SqlException ex)
@@ -72,7 +78,8 @@ namespace PussyCatsApp.Repositories
                 using var reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    return MapRowToDocument(reader);
+                    Document document = MapRowToDocument(reader);
+                    return document;
                 }
             }
             catch (SqlException ex)
@@ -100,7 +107,15 @@ namespace PussyCatsApp.Repositories
                 using var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@UserId", document.UserId);
                 command.Parameters.AddWithValue("@DocumentName", document.DocumentName);
-                command.Parameters.AddWithValue("@FilePath", document.FilePath ?? (object)DBNull.Value);
+                if (document.FilePath == null)
+                {
+                    command.Parameters.AddWithValue("@FilePath", DBNull.Value);
+
+                } 
+                else
+                {
+                    command.Parameters.AddWithValue("@FilePath", document.FilePath);
+                }
                 command.Parameters.AddWithValue("@UploadDate", document.UploadDate);
 
                 command.ExecuteNonQuery();
@@ -137,32 +152,51 @@ namespace PussyCatsApp.Repositories
             }
         }
 
-        // ── Helper: map a data reader row to a Document object ───────────────
         private static Document MapRowToDocument(SqlDataReader reader)
         {
             try
             {
-                return new Document
+                Document doc = new Document();
+                doc.Id = Convert.ToInt32(reader["Id"]);
+                doc.UserId = Convert.ToInt32(reader["UserId"]);
+
+                if (reader["DocumentName"] == DBNull.Value)
                 {
-                    Id = Convert.ToInt32(reader["Id"]),
-                    UserId = Convert.ToInt32(reader["UserId"]),
-                    DocumentName = reader["DocumentName"]?.ToString() ?? string.Empty,
-                    FilePath = reader["FilePath"] == DBNull.Value ? null : reader["FilePath"].ToString(),
-                    UploadDate = reader["UploadDate"] == DBNull.Value
-                                       ? DateTime.MinValue
-                                       : Convert.ToDateTime(reader["UploadDate"])
-                };
+                    doc.DocumentName = string.Empty;
+                }
+                else
+                {
+                    doc.DocumentName = reader["DocumentName"].ToString();
+                }
+
+                if (reader["FilePath"] == DBNull.Value)
+                {
+                    doc.FilePath = null;
+                }
+                else
+                {
+                    doc.FilePath = reader["FilePath"].ToString();
+                }
+
+                if (reader["UploadDate"] == DBNull.Value)
+                {
+                    doc.UploadDate = DateTime.MinValue;
+                }
+                else
+                {
+                    doc.UploadDate = Convert.ToDateTime(reader["UploadDate"]);
+                }
+
+                return doc;
             }
             catch (InvalidCastException castEx)
             {
-                Console.WriteLine($"Data mapping error: {castEx.Message}");
-                throw new Exception("Error mapping database row to Document object.", castEx);
+                throw new Exception("Mapping error.", castEx);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Unexpected mapping error: {ex.Message}");
                 throw;
             }
         }
     }
-}
+ }

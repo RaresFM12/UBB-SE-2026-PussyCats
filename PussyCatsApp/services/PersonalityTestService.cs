@@ -12,7 +12,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PussyCatsApp.services
 {
-    public class PersonalityTestService: IPersonalityTestService
+    public class PersonalityTestService : IPersonalityTestService
     {
         private IPersonalityTestRepository personalityTestRepository;
 

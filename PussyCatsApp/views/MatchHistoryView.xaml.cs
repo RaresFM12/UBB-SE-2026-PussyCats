@@ -24,6 +24,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.Repositories;
+using PussyCatsApp.Configuration;
 
 namespace PussyCatsApp.views
 {
@@ -51,7 +52,7 @@ namespace PussyCatsApp.views
         {
             if (_viewModel == null)
             {
-                IMatchService matchService = new MatchService(new MatchRepository());
+                IMatchService matchService = new MatchService(new MatchRepository(DatabaseConfiguration.GetConnectionString()));
                 _viewModel = new MatchHistoryViewModel(1, matchService);
             }
 

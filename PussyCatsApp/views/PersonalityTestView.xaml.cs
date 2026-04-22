@@ -16,6 +16,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using PussyCatsApp.Configuration;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -91,7 +92,7 @@ namespace PussyCatsApp.views
         }
         private void InitializeViewModel(int userId)
         {
-            IPersonalityTestService personalityTestService = new PersonalityTestService(new PersonalityTestRepository());
+            IPersonalityTestService personalityTestService = new PersonalityTestService(new PersonalityTestRepository(DatabaseConfiguration.GetConnectionString()));
             this.personalityTestViewModel = new PersonalityTestViewModel(userId, personalityTestService);
             this.DataContext = this.personalityTestViewModel;
         }
