@@ -21,8 +21,8 @@ namespace PussyCatsApp.services
         private bool ValidateFileType(string extension)
         {
             // ".pdf" => "PDF"
-            string normalised = extension.TrimStart('.').ToUpperInvariant();
-            return Enum.TryParse<AllowedFileType>(normalised, out _);
+            string normalisedExtension = extension.TrimStart('.').ToUpperInvariant();
+            return Enum.TryParse<AllowedFileType>(normalisedExtension, out _);
         }
 
         public List<Document> GetDocumentsByUserId(int userId)

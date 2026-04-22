@@ -13,6 +13,7 @@ public class PdfExportService : IPdfExportService
     private readonly WebView2 _webView;
     private readonly IUserProfileRepository _profileRepository;
     private UserProfile _currentProfile;
+    private const int RenderDelayMilliseconds = 500;
 
     public PdfExportService(WebView2 webView)
     {

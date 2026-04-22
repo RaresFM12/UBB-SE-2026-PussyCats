@@ -91,27 +91,70 @@ namespace PussyCatsApp.services
         /// </summary>
         private List<string> ProcessSkills(List<string> skills)
         {
-            if (skills == null || !skills.Any())
-                return new List<string>();
+            var result = new List<string>();
 
-            var processedSkills = new List<string>();
+            if (skills == null)
+                return result;
+
             var addedSkills = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var skill in skills.Take(30)) // Max 30 skills
+            int count = 0;
+
+            foreach (var skill in skills)
             {
+                if (count >= 30)
+                    break;
+
                 var sanitized = SanitizeString(skill, 60);
+
                 if (!string.IsNullOrWhiteSpace(sanitized) && addedSkills.Add(sanitized))
                 {
-                    processedSkills.Add(sanitized);
+                    result.Add(sanitized);
+                    count++;
                 }
             }
 
-            return processedSkills;
+            return result;
         }
 
         /// <summary>
         /// Processes work experiences with validation
         /// </summary>
+        private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
+        {
+            var result = new List<WorkExperience>();
+
+            if (experiences == null)
+                return result;
+
+            int count = 0;
+
+            foreach (var we in experiences)
+            {
+                if (count >= 10)
+                    break;
+
+                var processed = new WorkExperience
+                {
+                    Company = SanitizeString(we.Company, 150),
+                    JobTitle = SanitizeString(we.JobTitle, 100),
+                    StartDate = ValidateDate(we.StartDate),
+                    EndDate = we.CurrentlyWorking ? null : ValidateDate(we.EndDate),
+                    CurrentlyWorking = we.CurrentlyWorking,
+                    Description = SanitizeString(we.Description, 500)
+                };
+
+                if (!string.IsNullOrEmpty(processed.Company) &&
+                    !string.IsNullOrEmpty(processed.JobTitle))
+                {
+                    result.Add(processed);
+                    count++;
+                }
+            }
+
+            return result;
+        }
+        /*
         private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
         {
             if (experiences == null || !experiences.Any())
@@ -130,11 +173,55 @@ namespace PussyCatsApp.services
                 .Where(we => !string.IsNullOrEmpty(we.Company) && !string.IsNullOrEmpty(we.JobTitle))
                 .ToList();
         }
-
+        */
         /// <summary>
         /// Processes projects with validation
         /// </summary>
         private List<Project> ProcessProjects(List<Project> projects)
+        {
+            var result = new List<Project>();
+
+            if (projects == null)
+                return result;
+
+            int count = 0;
+
+            foreach (var p in projects)
+            {
+                if (count >= 10)
+                    break;
+
+                var proj = new Project
+                {
+                    Name = SanitizeString(p.Name, 100),
+                    Description = SanitizeString(p.Description, 600),
+                    Url = SanitizeString(p.Url, 200),
+                    Technologies = new List<string>()
+                };
+
+                if (p.Technologies != null)
+                {
+                    int techCount = 0;
+                    foreach (var t in p.Technologies)
+                    {
+                        if (techCount >= 10)
+                            break;
+
+                        proj.Technologies.Add(SanitizeString(t, 60));
+                        techCount++;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(proj.Name))
+                {
+                    result.Add(proj);
+                    count++;
+                }
+            }
+
+            return result;
+        }
+        /*private List<Project> ProcessProjects(List<Project> projects)
         {
             if (projects == null || !projects.Any())
                 return new List<Project>();
@@ -149,11 +236,12 @@ namespace PussyCatsApp.services
                 })
                 .Where(p => !string.IsNullOrEmpty(p.Name))
                 .ToList();
-        }
+        }*/
 
         /// <summary>
         /// Processes extracurricular activities with validation
         /// </summary>
+        /*
         private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
         {
             if (activities == null || !activities.Any())
@@ -170,6 +258,38 @@ namespace PussyCatsApp.services
                 })
                 .Where(a => !string.IsNullOrEmpty(a.ActivityName))
                 .ToList();
+        }*/
+        private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
+        {
+            var result = new List<ExtraCurricularActivity>();
+
+            if (activities == null)
+                return result;
+
+            int count = 0;
+
+            foreach (var a in activities)
+            {
+                if (count >= 10)
+                    break;
+
+                var activity = new ExtraCurricularActivity
+                {
+                    ActivityName = SanitizeString(a.ActivityName, 150),
+                    Organization = SanitizeString(a.Organization, 100),
+                    Role = SanitizeString(a.Role, 80),
+                    Period = SanitizeString(a.Period, 60),
+                    Description = SanitizeString(a.Description, 300)
+                };
+
+                if (!string.IsNullOrEmpty(activity.ActivityName))
+                {
+                    result.Add(activity);
+                    count++;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

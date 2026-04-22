@@ -11,6 +11,10 @@ namespace PussyCatsApp.services
     public class ImageStorageService: IImageStorageService
     {
         private string basePath = Path.Combine("uploads", "avatars");
+        private const int BytesPerKilobyte = 1024;
+        private const int BytesPerMegabyte = 1024 * BytesPerKilobyte;
+        private const int MaxFileSizeInMb = 5;
+        private const int MaxFileSize = MaxFileSizeInMb * BytesPerMegabyte;
 
         public ImageStorageService()
         {
@@ -30,7 +34,7 @@ namespace PussyCatsApp.services
                 throw new ArgumentException("Unsupported file type. Only .jpg, .jpeg, and .png are allowed.");
             }
 
-            if (fileStream.Length > 5 * 1024 * 1024)
+            if (fileStream.Length > MaxFileSize)
             {
                 throw new Exception("File size exceeds the maximum limit of 5MB.");
             }

@@ -154,7 +154,32 @@ namespace PussyCatsApp.services
 
             return roleScores;
         }
+        public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
+        {
+            var list = new List<KeyValuePair<JobRole, double>>();
 
+            foreach (var kvp in roleScores)
+            {
+                list.Add(kvp);
+            }
+
+            list.Sort((a, b) => b.Value.CompareTo(a.Value));
+
+            var result = new Dictionary<JobRole, double>();
+
+            int count = 0;
+            foreach (var kvp in list)
+            {
+                if (count >= length)
+                    break;
+
+                result.Add(kvp.Key, kvp.Value);
+                count++;
+            }
+
+            return result;
+        }
+        /*
         public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
         {
             return roleScores
@@ -167,6 +192,6 @@ namespace PussyCatsApp.services
         {
             personalityTestRepository.Save(userId, personalityTestResult);
 
-        }
+        }*/
     }
 }

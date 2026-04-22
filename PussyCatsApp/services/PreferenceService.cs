@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PussyCatsApp.models;
 using PussyCatsApp.Repositories;
 namespace PussyCatsApp.services
 {
@@ -88,7 +87,24 @@ namespace PussyCatsApp.services
                 _preferencesRepository.AddPreference(row);
             }
         }
+        public List<string> SearchLocations(string query)
+        {
+            var result = new List<string>();
 
+            if (string.IsNullOrWhiteSpace(query))
+                return result;
+
+            foreach (var loc in _predefinedLocations)
+            {
+                if (loc.Contains(query, StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(loc);
+                }
+            }
+
+            return result;
+        }
+        /*
         public List<string> SearchLocations(string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -99,6 +115,6 @@ namespace PussyCatsApp.services
             return _predefinedLocations
                 .Where(loc => loc.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .ToList();
-        }
+        }*/
     }
 }
