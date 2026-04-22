@@ -43,9 +43,13 @@ namespace PussyCatsApp.Models
             NextLevelXp = LEVEL_2_XP;
         }
 
-        public static UserLevel CalculateLevel(int xp)
+        public static UserLevel CalculateLevel(int experiencePoints)
         {
-            switch (xp)
+            if (experiencePoints < 0)
+            {
+                throw new ArgumentException("XP cannot be negative.");
+            }
+            switch (experiencePoints)
             {
                 case >= LEVEL_5_XP:
                     return new UserLevel(5, UserTitle.Expert, LEVEL_5_XP, LEVEL_1_XP);
@@ -62,16 +66,21 @@ namespace PussyCatsApp.Models
 
         public int GetLevelProgressPercent(int totalXp)
         {
+            if (totalXp < 0)
+            {
+                throw new ArgumentException("XP cannot be negative.");
+            }
+
             if (NextLevelXp == 0)
             {
                 return 100;
             }
 
-            double completedPercentageIntoCurrentLevel = this.GetLevelProgressFraction(totalXp);
+            double completedPercentageIntoCurrentLevel = this.GetLevelProgressPercentage(totalXp);
             return (int)completedPercentageIntoCurrentLevel;
         }
 
-        private double GetLevelProgressFraction(int totalXp)
+        private double GetLevelProgressPercentage(int totalXp)
         {
             double pointsIntoLevel = totalXp - XpRequired;
             double totalPointsForLevel = NextLevelXp - XpRequired;
@@ -81,6 +90,11 @@ namespace PussyCatsApp.Models
 
         public int GetXpToNextLevel(int totalXp)
         {
+            if (totalXp < 0)
+            {
+                throw new ArgumentException("XP cannot be negative.");
+            }
+
             if (NextLevelXp == LEVEL_1_XP)
             {
                 return 0;
