@@ -38,7 +38,8 @@ namespace PussyCatsApp.ViewModels
 
         public async Task LoadAndRenderCVAsync()
         {
-            if (UserId <= 0)
+            int minimumValidUserId = 1; // Assuming user IDs start from 1
+            if (UserId < minimumValidUserId)
             {
                 return;
             }

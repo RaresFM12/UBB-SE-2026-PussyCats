@@ -1,6 +1,7 @@
 ﻿using System;
 using PussyCatsApp.Models;
 using PussyCatsApp.Services;
+using PussyCatsApp.utilities;
 
 namespace PussyCatsApp.ViewModels
 {
@@ -11,9 +12,9 @@ namespace PussyCatsApp.ViewModels
     /// </summary>
     public class UploadDocumentViewModel
     {
-        private string documentName;
-        private string selectedFilePath;
-        private string errorMessage;
+        private string documentName = string.Empty;
+        private string selectedFilePath = string.Empty;
+        private string errorMessage = string.Empty;
         private readonly IDocumentService documentService;
         private readonly int userId;
 
@@ -23,24 +24,24 @@ namespace PussyCatsApp.ViewModels
             this.userId = userId;
         }
 
-        public void SetSelectedFilePath(string path) => selectedFilePath = path;
+        public void SetSelectedFilePath(string path)
+        {
+            selectedFilePath = path;
+        }
 
         public bool ValidateDocumentInput()
         {
-            if (string.IsNullOrWhiteSpace(documentName))
+            try
             {
-                errorMessage = "Please enter a name for the document.";
+                DocumentValidator.ValidateDocumentInput(documentName, selectedFilePath);
+                errorMessage = string.Empty;
+                return true;
+            }
+            catch (ArgumentException exception)
+            {
+                errorMessage = exception.Message;
                 return false;
             }
-
-            if (string.IsNullOrEmpty(selectedFilePath))
-            {
-                errorMessage = "Please select a file to upload.";
-                return false;
-            }
-
-            errorMessage = string.Empty;
-            return true;
         }
 
         public void UploadDocument()

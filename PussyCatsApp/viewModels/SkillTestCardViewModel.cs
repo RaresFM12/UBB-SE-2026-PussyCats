@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Services;
+using PussyCatsApp.utilities;
 
 namespace PussyCatsApp.ViewModels
 {
@@ -52,12 +53,12 @@ namespace PussyCatsApp.ViewModels
                 return;
             }
 
-            int newScore = GenerateRandomScore();
+            int newTestScore = Helpers.GenerateRandomScore(0, 100);
 
-            badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newScore);
+            badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newTestScore);
 
             skillTest.AchievedDate = DateOnly.FromDateTime(DateTime.Now);
-            skillTest.Score = newScore;
+            skillTest.Score = newTestScore;
 
             CheckRetakeEligible();
             UpdateBadge();

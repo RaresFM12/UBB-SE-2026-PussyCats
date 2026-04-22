@@ -20,9 +20,9 @@ namespace PussyCatsApp.ViewModels
         [ObservableProperty]
         public partial bool IsSelected { get; set; }
 
-        public RoleResultViewModel(JobRole role, double score)
+        public RoleResultViewModel(JobRole jobRole, double score)
         {
-            Role = role;
+            Role = jobRole;
             Score = score;
         }
     }

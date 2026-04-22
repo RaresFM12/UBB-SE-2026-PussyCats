@@ -20,7 +20,6 @@ namespace PussyCatsApp.ViewModels
     {
         private IUserProfileService profileService;
         private IImageStorageService imageStorageService;
-        private CvUploadService cvUploadService;
         private ICompletenessService completenessService;
 
         // Nested Export ViewModel
@@ -45,7 +44,6 @@ namespace PussyCatsApp.ViewModels
         {
             this.profileService = userProfileService;
             this.imageStorageService = imageStorageService;
-            this.cvUploadService = new CvUploadService();
             this.completenessService = completenessService;
         }
 
@@ -67,7 +65,6 @@ namespace PussyCatsApp.ViewModels
                 ErrorMessage = $"Error recalculating user level: {ex.Message}";
             }
         }
-
         public async Task LoadUserAsync(int userId)
         {
             ErrorMessage = string.Empty;

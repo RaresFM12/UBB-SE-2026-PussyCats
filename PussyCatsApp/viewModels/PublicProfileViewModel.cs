@@ -46,7 +46,11 @@ namespace PussyCatsApp.ViewModels
         }
         public string GetAvailabilityMessage()
         {
-            return IsAvailable ? string.Empty : "Profile Unavailable";
+            if (IsAvailable)
+            {
+                return string.Empty;
+            }
+            return "Profile Unavailable";
         }
     }
 }

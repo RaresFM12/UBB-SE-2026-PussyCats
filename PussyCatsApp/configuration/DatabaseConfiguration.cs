@@ -14,6 +14,7 @@ namespace PussyCatsApp.Configuration
                 cachedConnectionString = new ConfigurationBuilder()
                     .SetBasePath(AppContext.BaseDirectory)
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true)
                     .Build()
                     .GetConnectionString("raresConnectionString");
             }

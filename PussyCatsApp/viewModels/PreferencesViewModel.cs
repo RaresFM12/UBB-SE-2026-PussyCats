@@ -17,11 +17,11 @@ namespace PussyCatsApp.ViewModels
         private int currentUserId;
         private IPreferenceService preferencesService;
 
-        public PreferencesViewModel(int userId)
-        {
-            var repository = new PreferenceRepository(DatabaseConfiguration.GetConnectionString());
-            preferencesService = new PreferenceService(repository);
+        private const int MaximumJobRolesAllowed = 3;
 
+        public PreferencesViewModel(IPreferenceService preferencesService, int userId)
+        {
+            this.preferencesService = preferencesService;
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();
@@ -69,13 +69,13 @@ namespace PussyCatsApp.ViewModels
             }
             else
             {
-                if (selectedJobRoles.Count < 3)
+                if (selectedJobRoles.Count < MaximumJobRolesAllowed)
                 {
                     selectedJobRoles.Add(role);
                 }
                 else
                 {
-                    errorMessage = "You can select a maximum of 3 job roles.";
+                    errorMessage = $"You can select a maximum of {MaximumJobRolesAllowed} job roles.";
                 }
             }
         }
