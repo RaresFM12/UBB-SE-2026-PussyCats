@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using PussyCatsApp.Models;
-using PussyCatsApp.models;
 
 namespace PussyCatsApp.services
 {

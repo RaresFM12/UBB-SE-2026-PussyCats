@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.Data.SqlClient;
 using PussyCatsApp.Configuration;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
 namespace PussyCatsApp.Repositories
 {

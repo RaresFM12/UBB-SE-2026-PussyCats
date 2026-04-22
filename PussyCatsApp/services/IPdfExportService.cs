@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Threading.Tasks;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
 public interface IPdfExportService
 {
