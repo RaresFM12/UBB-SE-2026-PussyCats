@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using PussyCatsApp.Configuration;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
 namespace PussyCatsApp.Repositories
 {

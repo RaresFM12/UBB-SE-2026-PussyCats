@@ -1,7 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
@@ -146,9 +146,9 @@ namespace PussyCatsApp.views
             if (viewModel.UserProfile.UserLevel == null) return;
             LevelTitleText.Text = $"Level {viewModel.UserProfile.UserLevel.LevelNumber} — {viewModel.UserProfile.UserLevel.Title}";
 
-            XpProgressBar.Value = viewModel.UserProfile.UserLevel.getProgressPercent(viewModel.TotalXP);
+            XpProgressBar.Value = viewModel.UserProfile.UserLevel.GetLevelProgressPercent(viewModel.TotalXP);
 
-            int xpToNext = viewModel.UserProfile.UserLevel.getXPToNextLevel(viewModel.TotalXP);
+            int xpToNext = viewModel.UserProfile.UserLevel.GetXpToNextLevel(viewModel.TotalXP);
             XpCountText.Text = xpToNext > 0
                 ? $"{viewModel.TotalXP} XP — {xpToNext} XP needed for next level"
                 : $"{viewModel.TotalXP} XP — Max level reached!";

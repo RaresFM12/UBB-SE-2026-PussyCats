@@ -1,8 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using PussyCatsApp.utilities;
 using PussyCatsApp.Configuration;
 using System;
 using System.Collections.Generic;
@@ -13,131 +17,11 @@ namespace PussyCatsApp.views
 {
     public sealed partial class PreferencesView : Page
     {
-        private readonly List<string> _allRoles = new()
-        {
-            "Frontend Developer", "Backend Developer", "UI/UX Designer",
-            "DevOps Engineer", "Project Manager", "Data Analyst",
-            "Cybersecurity Specialist", "AI/ML Engineer"
-        };
-
-        private readonly List<string> _mockLocations = new()
-        {
-            // Romania
-            "Bucharest, Romania", "Cluj-Napoca, Romania", "Timisoara, Romania", "Iasi, Romania",
-
-            // UK & Ireland
-            "London, UK", "Manchester, UK", "Birmingham, UK",
-            "Dublin, Ireland",
-
-            // Germany
-            "Berlin, Germany", "Munich, Germany", "Hamburg, Germany", "Frankfurt, Germany",
-
-            // France
-            "Paris, France", "Lyon, France", "Marseille, France",
-
-            // Spain
-            "Madrid, Spain", "Barcelona, Spain", "Valencia, Spain",
-
-            // Italy
-            "Rome, Italy", "Milan, Italy", "Naples, Italy", "Florence, Italy",
-
-            // Netherlands
-            "Amsterdam, Netherlands", "Rotterdam, Netherlands", "Utrecht, Netherlands",
-
-            // Belgium
-            "Brussels, Belgium", "Antwerp, Belgium",
-
-            // Switzerland
-            "Zurich, Switzerland", "Geneva, Switzerland",
-
-            // Austria
-            "Vienna, Austria", "Salzburg, Austria",
-
-            // Nordics
-            "Stockholm, Sweden", "Gothenburg, Sweden",
-            "Oslo, Norway",
-            "Copenhagen, Denmark",
-            "Helsinki, Finland",
-
-            // Poland
-            "Warsaw, Poland", "Krakow, Poland", "Wroclaw, Poland",
-
-            // Czech Republic
-            "Prague, Czech Republic", "Brno, Czech Republic",
-
-            // Hungary
-            "Budapest, Hungary",
-
-            // Greece
-            "Athens, Greece", "Thessaloniki, Greece",
-
-            // Portugal
-            "Lisbon, Portugal", "Porto, Portugal",
-
-            // Balkans
-            "Belgrade, Serbia",
-            "Zagreb, Croatia",
-            "Ljubljana, Slovenia",
-            "Sarajevo, Bosnia and Herzegovina",
-            "Sofia, Bulgaria",
-
-            // Turkey
-            "Istanbul, Turkey", "Ankara, Turkey",
-
-            // USA (mai multe pentru că e huge)
-            "New York, USA", "Los Angeles, USA", "Chicago, USA",
-            "San Francisco, USA", "Seattle, USA", "Austin, USA",
-            "Boston, USA", "Miami, USA",
-
-            // Canada
-            "Toronto, Canada", "Vancouver, Canada", "Montreal, Canada",
-
-            // Australia
-            "Sydney, Australia", "Melbourne, Australia", "Brisbane, Australia",
-
-            // Japan
-            "Tokyo, Japan", "Osaka, Japan",
-
-            // South Korea
-            "Seoul, South Korea",
-
-            // China
-            "Beijing, China", "Shanghai, China", "Shenzhen, China",
-
-            // Southeast Asia
-            "Singapore, Singapore",
-            "Bangkok, Thailand",
-            "Kuala Lumpur, Malaysia",
-            "Jakarta, Indonesia",
-            "Manila, Philippines",
-
-            // India
-            "Delhi, India", "Mumbai, India", "Bangalore, India",
-
-            // Middle East
-            "Dubai, UAE", "Abu Dhabi, UAE",
-            "Tel Aviv, Israel",
-            "Doha, Qatar",
-
-            // Africa (puțin mai multe pe regiune)
-            "Cape Town, South Africa", "Johannesburg, South Africa", "Durban, South Africa",
-            "Cairo, Egypt",
-            "Nairobi, Kenya",
-            "Lagos, Nigeria",
-
-            // South America
-            "Sao Paulo, Brazil", "Rio de Janeiro, Brazil",
-            "Buenos Aires, Argentina",
-            "Santiago, Chile",
-            "Bogota, Colombia",
-            "Lima, Peru"
-        };
-
         public PreferencesView()
         {
             this.InitializeComponent();
 
-            RolesListView.ItemsSource = _allRoles;
+            RolesListView.ItemsSource = PreferencesData.AllRoles;
 
             LoadExistingPreferences();
         }
@@ -170,7 +54,7 @@ namespace PussyCatsApp.views
 
                 foreach (var role in savedRoles)
                 {
-                    if (_allRoles.Contains(role))
+                    if (PreferencesData.AllRoles.Contains(role))
                     {
                         RolesListView.SelectedItems.Add(role);
                     }
@@ -231,7 +115,7 @@ namespace PussyCatsApp.views
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var suitableItems = _mockLocations
+                var suitableItems = PreferencesData.MockLocations
                     .Where(x => x.ToLower().Contains(sender.Text.ToLower()))
                     .ToList();
 
@@ -274,7 +158,7 @@ namespace PussyCatsApp.views
 
                 foreach (var role in selectedRoles)
                 {
-                    repo.AddPreference(new models.Preference
+                    repo.AddPreference(new Models.Preference
                     {
                         UserId = currentUserId,
                         PreferenceType = "JobRole",
@@ -282,14 +166,14 @@ namespace PussyCatsApp.views
                     });
                 }
 
-                repo.AddPreference(new models.Preference
+                repo.AddPreference(new Models.Preference
                 {
                     UserId = currentUserId,
                     PreferenceType = "WorkMode",
                     Value = workMode
                 });
 
-                repo.AddPreference(new models.Preference
+                repo.AddPreference(new Models.Preference
                 {
                     UserId = currentUserId,
                     PreferenceType = "Location",

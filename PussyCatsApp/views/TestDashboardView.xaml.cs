@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
@@ -87,7 +87,7 @@ namespace PussyCatsApp.views
 
         private void GoToAllTestsButton_Click(object sender, RoutedEventArgs e)
         {
-            testDashboardViewModel.goToAllTestsCommand();
+            testDashboardViewModel.GoToAllTestsCommand();
         }
     }
 }

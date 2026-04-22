@@ -1,5 +1,5 @@
 using Microsoft.UI.Xaml.Data;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using System;
 
 namespace PussyCatsApp.converters

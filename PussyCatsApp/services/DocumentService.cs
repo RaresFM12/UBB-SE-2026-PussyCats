@@ -1,4 +1,4 @@
-﻿using PussyCatsApp.models;
+﻿using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.storage;
 using System;
