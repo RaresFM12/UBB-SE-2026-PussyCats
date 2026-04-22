@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.utilities
 {
-    internal class TimeFormatter
+    public class TimeFormatter
     {
         public static string CalculateFreshnessLabel(DateTime targetDate)
         {
