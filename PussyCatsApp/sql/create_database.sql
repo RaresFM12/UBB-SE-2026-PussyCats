@@ -1,6 +1,6 @@
 -- =============================================
--- PussyCatsApp — Clean Database Schema
--- Run this on a fresh SQL Server instance.
+-- PussyCatsApp Database Schema
+-- Based on DB diagram: USERS, SKILLS, DOCUMENTS, PREFERENCES
 -- =============================================
 USE master;
 GO
@@ -13,15 +13,11 @@ GO
 USE PussyCatsDB;
 GO
 
--- =============================================
--- Drop existing tables (if re-running)
--- =============================================
-IF OBJECT_ID('SKILLS', 'U')      IS NOT NULL DROP TABLE SKILLS;
-IF OBJECT_ID('PREFERENCES', 'U') IS NOT NULL DROP TABLE PREFERENCES;
-IF OBJECT_ID('MATCHES', 'U')     IS NOT NULL DROP TABLE MATCHES;
-IF OBJECT_ID('DOCUMENTS', 'U')   IS NOT NULL DROP TABLE DOCUMENTS;
-IF OBJECT_ID('USERS', 'U')       IS NOT NULL DROP TABLE USERS;
-GO
+DROP TABLE SKILLS
+DROP TABLE PREFERENCES
+DROP TABLE MATCHES
+DROP TABLE DOCUMENTS
+DROP TABLE USERS
 
 -- =============================================
 -- USERS table

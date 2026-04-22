@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using PussyCatsApp.Repositories;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.services;
 using PussyCatsApp.views;
 

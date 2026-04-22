@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using PussyCatsApp.models;
 using PussyCatsApp.Models;
 using PussyCatsApp.services;
 using PussyCatsApp.utilities;
@@ -34,7 +33,7 @@ namespace PussyCatsApp.viewModels
             this.userProfileViewModel = userProfileViewModel;
 
             CheckRetakeEligible();
-            badge = Badge.assignTier(skillTest.Score);
+            badge = Badge.AssignTier(skillTest.Score);
         }
 
         public void LoadCardCommand()
@@ -72,7 +71,7 @@ namespace PussyCatsApp.viewModels
 
         public void UpdateBadge()
         {
-            badge = Badge.assignTier(skillTest.Score);
+            badge = Badge.AssignTier(skillTest.Score);
         }
     }
 }

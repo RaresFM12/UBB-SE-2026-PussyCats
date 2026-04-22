@@ -152,7 +152,7 @@ namespace PussyCatsApp.views
 
                 foreach (var role in selectedRoles)
                 {
-                    repo.AddPreference(new models.Preference
+                    repo.AddPreference(new Models.Preference
                     {
                         UserId = currentUserId,
                         PreferenceType = "JobRole",
@@ -160,14 +160,14 @@ namespace PussyCatsApp.views
                     });
                 }
 
-                repo.AddPreference(new models.Preference
+                repo.AddPreference(new Models.Preference
                 {
                     UserId = currentUserId,
                     PreferenceType = "WorkMode",
                     Value = workMode
                 });
 
-                repo.AddPreference(new models.Preference
+                repo.AddPreference(new Models.Preference
                 {
                     UserId = currentUserId,
                     PreferenceType = "Location",

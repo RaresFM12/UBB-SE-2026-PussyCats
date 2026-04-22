@@ -8,7 +8,7 @@ using Windows.Networking.Sockets;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.converters;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.services;
 
 namespace PussyCatsApp.viewModels

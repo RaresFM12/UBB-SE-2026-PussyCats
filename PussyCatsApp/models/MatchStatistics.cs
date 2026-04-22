@@ -1,47 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace PussyCatsApp.models
+namespace PussyCatsApp.Models
 {
     public class MatchStatistics
     {
-        private int totalMatches;
-        private Dictionary<string, int> matchesPerPosition = new Dictionary<string, int>();
-        private int matchesLastMonth;
-        private int matchesLastSixMonths;
-        private int matchesLastYear;
+        public int TotalMatches { get; set; }
 
-        public int TotalMatches
-        {
-            get { return totalMatches; }
-            set { totalMatches = value; }
-        }
+        public Dictionary<string, int> MatchesPerPosition { get; set; }
 
-        public Dictionary<string, int> MatchesPerPosition
-        {
-            get { return matchesPerPosition; }
-            set { matchesPerPosition = value; }
-        }
+        public int MatchesLastMonth { get; set; }
 
-        public int MatchesLastMonth
-        {
-            get { return matchesLastMonth; }
-            set { matchesLastMonth = value; }
-        }
+        public int MatchesLastSixMonths { get; set; }
 
-        public int MatchesLastSixMonths
-        {
-            get { return matchesLastSixMonths; }
-            set { matchesLastSixMonths = value; }
-        }
-
-        public int MatchesLastYear
-        {
-            get { return matchesLastYear; }
-            set { matchesLastYear = value; }
-        }
+        public int MatchesLastYear { get; set; }
     }
 }

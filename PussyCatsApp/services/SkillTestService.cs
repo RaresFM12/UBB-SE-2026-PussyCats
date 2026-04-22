@@ -9,7 +9,6 @@ using Microsoft.UI.Xaml.Controls;
 using PussyCatsApp.Repositories;
 
 using PussyCatsApp.Models;
-using PussyCatsApp.models;
 
 
 
@@ -48,7 +47,7 @@ namespace PussyCatsApp.services
             skillTestRepository.UpdateSkillTestScore(skillId, newScore);
             skillTestRepository.UpdateAchievedDate(skillId, DateOnly.FromDateTime(DateTime.Now));
 
-            return Badge.assignTier(newScore);
+            return Badge.AssignTier(newScore);
         }
     }
 }
