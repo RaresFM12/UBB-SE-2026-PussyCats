@@ -17,7 +17,6 @@ namespace PussyCatsApp.viewModels
     {
         private IUserProfileService profileService;
         private IImageStorageService imageStorageService;
-        private CvUploadService cvUploadService;
         private ICompletenessService completenessService;
 
         // Nested Export ViewModel
@@ -42,7 +41,6 @@ namespace PussyCatsApp.viewModels
         {
             this.profileService = userProfileService;
             this.imageStorageService = imageStorageService;
-            this.cvUploadService = new CvUploadService();
             this.completenessService = completenessService;
         }
 
