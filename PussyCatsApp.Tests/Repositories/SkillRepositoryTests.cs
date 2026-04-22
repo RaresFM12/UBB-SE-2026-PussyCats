@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.Tests.Repositories

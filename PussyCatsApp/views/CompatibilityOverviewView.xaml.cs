@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.Tests.Infrastructure;
 using System.Collections.Generic;
 
