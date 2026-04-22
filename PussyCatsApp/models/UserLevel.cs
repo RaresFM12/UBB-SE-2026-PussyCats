@@ -66,20 +66,26 @@ namespace PussyCatsApp.Models
             {
                 return 100;
             }
-            double pointsIntoLevel = totalXp - XpRequired;
-            double totalPointsForLevel = NextLevelXp - XpRequired;
-            double progress = pointsIntoLevel / totalPointsForLevel * 100;
 
-            return (int)progress;
+            double completedPercentageIntoCurrentLevel = this.GetLevelProgressFraction(totalXp);
+            return (int)completedPercentageIntoCurrentLevel;
         }
 
-        public int GetXpToNextLevel(int totalXP)
+        private double GetLevelProgressFraction(int totalXp)
+        {
+            double pointsIntoLevel = totalXp - XpRequired;
+            double totalPointsForLevel = NextLevelXp - XpRequired;
+            double completedPercentageIntoCurrentLevel = pointsIntoLevel / totalPointsForLevel * 100;
+            return completedPercentageIntoCurrentLevel;
+        }
+
+        public int GetXpToNextLevel(int totalXp)
         {
             if (NextLevelXp == LEVEL_1_XP)
             {
                 return 0;
             }
-            return NextLevelXp - totalXP;
+            return NextLevelXp - totalXp;
         }
     }
 }
