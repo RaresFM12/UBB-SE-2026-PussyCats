@@ -16,7 +16,13 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty]
         public partial int? SelectedAnswer { get; set; }
 
-        public bool IsAnswered => SelectedAnswer != null;
+        public bool IsAnswered
+        {
+            get
+            {
+                return SelectedAnswer != null;
+            }
+        }
 
         public QuestionViewModel(Question question)
         {

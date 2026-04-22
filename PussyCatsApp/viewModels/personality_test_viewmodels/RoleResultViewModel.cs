@@ -1,12 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.models;
 
 namespace PussyCatsApp.viewModels
 {
@@ -18,9 +17,9 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty]
         public partial bool IsSelected { get; set; }
 
-        public RoleResultViewModel(JobRole role, double score)
+        public RoleResultViewModel(JobRole jobRole, double score)
         {
-            Role = role;
+            Role = jobRole;
             Score = score;
         }
     }

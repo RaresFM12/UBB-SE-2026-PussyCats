@@ -1,6 +1,6 @@
-﻿using PussyCatsApp.models;
+﻿using System.Collections.Generic;
+using PussyCatsApp.models;
 using PussyCatsApp.services;
-using System.Collections.Generic;
 
 namespace PussyCatsApp.viewModels
 {
