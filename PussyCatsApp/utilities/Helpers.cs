@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PussyCatsApp.models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,36 @@ namespace PussyCatsApp.utilities
         {
             Random random = new Random();
             return random.Next(lowerBound, upperBound + 1);
+        }
+
+        public static string GetFormattedNameFromJobRole(JobRole jobRole)
+        {
+            string formattedName = string.Empty;
+            if (jobRole == JobRole.UIUXDesigner)
+            {
+                formattedName = "UI/UX Designer";
+                return formattedName;
+            }
+            else if (jobRole == JobRole.AIMLEngineer)
+            {
+                formattedName = "AI/ML Engineer";
+                return formattedName;
+            }
+            else
+            {
+                formattedName = jobRole.ToString();
+            }
+
+            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+            foreach (char character in formattedName)
+            {
+                if (char.IsUpper(character) && stringBuilder.Length > 0)
+                {
+                    stringBuilder.Append(' ');
+                }
+                stringBuilder.Append(character);
+            }
+            return stringBuilder.ToString();
         }
     }
 }
