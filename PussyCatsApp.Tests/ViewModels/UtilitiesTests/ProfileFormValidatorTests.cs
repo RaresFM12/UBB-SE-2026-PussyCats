@@ -1,4 +1,4 @@
-﻿using PussyCatsApp.models;
+﻿using PussyCatsApp.Models;
 using PussyCatsApp.utilities;
 using System;
 using System.Collections.Generic;
