@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     public class PreferenceRepository : IPreferenceRepository
     {
-        private readonly string _connectionString;
+        private readonly string connectionString;
 
-        public PreferenceRepository(string connectionString)
+        public PreferenceRepository(string connectionStringArgument)
         {
-            _connectionString = connectionString;
+            connectionString = connectionStringArgument;
         }
 
         public List<Preference> GetPreferencesByUserId(int userId)
@@ -19,7 +19,7 @@ namespace PussyCatsApp.repositories
             var preferences = new List<Preference>();
             string query = "SELECT pID, userID, preferanceType, value FROM PREFERENCES WHERE userID = @UserId";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -47,16 +47,16 @@ namespace PussyCatsApp.repositories
         {
             string query = "INSERT INTO PREFERENCES (userID, preferanceType, value) VALUES (@UserId, @PreferenceType, @Value)";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", preference.UserId);
-                    cmd.Parameters.AddWithValue("@PreferenceType", preference.PreferenceType);
-                    cmd.Parameters.AddWithValue("@Value", preference.Value);
+                    command.Parameters.AddWithValue("@UserId", preference.UserId);
+                    command.Parameters.AddWithValue("@PreferenceType", preference.PreferenceType);
+                    command.Parameters.AddWithValue("@Value", preference.Value);
 
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                    connection.Open();
+                    command.ExecuteNonQuery();
                 }
             }
         }
@@ -65,13 +65,13 @@ namespace PussyCatsApp.repositories
         {
             string query = "DELETE FROM PREFERENCES WHERE pID = @PId";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@PId", preferenceId);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                    command.Parameters.AddWithValue("@PId", preferenceId);
+                    connection.Open();
+                    command.ExecuteNonQuery();
                 }
             }
         }
@@ -80,13 +80,13 @@ namespace PussyCatsApp.repositories
         {
             string query = "DELETE FROM PREFERENCES WHERE userID = @UserId";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", userId);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    connection.Open();
+                    command.ExecuteNonQuery();
                 }
             }
         }
@@ -96,12 +96,12 @@ namespace PussyCatsApp.repositories
             throw new NotImplementedException("Use DeleteAllByUserId and AddPreference instead.");
         }
 
-        public Preference load(int id)
+        public Preference Load(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void save(int id, Preference data)
+        public void Save(int id, Preference data)
         {
             throw new NotImplementedException();
         }

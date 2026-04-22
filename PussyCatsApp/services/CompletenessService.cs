@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace PussyCatsApp.services
 {
-    public class CompletenessService
+    public class CompletenessService: ICompletenessService
     {
         private static readonly List<(string Label, Func<UserProfile, bool> IsFilled)> ProfileFields = new()
         {

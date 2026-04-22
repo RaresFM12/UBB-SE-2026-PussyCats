@@ -17,11 +17,11 @@ namespace PussyCatsApp.viewModels
         private List<string> locationSuggestions;
         private string errorMessage;
         private int currentUserId;
-        private PreferenceService preferencesService;
+        private IPreferenceService preferencesService;
 
-        public PreferencesViewModel(PreferenceService service, int userId)
+        public PreferencesViewModel(IPreferenceService preferencesService, int userId)
         {
-            preferencesService = service;
+            this.preferencesService = preferencesService;
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();

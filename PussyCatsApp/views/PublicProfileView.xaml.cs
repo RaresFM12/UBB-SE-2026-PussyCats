@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.Models;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,7 +34,7 @@ namespace PussyCatsApp.views
 
             var skillTestRepo = new SkillTestRepository();
             var userProfileRepo = new UserProfileRepository();
-            var userProfileService = new UserProfileService();
+            var userProfileService = new UserProfileService(skillTestRepo, userProfileRepo);
             viewModel = new PublicProfileViewModel(userProfileService);
         }
 

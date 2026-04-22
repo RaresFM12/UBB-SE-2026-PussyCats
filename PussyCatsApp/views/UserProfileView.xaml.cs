@@ -2,6 +2,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.services;
 using PussyCatsApp.viewModels;
 using System;
 using System.Diagnostics;
@@ -18,8 +20,12 @@ namespace PussyCatsApp.views
         public UserProfileView()
         {
             this.InitializeComponent();
-
-            viewModel = new UserProfileViewModel();
+            ISkillTestRepository skillTestRepository = new SkillTestRepository();
+            IUserProfileRepository userProfileRepository = new UserProfileRepository();
+            UserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
+            IImageStorageService imageStorageService = new ImageStorageService();
+            ICompletenessService completenessService = new CompletenessService();
+            viewModel = new UserProfileViewModel(userProfileService, imageStorageService, completenessService);
 
             viewModel.OnLevelUpdated += renderLevelDisplay;
             this.DataContext = viewModel;
@@ -28,7 +34,6 @@ namespace PussyCatsApp.views
             btnOldTests.Click += OnGoToOldTestsClick;
             btnPublicProfile.Click += OnSeePublicProfileClick;
             btnViewDocuments.Click += OnViewDocumentsClick;
-
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -51,35 +56,35 @@ namespace PussyCatsApp.views
                 return;
             }
 
-            if (viewModel._userProfile != null)
+            if (viewModel.UserProfile != null)
             {
-                lblFirstName.Text = $"First Name: {viewModel._userProfile.FirstName}";
-                lblLastName.Text = $"Last Name: {viewModel._userProfile.LastName}";
-                lblEmail.Text = $"Email: {viewModel._userProfile.Email}";
-                lblPhone.Text = $"Phone: {viewModel._userProfile.PhoneNumber}";
-                lblGithubAccount.Text = $"GitHub: {viewModel._userProfile.GitHub}";
-                lblLinkedinAccount.Text = $"LinkedIn: {viewModel._userProfile.LinkedIn}";
+                lblFirstName.Text = $"First Name: {viewModel.UserProfile.FirstName}";
+                lblLastName.Text = $"Last Name: {viewModel.UserProfile.LastName}";
+                lblEmail.Text = $"Email: {viewModel.UserProfile.Email}";
+                lblPhone.Text = $"Phone: {viewModel.UserProfile.PhoneNumber}";
+                lblGithubAccount.Text = $"GitHub: {viewModel.UserProfile.GitHub}";
+                lblLinkedinAccount.Text = $"LinkedIn: {viewModel.UserProfile.LinkedIn}";
 
-                string displayGender = viewModel._userProfile.Gender;
+                string displayGender = viewModel.UserProfile.Gender;
                 if (string.IsNullOrEmpty(displayGender) || (displayGender != "Male" && displayGender != "Female"))
                     displayGender = "Not specified";
 
                 Debug.WriteLine($"[BindData] ErrorMessage: '{viewModel.ErrorMessage}'");
-                Debug.WriteLine($"[BindData] userProfile is null: {viewModel._userProfile == null}");
+                Debug.WriteLine($"[BindData] userProfile is null: {viewModel.UserProfile == null}");
 
                 lblGender.Text = $"Gender: {displayGender}";
-                lblUniversity.Text = $"University: {viewModel._userProfile.University}";
-                lblCountry.Text = $"Country: {viewModel._userProfile.Country}";
-                //lblAddress.Text = $"Address: {viewModel._userProfile.Address}";
-                lblCity.Text = $"City: {viewModel._userProfile.City}";
-                lblGraduationYear.Text = $"Graduation Year: {viewModel._userProfile.ExpectedGraduationYear}";
+                lblUniversity.Text = $"University: {viewModel.UserProfile.University}";
+                lblCountry.Text = $"Country: {viewModel.UserProfile.Country}";
+                //lblAddress.Text = $"Address: {viewModel.UserProfile.Address}";
+                lblCity.Text = $"City: {viewModel.UserProfile.City}";
+                lblGraduationYear.Text = $"Graduation Year: {viewModel.UserProfile.ExpectedGraduationYear}";
                 lblFreshness.Text = viewModel.FreshnessText;
 
                 string testResultDisplay = "Not taken yet";
-                if (!string.IsNullOrEmpty(viewModel._userProfile.PersonalityTestResult))
+                if (!string.IsNullOrEmpty(viewModel.UserProfile.PersonalityTestResult))
                 {
                     // Try parsing the string to the JobRole enum
-                    if (Enum.TryParse<JobRole>(viewModel._userProfile.PersonalityTestResult, out var jobRole))
+                    if (Enum.TryParse<JobRole>(viewModel.UserProfile.PersonalityTestResult, out var jobRole))
                     {
                         var converter = new converters.JobRoleToDisplayNameConverter();
 
@@ -89,7 +94,7 @@ namespace PussyCatsApp.views
                     else
                     {
                         // Fallback if the string couldn't be parsed 
-                        testResultDisplay = viewModel._userProfile.PersonalityTestResult;
+                        testResultDisplay = viewModel.UserProfile.PersonalityTestResult;
                     }
                 }
                 lblPersonalityTestResult.Text = $"Personality Test Result: {testResultDisplay}";
@@ -99,20 +104,20 @@ namespace PussyCatsApp.views
                 XpProgressBar.Value = 150;
                 XpCountText.Text = "150 / 250 XP";
 
-                chkAccountStatus.IsOn = viewModel._userProfile.ActiveAccount;
+                chkAccountStatus.IsOn = viewModel.UserProfile.ActiveAccount;
 
-                if (!string.IsNullOrEmpty(viewModel._userProfile.ProfilePicture))
+                if (!string.IsNullOrEmpty(viewModel.UserProfile.ProfilePicture))
                 {
                     pbAvatar.ProfilePicture =
                         new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
-                            new Uri(viewModel._userProfile.ProfilePicture));
+                            new Uri(viewModel.UserProfile.ProfilePicture));
                 }
                 else
                 {
                     pbAvatar.ProfilePicture = null;
                 }
 
-                if (!string.IsNullOrEmpty(viewModel._userProfile.PersonalityTestResult))
+                if (!string.IsNullOrEmpty(viewModel.UserProfile.PersonalityTestResult))
                 {
                     btnPersonalityTest.Content = "Retake Personality Test";
                 }
@@ -123,7 +128,7 @@ namespace PussyCatsApp.views
 
                 completenessBar.Update(viewModel.CompletenessPercentage, viewModel.NextEmptyFieldPrompt);
 
-                viewModel.recalculateLevelCommand();
+                viewModel.RecalculateLevelCommand();
                 renderLevelDisplay();
             }
             else
@@ -137,13 +142,13 @@ namespace PussyCatsApp.views
 
         private void renderLevelDisplay()
         {
-            if (viewModel._userProfile == null) return;          
-            if (viewModel._userProfile.UserLevel == null) return;
-            LevelTitleText.Text = $"Level {viewModel._userProfile.UserLevel.LevelNumber} — {viewModel._userProfile.UserLevel.Title}";
+            if (viewModel.UserProfile == null) return;          
+            if (viewModel.UserProfile.UserLevel == null) return;
+            LevelTitleText.Text = $"Level {viewModel.UserProfile.UserLevel.LevelNumber} — {viewModel.UserProfile.UserLevel.Title}";
 
-            XpProgressBar.Value = viewModel._userProfile.UserLevel.GetLevelProgressPercent(viewModel.TotalXP);
+            XpProgressBar.Value = viewModel.UserProfile.UserLevel.getProgressPercent(viewModel.TotalXP);
 
-            int xpToNext = viewModel._userProfile.UserLevel.GetXpToNextLevel(viewModel.TotalXP);
+            int xpToNext = viewModel.UserProfile.UserLevel.getXPToNextLevel(viewModel.TotalXP);
             XpCountText.Text = xpToNext > 0
                 ? $"{viewModel.TotalXP} XP — {xpToNext} XP needed for next level"
                 : $"{viewModel.TotalXP} XP — Max level reached!";
@@ -182,7 +187,7 @@ namespace PussyCatsApp.views
         {
             if (_isBinding) return;
 
-            if (viewModel?._userProfile != null)
+            if (viewModel?.UserProfile != null)
             {
                 viewModel.ToggleAccountStatusCommand();
                 BindData();
@@ -191,9 +196,9 @@ namespace PussyCatsApp.views
 
         private void OnEditProfileClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel._userProfile != null)
+            if (viewModel.UserProfile != null)
             {
-                Frame.Navigate(typeof(ProfileFormView), viewModel._userProfile);
+                Frame.Navigate(typeof(ProfileFormView), viewModel.UserProfile);
             }
             else
             {
@@ -203,26 +208,26 @@ namespace PussyCatsApp.views
 
         private void OnPreviewCVClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel._userProfile != null)
+            if (viewModel.UserProfile != null)
             {
-                Frame.Navigate(typeof(ExportCVView), viewModel._userProfile.UserId);
+                Frame.Navigate(typeof(ExportCVView), viewModel.UserProfile.UserId);
             }
         }
 
         private void OnGoToOldTestsClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel._userProfile == null)
+            if (viewModel.UserProfile == null)
                 return;
 
-            //viewModel._userProfile.UserId = currentUserId;
-            this.Frame.Navigate(typeof(TestDashboardView), viewModel._userProfile);
+            //viewModel.UserProfile.UserId = currentUserId;
+            this.Frame.Navigate(typeof(TestDashboardView), viewModel.UserProfile);
         }
 
         private void OnSeePublicProfileClick(object sender, RoutedEventArgs e)
         {
-            if (viewModel._userProfile == null)
+            if (viewModel.UserProfile == null)
                 return;
-            this.Frame.Navigate(typeof(PublicProfileView), viewModel._userProfile);
+            this.Frame.Navigate(typeof(PublicProfileView), viewModel.UserProfile);
         }
         
         private void OnCompatibilityAnalyzerClick(object sender, RoutedEventArgs e)

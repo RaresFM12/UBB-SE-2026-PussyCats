@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PussyCatsApp.Models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.services
 {
-    public class MatchService
+    public class MatchService : IMatchService
     {
-        private readonly MatchRepository _matchRepository;
+        private readonly IMatchRepository _matchRepository;
 
-        public MatchService()
+        public MatchService(IMatchRepository matchRepository)
         {
-            _matchRepository = new MatchRepository();
+            _matchRepository = matchRepository;
         }
 
-        private int CountByPeriod(List<Match> matches, int months)
+        private int CountMatchesInLastMonths(List<Match> matches, int months)
         {
             DateTime cutoffDate = DateTime.Now.AddMonths(-months);
             int count = 0;
@@ -34,7 +34,7 @@ namespace PussyCatsApp.services
             return count;
         }
 
-        private Dictionary<string, int> GroupByPosition(List<Match> matches)
+        private Dictionary<string, int> GroupMatchesByPosition(List<Match> matches)
         {
             var positionCounts = new Dictionary<string, int>();
 
@@ -55,19 +55,19 @@ namespace PussyCatsApp.services
 
         public List<Match> GetMatchesForUser(int userId)
         {
-            return _matchRepository.GetByUserId(userId);
+            return _matchRepository.GetMatchesByUserId(userId);
         }
 
-        public MatchStatistics GetStatistics(int userId)
+        public MatchStatistics GetMatchStatistics(int userId)
         {
-            var matches = _matchRepository.GetByUserId(userId);
+            var matches = _matchRepository.GetMatchesByUserId(userId);
             var stats = new MatchStatistics();
 
             stats.TotalMatches = matches.Count;
-            stats.MatchesLastMonth = CountByPeriod(matches, 1);
-            stats.MatchesLastSixMonths = CountByPeriod(matches, 6);
-            stats.MatchesLastYear = CountByPeriod(matches, 12);
-            stats.MatchesPerPosition = GroupByPosition(matches);
+            stats.MatchesLastMonth = CountMatchesInLastMonths(matches, 1);
+            stats.MatchesLastSixMonths = CountMatchesInLastMonths(matches, 6);
+            stats.MatchesLastYear = CountMatchesInLastMonths(matches, 12);
+            stats.MatchesPerPosition = GroupMatchesByPosition(matches);
 
             return stats;
         }

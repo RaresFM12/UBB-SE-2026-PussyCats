@@ -1,19 +1,19 @@
 ﻿using PussyCatsApp.Models;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 using System;
 using System.Collections.Generic;
 
 namespace PussyCatsApp.services
 {
-    public class CompatibilityService
+    public class CompatibilityService: ICompatibilityService
     {
-        private UserSkillRepository userSkillRepository;
-        private SkillGroupRepository skillGroupRepository;
+        private IUserSkillRepository userSkillRepository;
+        private ISkillGroupRepository skillGroupRepository;
 
-        public CompatibilityService()
+        public CompatibilityService(IUserSkillRepository userSkillRepository, ISkillGroupRepository skillGroupRepository)
         {
-            this.userSkillRepository = new UserSkillRepository();
-            this.skillGroupRepository = new SkillGroupRepository();
+            this.userSkillRepository = userSkillRepository;
+            this.skillGroupRepository = skillGroupRepository;
         }
 
         private List<UserSkill> GetUserSkills(int userId)

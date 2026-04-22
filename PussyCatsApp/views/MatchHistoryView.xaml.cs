@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
-using PussyCatsApp.repositories.personality_test_repo;
+using PussyCatsApp.Repositories.PersonalityTestRepo;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.viewModels;
-using PussyCatsApp.repositories;
+using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.views
 {
@@ -51,7 +51,8 @@ namespace PussyCatsApp.views
         {
             if (_viewModel == null)
             {
-                _viewModel = new MatchHistoryViewModel(1);
+                IMatchService matchService = new MatchService(new MatchRepository());
+                _viewModel = new MatchHistoryViewModel(1, matchService);
             }
 
             LoadMatches();

@@ -1,16 +1,17 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PussyCatsApp.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using PussyCatsApp.Configuration;
+using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
-    public class DocumentRepository
+    public class DocumentRepository : IDocumentRepository
     {
-        private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
+        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
 
-        public List<Document> getDocumentsByUserId(int userId)
+        public List<Document> GetDocumentsByUserId(int userId)
         {
             var documents = new List<Document>();
 
@@ -36,20 +37,20 @@ namespace PussyCatsApp.repositories
                 {
                     documents.Add(MapRowToDocument(reader));
                 }
-            } 
+            }
             catch (SqlException ex)
             {
                 Console.Error.WriteLine($"Database error retrieving documents for user {userId}: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred retrieving documents for user {userId}: {ex.Message}"); ;
+                Console.Error.WriteLine($"An error occurred retrieving documents for user {userId}: {ex.Message}");
             }
 
             return documents;
         }
 
-        public Document getDocumentById(int documentId)
+        public Document GetDocumentById(int documentId)
         {
             try
             {
@@ -70,8 +71,9 @@ namespace PussyCatsApp.repositories
 
                 using var reader = command.ExecuteReader();
                 if (reader.Read())
+                {
                     return MapRowToDocument(reader);
-
+                }
             }
             catch (SqlException ex)
             {
@@ -84,7 +86,7 @@ namespace PussyCatsApp.repositories
             return null;
         }
 
-        public void addDocument(Document document)
+        public void AddDocument(Document document)
         {
             try
             {
@@ -112,7 +114,7 @@ namespace PussyCatsApp.repositories
                 Console.Error.WriteLine($"An error occurred adding document for user {document.UserId}: {ex.Message}");
             }
         }
-        public void deleteDocument(int documentId)
+        public void DeleteDocument(int documentId)
         {
             try
             {

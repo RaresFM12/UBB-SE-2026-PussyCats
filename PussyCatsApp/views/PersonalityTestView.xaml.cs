@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
-using PussyCatsApp.repositories.personality_test_repo;
+using PussyCatsApp.Repositories.PersonalityTestRepo;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace PussyCatsApp.views
     /// </summary>
     public sealed partial class PersonalityTestView : Page
     {
-        private PersonalityTestViewModel PersonalityTestViewModel;
+        private PersonalityTestViewModel personalityTestViewModel;
 
         public PersonalityTestView()
         {
@@ -91,8 +91,9 @@ namespace PussyCatsApp.views
         }
         private void InitializeViewModel(int userId)
         {
-            this.PersonalityTestViewModel = new PersonalityTestViewModel(userId);
-            this.DataContext = this.PersonalityTestViewModel;
+            IPersonalityTestService personalityTestService = new PersonalityTestService(new PersonalityTestRepository());
+            this.personalityTestViewModel = new PersonalityTestViewModel(userId, personalityTestService);
+            this.DataContext = this.personalityTestViewModel;
         }
     }
 }

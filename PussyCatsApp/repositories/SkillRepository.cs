@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using PussyCatsApp.Models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
     internal class SkillRepository : ISkillRepository
     {
         private readonly List<Skill> _skills = new();
 
-        public Skill load(int skillId)
+        public Skill Load(int skillId)
         {
             return _skills.FirstOrDefault(s => s.SkillId == skillId);
         }
 
-        public void save(int skillId, Skill data)
+        public void Save(int skillId, Skill data)
         {
             var existing = _skills.FirstOrDefault(s => s.SkillId == skillId);
             if (existing != null)

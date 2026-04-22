@@ -1,79 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using PussyCatsApp.Models;
-using Microsoft.Data.SqlClient;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Windows.System;
 using System.Diagnostics;
-using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using Microsoft.Data.SqlClient;
+using PussyCatsApp.Configuration;
+using PussyCatsApp.models;
 
-namespace PussyCatsApp.repositories
+namespace PussyCatsApp.Repositories
 {
-    public class UserProfileRepository : IUserProileRepository
+    public class UserProfileRepository : IUserProfileRepository
     {
-        private static readonly JsonSerializerOptions _jsonOptions = new()
+        private static readonly JsonSerializerOptions JsonOptions = new ()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
+
         private record ParsedCVData(
-            List<WorkExperience> WorkExperiences,
-            List<Project> Projects,
-            List<ExtraCurricularActivity> ExtraCurricularActivities
-        );
+            List<WorkExperience> workExperiences,
+            List<Project> projects,
+            List<ExtraCurricularActivity> extraCurricularActivities);
+
         private record FormDataSnapshot(
-            string FirstName,
-            string LastName,
-            int Age,
-            string Gender,
-            string Email,
-            string PhoneNumber,
-            string GitHub,
-            string LinkedIn,
-            string Country,
-            string City,
-            string University,
-            string Degree,
-            int UniversityStartYear,
-            int ExpectedGraduationYear,
-            string Address,
-            string Motivation,
-            bool HasDisabilities,
-            List<string> Skills,
-            List<WorkExperience> WorkExperiences,
-            List<Project> Projects,
-            List<ExtraCurricularActivity> ExtraCurricularActivities
-        );
+            string firstName,
+            string lastName,
+            int age,
+            string gender,
+            string email,
+            string phoneNumber,
+            string gitHub,
+            string linkedIn,
+            string country,
+            string city,
+            string university,
+            string degree,
+            int universityStartYear,
+            int expectedGraduationYear,
+            string address,
+            string motivation,
+            bool hasDisabilities,
+            List<string> skills,
+            List<WorkExperience> workExperiences,
+            List<Project> projects,
+            List<ExtraCurricularActivity> extraCurricularActivities);
 
-        private readonly string connectionString = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build().GetConnectionString("raresConnectionString");
-        private SqlConnection sqlConnection;
+        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
 
-        public UserProfile getProfileById(int userId)
+        public UserProfile GetProfileById(int userId)
         {
             using var connection = new SqlConnection(connectionString);
             try
             {
                 connection.Open();
                 Debug.WriteLine("Database connection opened successfully.");
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Debug.WriteLine($"Failed to connect to database.{e.Message}");
                 return null;
             }
 
-
             try
             {
                 var profile = LoadUserRow(connection, userId);
-                Debug.WriteLine(profile);
                 Debug.WriteLine($"Loaded user row for userId={userId}: {(profile == null ? "NOT FOUND" : "FOUND")}");
-                if (profile == null) return null;
+                if (profile == null)
+                {
+                    return null;
+                }
 
                 profile.RelevantCertificates = LoadCertificates(connection, userId);
                 LoadPreferences(connection, userId, profile);
-
                 LoadFormData(connection, userId, profile);
 
                 return profile;
@@ -89,13 +85,12 @@ namespace PussyCatsApp.repositories
             }
         }
 
-
-        public UserProfile load(int id)
+        public UserProfile Load(int id)
         {
             return null;
         }
 
-        public void save(int id, UserProfile data)
+        public void Save(int id, UserProfile data)
         {
             using var connection = new SqlConnection(connectionString);
             connection.Open();
@@ -104,13 +99,11 @@ namespace PussyCatsApp.repositories
             {
                 using var tx = connection.BeginTransaction();
                 UpsertUserRow(connection, tx, id, data);
-
                 tx.Commit();
             }
             catch (SqlException e)
             {
                 Debug.WriteLine($"SQL Exception: {e.Message}");
-                return;
             }
             finally
             {
@@ -118,75 +111,83 @@ namespace PussyCatsApp.repositories
             }
         }
 
-        public void updateAccountStatus(int userId, string status)
+        public void UpdateAccountStatus(int userId, string status)
         {
-            this.sqlConnection = new SqlConnection(connectionString);
-            SqlCommand updateAccounStatusCommand = new SqlCommand("UPDATE Users SET activeAccount = @status WHERE userID = @userId", sqlConnection);
+            const string query = "UPDATE Users SET activeAccount = @status WHERE userID = @userId";
+            bool isActive = status == "ACTIVE";
 
-            bool isActive = (status == "ACTIVE");
-            updateAccounStatusCommand.Parameters.AddWithValue("@status", isActive);
-            updateAccounStatusCommand.Parameters.AddWithValue("@userId", userId);
             try
             {
-                sqlConnection.Open();
-                int rowsAffected = updateAccounStatusCommand.ExecuteNonQuery();
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@status", isActive);
+                command.Parameters.AddWithValue("@userId", userId);
+
+                int rowsAffected = command.ExecuteNonQuery();
                 if (rowsAffected == 0)
                 {
                     Console.WriteLine($"No user found with ID {userId} to update account status");
                 }
             }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error updating account status for user {userId}: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.Error.WriteLine($"An error occurred updating account status for user {userId}: {ex.Message}");
             }
-            finally
-            {
-                sqlConnection.Close();
-            }
-
         }
 
-        public void updateProfileLastModified(int userId, DateTime timestamp)
+        public void UpdateProfileLastModified(int userId, DateTime timestamp)
         {
-            using var connection = new SqlConnection(connectionString);
-            using var cmd = connection.CreateCommand();
-
-            cmd.CommandText = "UPDATE Users SET LastUpdated = @time WHERE userID = @userId";
-            cmd.Parameters.AddWithValue("@time", timestamp);
-            cmd.Parameters.AddWithValue("@userId", userId);
+            const string query = "UPDATE Users SET LastUpdated = @time WHERE userID = @userId";
 
             try
             {
+                using var connection = new SqlConnection(connectionString);
                 connection.Open();
+
+                using var cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@time", timestamp);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
                 cmd.ExecuteNonQuery();
             }
+            catch (SqlException ex)
+            {
+                Debug.WriteLine($"Database error updating LastModified for user {userId}: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error updating LastModified: {ex.Message}");
+                Debug.WriteLine($"An error occurred updating LastModified for user {userId}: {ex.Message}");
             }
         }
 
-        public void updateProfilePicture(int userId, string picturePath)
+        public void UpdateProfilePicture(int userId, string picturePath)
         {
-            this.sqlConnection = new SqlConnection(connectionString);
-
-            SqlCommand updatePictureCommand = new SqlCommand("UPDATE Users SET profilePicture = @path WHERE userID = @userId", sqlConnection);
-
-            updatePictureCommand.Parameters.AddWithValue("@path", (object)picturePath ?? DBNull.Value);
-            updatePictureCommand.Parameters.AddWithValue("@userId", userId);
+            const string query = "UPDATE Users SET profilePicture = @path WHERE userID = @userId";
 
             try
             {
-                sqlConnection.Open();
-                updatePictureCommand.ExecuteNonQuery();
+                using var connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@path", (object)picturePath ?? DBNull.Value);
+                command.Parameters.AddWithValue("@userId", userId);
+
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine($"Database error updating profile picture for user {userId}: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                sqlConnection.Close();
+                Console.Error.WriteLine($"An error occurred updating profile picture for user {userId}: {ex.Message}");
             }
         }
 
@@ -205,10 +206,11 @@ namespace PussyCatsApp.repositories
                 WHERE userID = @id";
             cmd.Parameters.AddWithValue("@id", userId);
 
-            Debug.WriteLine(cmd);
-
             using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return null;
+            if (!reader.Read())
+            {
+                return null;
+            }
 
             var genderChar = GetString(reader, "gender").Trim();
             var genderDisplay = genderChar switch
@@ -246,7 +248,6 @@ namespace PussyCatsApp.repositories
             };
         }
 
-        
         private static void LoadFormData(SqlConnection connection, int userId, UserProfile profile)
         {
             using var command = connection.CreateCommand();
@@ -254,28 +255,32 @@ namespace PussyCatsApp.repositories
             command.Parameters.AddWithValue("@id", userId);
 
             var raw = command.ExecuteScalar() as string;
-            if (string.IsNullOrWhiteSpace(raw)) return;
+            if (string.IsNullOrWhiteSpace(raw))
+                {
+                    return;
+                }
 
             try
             {
-                var formData = JsonSerializer.Deserialize<FormDataSnapshot>(raw, _jsonOptions);
-                if (formData == null) return;
+                var formData = JsonSerializer.Deserialize<FormDataSnapshot>(raw, JsonOptions);
+                if (formData == null)
+                {
+                    return;
+                }
 
-                profile.Skills = formData.Skills ?? new();
-                profile.WorkExperiences = formData.WorkExperiences ?? new();
-                profile.Projects = formData.Projects ?? new();
-                profile.ExtraCurricularActivities = formData.ExtraCurricularActivities ?? new();
+                profile.Skills = formData.skills ?? new ();
+                profile.WorkExperiences = formData.workExperiences ?? new ();
+                profile.Projects = formData.projects ?? new ();
+                profile.ExtraCurricularActivities = formData.extraCurricularActivities ?? new ();
             }
             catch (JsonException)
             {
-                profile.Skills = new();
-                profile.WorkExperiences = new();
-                profile.Projects = new();
-                profile.ExtraCurricularActivities = new();
+                profile.Skills = new ();
+                profile.WorkExperiences = new ();
+                profile.Projects = new ();
+                profile.ExtraCurricularActivities = new ();
             }
         }
-
-        
 
         private static List<string> LoadSkills(SqlConnection connection, int userId)
         {
@@ -286,7 +291,9 @@ namespace PussyCatsApp.repositories
 
             using var reader = command.ExecuteReader();
             while (reader.Read())
+            {
                 skills.Add(reader.GetString(0));
+            }
 
             return skills;
         }
@@ -307,7 +314,9 @@ namespace PussyCatsApp.repositories
             {
                 var name = GetString(reader, "nameDocument");
                 if (!string.IsNullOrWhiteSpace(name))
+                {
                     list.Add(name);
+                }
             }
             return list;
         }
@@ -342,7 +351,6 @@ namespace PussyCatsApp.repositories
             }
         }
 
-        
         private static void UpsertUserRow(SqlConnection connection, SqlTransaction transaction,
             int userId, UserProfile profile)
         {
@@ -352,11 +360,10 @@ namespace PussyCatsApp.repositories
                 profile.Country, profile.City, profile.University, profile.Degree,
                 profile.UniversityStartYear, profile.ExpectedGraduationYear,
                 profile.Address, profile.Motivation, profile.HasDisabilities,
-                profile.Skills ?? new(),
-                profile.WorkExperiences ?? new(),
-                profile.Projects ?? new(),
-                profile.ExtraCurricularActivities ?? new()
-            ), _jsonOptions);
+                profile.Skills ?? new (),
+                profile.WorkExperiences ?? new (),
+                profile.Projects ?? new (),
+                profile.ExtraCurricularActivities ?? new ()), JsonOptions);
 
             using var cmd = connection.CreateCommand();
             cmd.Transaction = transaction;
@@ -429,7 +436,7 @@ namespace PussyCatsApp.repositories
             cmd.Parameters.AddWithValue("@personalityTestResult", (object)profile.PersonalityTestResult ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@activeAccount", profile.ActiveAccount);
             cmd.Parameters.AddWithValue("@profilePicture", (object)profile.ProfilePicture ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@parsedCV", (object)profile.ParsedCV ?? DBNull.Value); 
+            cmd.Parameters.AddWithValue("@parsedCV", (object)profile.ParsedCV ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@formDataJson", formDataJson);
             cmd.ExecuteNonQuery();
         }
@@ -469,7 +476,10 @@ namespace PussyCatsApp.repositories
 
             void Insert(string type, string value)
             {
-                if (string.IsNullOrWhiteSpace(value)) return;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return;
+                }
                 using var cmd = connection.CreateCommand();
                 cmd.Transaction = transaction;
                 cmd.CommandText = @"
@@ -482,7 +492,9 @@ namespace PussyCatsApp.repositories
             }
 
             foreach (var role in profile.PreferredJobRoles ?? new List<string>())
+            {
                 Insert("JobRole", role);
+            }
 
             Insert("WorkMode", profile.WorkModePreference);
             Insert("Location", profile.LocationPreference);
@@ -494,10 +506,11 @@ namespace PussyCatsApp.repositories
         private static int GetInt(SqlDataReader reader, string col)
         {
             int ordinal = reader.GetOrdinal(col);
-            if (reader.IsDBNull(ordinal)) return 0;
-
+            if (reader.IsDBNull(ordinal))
+            {
+                return 0;
+            }
             return Convert.ToInt32(reader.GetValue(ordinal));
         }
     }
 }
-

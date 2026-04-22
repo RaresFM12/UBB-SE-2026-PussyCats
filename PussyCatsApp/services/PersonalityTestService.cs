@@ -1,5 +1,5 @@
 ﻿using PussyCatsApp.Models;
-using PussyCatsApp.repositories.personality_test_repo;
+using PussyCatsApp.Repositories.PersonalityTestRepo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -12,13 +12,13 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PussyCatsApp.services
 {
-    public class PersonalityTestService
+    public class PersonalityTestService: IPersonalityTestService
     {
-        private PersonalityTestRepository Repository;
+        private IPersonalityTestRepository personalityTestRepository;
 
-        public PersonalityTestService()
+        public PersonalityTestService(IPersonalityTestRepository personalityTestRepository)
         {
-            this.Repository = new PersonalityTestRepository();
+            this.personalityTestRepository = personalityTestRepository;
         }
 
         public static List<Question> LoadQuestions()
@@ -165,7 +165,8 @@ namespace PussyCatsApp.services
 
         public void SaveResult(int userId, string personalityTestResult)
         {
-            Repository.save(userId, personalityTestResult);
+            personalityTestRepository.Save(userId, personalityTestResult);
+
         }
     }
 }
