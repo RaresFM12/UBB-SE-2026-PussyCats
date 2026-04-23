@@ -355,22 +355,6 @@ namespace PussyCatsApp.Repositories
             }
         }
 
-        //private static List<string> LoadSkills(SqlConnection connection, int userId)
-        //{
-        //    var skills = new List<string>();
-        //    using var command = connection.CreateCommand();
-        //    command.CommandText = "SELECT name FROM Skills WHERE userID = @id ORDER BY skillID";
-        //    command.Parameters.AddWithValue("@id", userId);
-
-        //    using var reader = command.ExecuteReader();
-        //    while (reader.Read())
-        //    {
-        //        skills.Add(reader.GetString(0));
-        //    }
-
-        //    return skills;
-        //}
-
         private static List<string> LoadCertificates(SqlConnection connection, int userId)
         {
             var list = new List<string>();
@@ -522,7 +506,10 @@ namespace PussyCatsApp.Repositories
             sqlCommand.Parameters.AddWithValue("@lastName", profile.LastName);
 
             object genderParam = DBNull.Value;
-            if (genderDbValue != null) { genderParam = genderDbValue; }
+            if (genderDbValue != null)
+            {
+                genderParam = genderDbValue;
+            }
             sqlCommand.Parameters.AddWithValue("@gender", genderParam);
 
             sqlCommand.Parameters.AddWithValue("@age", profile.Age);
@@ -551,7 +538,7 @@ namespace PussyCatsApp.Repositories
 
         //private static void SaveSkills(SqlConnection connection, SqlTransaction transaction,
         //    int userId, List<string> skills)
-        //{
+        // {
         //    using (var del = connection.CreateCommand())
         //    {
         //        del.Transaction = transaction;
