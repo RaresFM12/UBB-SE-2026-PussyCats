@@ -165,8 +165,8 @@ public class UserProfileServiceTest
 
         var tests = new List<SkillTest>
     {
-        new SkillTest(1, 1, "Test1", 95), //100XP
-        new SkillTest(2, 1, "Test2", 75)  //60XP
+        new SkillTest(1, 1, "Test1", 95), 
+        new SkillTest(2, 1, "Test2", 75)  
     };
 
         mockSkillRepo.Setup(r => r.GetSkillTestsByUserId(1))
@@ -176,7 +176,7 @@ public class UserProfileServiceTest
 
         var result = service.RecalculateLevel(profile);
 
-        Assert.AreEqual(160, result); //100+60
+        Assert.AreEqual(160, result); 
     }
 
 }
