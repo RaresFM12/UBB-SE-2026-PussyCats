@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Microsoft.UI.Xaml.Media;
+using System.Linq;
 
 namespace PussyCatsApp.Services
 {
@@ -15,6 +12,7 @@ namespace PussyCatsApp.Services
         private const int BytesPerMegabyte = 1024 * BytesPerKilobyte;
         private const int MaxFileSizeInMb = 5;
         private const int MaxFileSize = MaxFileSizeInMb * BytesPerMegabyte;
+        private readonly HashSet<string> allowedExtensions = new () { ".jpg", ".jpeg", ".png" };
 
         public ImageStorageService()
         {
@@ -25,23 +23,25 @@ namespace PussyCatsApp.Services
                 Directory.CreateDirectory(fullDirectoryPath);
             }
         }
+        public ImageStorageService(string basePath)
+        {
+            this.basePath = basePath;
+
+            if (!Directory.Exists(basePath))
+            {
+                Directory.CreateDirectory(basePath);
+            }
+        }
 
         public string SaveImage(Stream fileStream, string fileName)
         {
-            string extension = Path.GetExtension(fileName).ToLowerInvariant();
-            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
-            {
-                throw new ArgumentException("Unsupported file type. Only .jpg, .jpeg, and .png are allowed.");
-            }
-
-            if (fileStream.Length > MaxFileSize)
-            {
-                throw new Exception("File size exceeds the maximum limit of 5MB.");
-            }
+            string extension = GetImageExtension(fileName);
+            CheckFileSize(fileStream);
 
             string uniqueFileName = Guid.NewGuid().ToString() + extension;
-
-            string fullPath = Path.Combine(AppContext.BaseDirectory, basePath, uniqueFileName);
+            string fullPath = Path.IsPathRooted(basePath)
+                ? Path.Combine(basePath, uniqueFileName)
+                : Path.Combine(AppContext.BaseDirectory, basePath, uniqueFileName);
 
             using (FileStream destinationStream = new FileStream(fullPath, FileMode.Create))
             {
@@ -63,7 +63,7 @@ namespace PussyCatsApp.Services
                 return;
             }
 
-            string fullPath = relativePath;
+            string fullPath = Path.Combine(AppContext.BaseDirectory, basePath, Path.GetFileName(relativePath));
             if (!Path.IsPathRooted(fullPath))
             {
                 fullPath = Path.Combine(AppContext.BaseDirectory, relativePath);
@@ -72,6 +72,24 @@ namespace PussyCatsApp.Services
             if (File.Exists(fullPath))
             {
                 File.Delete(fullPath);
+            }
+        }
+
+        private string GetImageExtension(string fileName)
+        {
+            string extension = Path.GetExtension(fileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+            {
+                throw new ArgumentException($"Unsupported file type. Allowed formats are: {string.Join(", ", allowedExtensions.Order())}");
+            }
+
+            return extension;
+        }
+        public void CheckFileSize(Stream fileStream)
+        {
+            if (fileStream.Length > MaxFileSize)
+            {
+                throw new Exception("File size exceeds the maximum limit of " + MaxFileSize + "MB.");
             }
         }
     }
