@@ -19,9 +19,9 @@ namespace PussyCatsApp.ViewModels
 
         private const int MaximumJobRolesAllowed = 3;
 
-        public PreferencesViewModel(int userId)
+        public PreferencesViewModel(IPreferenceService preferenceService, int userId)
         {
-            this.preferencesService = new PreferenceService(new PreferenceRepository(DatabaseConfiguration.GetConnectionString()));
+            this.preferencesService = preferenceService;
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();
@@ -36,42 +36,42 @@ namespace PussyCatsApp.ViewModels
 
             var savedPreferences = preferencesService.GetByUserId(currentUserId);
 
-            foreach (var pref in savedPreferences)
+            foreach (var preference in savedPreferences)
             {
-                if (pref.PreferenceType == "JobRole")
+                if (preference.PreferenceType == "JobRole")
                 {
-                    if (Enum.TryParse<JobRole>(pref.Value, out var role))
+                    if (Enum.TryParse<JobRole>(preference.Value, out var jobRole))
                     {
-                        selectedJobRoles.Add(role);
+                        selectedJobRoles.Add(jobRole);
                     }
                 }
-                else if (pref.PreferenceType == "WorkMode")
+                else if (preference.PreferenceType == "WorkMode")
                 {
-                    if (Enum.TryParse<WorkMode>(pref.Value, out var mode))
+                    if (Enum.TryParse<WorkMode>(preference.Value, out var workMode))
                     {
-                        selectedWorkMode = mode;
+                        selectedWorkMode = workMode;
                     }
                 }
-                else if (pref.PreferenceType == "Location")
+                else if (preference.PreferenceType == "Location")
                 {
-                    preferredLocation = pref.Value;
+                    preferredLocation = preference.Value;
                 }
             }
         }
 
-        public void ToggleJobRole(JobRole role)
+        public void ToggleJobRole(JobRole jobRole)
         {
             errorMessage = string.Empty;
 
-            if (selectedJobRoles.Contains(role))
+            if (selectedJobRoles.Contains(jobRole))
             {
-                selectedJobRoles.Remove(role);
+                selectedJobRoles.Remove(jobRole);
             }
             else
             {
                 if (selectedJobRoles.Count < MaximumJobRolesAllowed)
                 {
-                    selectedJobRoles.Add(role);
+                    selectedJobRoles.Add(jobRole);
                 }
                 else
                 {
@@ -80,9 +80,9 @@ namespace PussyCatsApp.ViewModels
             }
         }
 
-        public void SetWorkMode(WorkMode mode)
+        public void SetWorkMode(WorkMode workMode)
         {
-            selectedWorkMode = mode;
+            selectedWorkMode = workMode;
         }
 
         public void SetLocation(string location)
@@ -102,9 +102,9 @@ namespace PussyCatsApp.ViewModels
             {
                 preferencesService.SavePreferences(currentUserId, selectedJobRoles, selectedWorkMode, preferredLocation);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                errorMessage = ex.Message;
+                errorMessage = exception.Message;
             }
         }
 

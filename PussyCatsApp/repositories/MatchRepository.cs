@@ -13,9 +13,13 @@ namespace PussyCatsApp.Repositories
 {
     public class MatchRepository : IMatchRepository
     {
-        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
+        private readonly string connectionString;
 
-        // public MatchRepository() {}
+        public MatchRepository(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+
         public List<Models.Match> GetMatchesByUserId(int userId)
         {
             var matches = new List<Match>();

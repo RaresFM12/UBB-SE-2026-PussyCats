@@ -9,10 +9,11 @@ namespace PussyCatsApp.Repositories
 {
     public class UserSkillRepository : IUserSkillRepository
     {
-        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
+        private readonly string connectionString;
 
-        public UserSkillRepository()
+        public UserSkillRepository(string connectionString)
         {
+            this.connectionString = connectionString;
         }
 
         public List<UserSkill> GetVerifiedSkillsByUserId(int userId)
