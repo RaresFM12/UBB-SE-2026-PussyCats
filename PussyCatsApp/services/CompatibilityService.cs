@@ -162,9 +162,9 @@ namespace PussyCatsApp.Services
             return weightedSum * ScoreNormalizationFactor / totalWeight;
         }
 
-        private double ComputeGain(SkillGroup group, double gj, int totalWeight)
+        private double ComputeGain(SkillGroup group, double groupScore, int totalWeight)
         {
-            return ScoreNormalizationFactor * group.Weight * (TargetGroupScore - gj) / totalWeight;
+            return ScoreNormalizationFactor * group.Weight * (TargetGroupScore - groupScore) / totalWeight;
         }
 
         private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)

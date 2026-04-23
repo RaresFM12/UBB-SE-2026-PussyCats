@@ -6,7 +6,7 @@ namespace PussyCatsApp.Services
     public class CompletenessService : ICompletenessService
     {
         // magic numbers: field indexes
-        private const int TotalFields = 20;
+        private const int TotalFields = 21;
 
         private static readonly string[] Labels =
         {
