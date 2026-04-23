@@ -16,6 +16,7 @@ using PussyCatsApp.Models;
 using PussyCatsApp.ViewModels;
 using PussyCatsApp.Services;
 using PussyCatsApp.Repositories;
+using PussyCatsApp.Configuration;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,8 +32,8 @@ namespace PussyCatsApp.Views
         {
             this.InitializeComponent();
 
-            var skillTestRepo = new SkillTestRepository();
-            var userProfileRepo = new UserProfileRepository();
+            var skillTestRepo = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
+            var userProfileRepo = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
             var userProfileService = new UserProfileService(skillTestRepo, userProfileRepo);
             viewModel = new PublicProfileViewModel(userProfileService);
         }

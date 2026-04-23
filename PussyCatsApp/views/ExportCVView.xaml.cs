@@ -7,6 +7,7 @@ using Microsoft.Web.WebView2.Core;
 using PussyCatsApp.ViewModels;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
+using PussyCatsApp.Configuration;
 
 namespace PussyCatsApp.Views
 {
@@ -56,8 +57,8 @@ namespace PussyCatsApp.Views
                 CoreWebView2HostResourceAccessKind.Allow);
 
             IPdfExportService pdfExportService = new PdfExportService(CvWebView);
-            ISkillTestRepository skillTestRepository = new SkillTestRepository();
-            IUserProfileRepository userProfileRepository = new UserProfileRepository();
+            ISkillTestRepository skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
+            IUserProfileRepository userProfileRepository = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
             IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
 
             ViewModel = new ExportCVViewModel(pdfExportService, userProfileService);

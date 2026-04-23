@@ -9,6 +9,6 @@ namespace PussyCatsApp.Repositories
 {
     public interface ISkillGroupRepository
     {
-        List<SkillGroup> GetByRole(JobRole role);
+        List<SkillGroup> GetSkillsGroupByRole(JobRole role);
     }
 }

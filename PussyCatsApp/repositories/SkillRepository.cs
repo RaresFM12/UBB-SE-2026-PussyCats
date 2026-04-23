@@ -5,61 +5,118 @@ using PussyCatsApp.Models;
 
 namespace PussyCatsApp.Repositories
 {
-    internal class SkillRepository : ISkillRepository
+    public class SkillRepository : ISkillRepository
     {
-        private readonly List<Skill> skills = new ();
+        private readonly List<Skill> skills = new List<Skill>();
 
         public Skill Load(int skillId)
         {
-            return skills.FirstOrDefault(s => s.SkillId == skillId);
+            foreach (Skill currentSkill in skills)
+            {
+                if (currentSkill.SkillId == skillId)
+                {
+                    return currentSkill;
+                }
+            }
+            return null;
         }
 
-        public void Save(int skillId, Skill data)
+        public void Save(int targetSkillId, Skill providedSkillData)
         {
-            var existing = skills.FirstOrDefault(s => s.SkillId == skillId);
-            if (existing != null)
+            Skill skillFoundInStorage = null;
+            foreach (Skill currentSkill in skills)
             {
-                existing.Name = data.Name;
-                existing.Score = data.Score;
-                existing.UserId = data.UserId;
-                existing.AchievedDate = data.AchievedDate;
+                if (currentSkill.SkillId == targetSkillId)
+                {
+                    skillFoundInStorage = currentSkill;
+                    break;
+                }
+            }
+
+            if (skillFoundInStorage != null)
+            {
+                skillFoundInStorage.Name = providedSkillData.Name;
+                skillFoundInStorage.Score = providedSkillData.Score;
+                skillFoundInStorage.UserId = providedSkillData.UserId;
+                skillFoundInStorage.AchievedDate = providedSkillData.AchievedDate;
             }
             else
             {
-                data.SkillId = skillId;
-                skills.Add(data);
+                providedSkillData.SkillId = targetSkillId;
+                skills.Add(providedSkillData);
             }
         }
 
         public List<Skill> GetSkillsByUserId(int userId)
         {
-            return skills.Where(s => s.UserId == userId).ToList();
+            List<Skill> userSkills = new List<Skill>();
+            foreach (Skill currentSkill in skills)
+            {
+                if (currentSkill.UserId == userId)
+                {
+                    userSkills.Add(currentSkill);
+                }
+            }
+            return userSkills;
         }
 
-        public void AddSkill(Skill skill)
+        public void AddSkill(Skill newSkill)
         {
-            if (skill.SkillId == 0)
+            if (newSkill.SkillId == 0)
             {
-                skill.SkillId = skills.Count > 0 ? skills.Max(s => s.SkillId) + 1 : 1;
+                if (skills.Count == 0)
+                {
+                    newSkill.SkillId = 1;
+                }
+                else
+                {
+                    int highestIdFound = 0;
+                    foreach (Skill currentSkill in skills)
+                    {
+                        if (currentSkill.SkillId > highestIdFound)
+                        {
+                            highestIdFound = currentSkill.SkillId;
+                        }
+                    }
+                    newSkill.SkillId = highestIdFound + 1;
+                }
             }
-            skills.Add(skill);
+            skills.Add(newSkill);
         }
 
         public void RemoveSkill(int skillId)
         {
-            var skill = skills.FirstOrDefault(s => s.SkillId == skillId);
-            if (skill != null)
+            Skill skillToRemove = null;
+            foreach (Skill currentSkill in skills)
             {
-                skills.Remove(skill);
+                if (currentSkill.SkillId == skillId)
+                {
+                    skillToRemove = currentSkill;
+                    break;
+                }
+            }
+
+            if (skillToRemove != null)
+            {
+                skills.Remove(skillToRemove);
             }
         }
 
-        public void UpdateSkillScore(int skillId, double score)
+        public void UpdateSkillScore(int skillId, double newScore)
         {
-            var skill = skills.FirstOrDefault(s => s.SkillId == skillId);
-            if (skill != null)
+            Skill skillToUpdate = null;
+            foreach (Skill currentSkill in skills)
             {
-                skill.Score = score;
+                if (currentSkill.SkillId == skillId)
+                {
+                    skillToUpdate = currentSkill;
+                    break;
+                }
+            }
+
+            if (skillToUpdate != null)
+            {
+                skillToUpdate.Score = newScore;
             }
         }
     }

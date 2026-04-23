@@ -19,13 +19,13 @@ namespace PussyCatsApp.Repositories
             var preferences = new List<Preference>();
             string query = "SELECT pID, userID, preferanceType, value FROM PREFERENCES WHERE userID = @UserId";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", userId);
-                    conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
