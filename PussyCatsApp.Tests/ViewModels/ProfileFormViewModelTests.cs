@@ -156,8 +156,59 @@ namespace PussyCatsApp.Tests.ViewModels
 
             viewModel.AddWorkExperience();
 
-            Assert.AreEqual(maximumNumberOfWorkExperiencesAllowed, viewModel.WorkExperiences.Count);
+            Assert.IsTrue(viewModel.IsInfoBarOpen);
+            Assert.AreEqual($"Maximum of {maximumNumberOfWorkExperiencesAllowed} work experiences allowed.", viewModel.InfoBarMessage);
         }
 
+        [TestMethod]
+        public void TestRemoveWorkExperienceRemovesExperienceFromList()
+        {
+            viewModel.AddWorkExperience();
+            var experience = viewModel.WorkExperiences.First();
+
+            viewModel.RemoveWorkExperience(experience);
+            Assert.AreEqual(0, viewModel.WorkExperiences.Count);
+        }
+
+        [TestMethod]
+        public void TestAddProjectAddsProjectToList()
+        {
+            viewModel.AddProject();
+            Assert.AreEqual(1, viewModel.Projects.Count);
+        }
+
+        [TestMethod]
+        public void TestAddProjectFailsWhenMaximumNumberOfProjectsIsReached()
+        {
+            int maximumNumberOfProjectsAllowed = 10;
+            for (int projectIndex = 0; projectIndex < maximumNumberOfProjectsAllowed; projectIndex++)
+            {
+                viewModel.AddProject();
+            }
+            viewModel.AddProject();
+            Assert.AreEqual(maximumNumberOfProjectsAllowed, viewModel.Projects.Count);
+        }
+
+        [TestMethod]
+        public void TestAddProjectShowInfoBarWhenMaximumNumberOfProjectsIsReached()
+        {
+            int maximumNumberOfProjectsAllowed = 10;
+            for (int projectIndex = 0; projectIndex < maximumNumberOfProjectsAllowed; projectIndex++)
+            {
+                viewModel.AddProject();
+            }
+            viewModel.AddProject();
+            Assert.IsTrue(viewModel.IsInfoBarOpen);
+            Assert.AreEqual($"Maximum of {maximumNumberOfProjectsAllowed} projects allowed.", viewModel.InfoBarMessage);
+        }
+
+        [TestMethod]
+        public void TestRemoveProjectRemovesProjectFromList()
+        {
+            viewModel.AddProject();
+            var project = viewModel.Projects.First();
+            viewModel.RemoveProject(project);
+            Assert.AreEqual(0, viewModel.Projects.Count);
+        }
     }
 }
