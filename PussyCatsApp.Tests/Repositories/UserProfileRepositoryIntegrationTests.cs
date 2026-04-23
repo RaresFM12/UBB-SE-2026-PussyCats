@@ -181,7 +181,7 @@ namespace PussyCatsApp.Tests.Repositories
 
 
         [TestMethod]
-        public void GetProfileById_UserWithNoPreferences_ReturnsEmptyJobRolesList()
+        public void GetProfileById_UserWithNoPreferences_ExpectsEmptyJobRolesList()
         {
             int userId = TestDatabaseHelper.InsertUser();
 

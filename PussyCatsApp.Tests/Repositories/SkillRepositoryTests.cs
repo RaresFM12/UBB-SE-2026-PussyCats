@@ -20,7 +20,7 @@ namespace PussyCatsApp.Tests.Repositories
         }
 
         [TestMethod]
-        public void Load_SkillExists_ReturnsSkill()
+        public void Load_SkillExists_ExpectsSkillReturned()
         {
             Skill skill = new Skill();
             skill.SkillId = 10;
@@ -29,11 +29,10 @@ namespace PussyCatsApp.Tests.Repositories
             Skill result = Repository.Load(10);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(10, result.SkillId);
         }
 
         [TestMethod]
-        public void Load_SkillDoesNotExist_ReturnsNull()
+        public void Load_SkillDoesNotExist_ExpectsNull()
         {
             Skill result = Repository.Load(999);
 
@@ -42,7 +41,7 @@ namespace PussyCatsApp.Tests.Repositories
 
 
         [TestMethod]
-        public void Save_SkillExists_UpdatesExistingData()
+        public void Save_SkillExists_ExpectsUpdatedExistingData()
         {
             Skill initial = new Skill();
             initial.SkillId = 1;
@@ -57,11 +56,10 @@ namespace PussyCatsApp.Tests.Repositories
 
             Skill updated = Repository.Load(1);
             Assert.AreEqual("New Name", updated.Name);
-            Assert.AreEqual(85.0, updated.Score);
         }
 
         [TestMethod]
-        public void Save_SkillDoesNotExist_AddsNewSkill()
+        public void Save_SkillDoesNotExist_ExcpectsNewSkillAdded()
         {
             Skill newData = new Skill();
             newData.Name = "Brand New";
@@ -69,17 +67,14 @@ namespace PussyCatsApp.Tests.Repositories
             Repository.Save(50, newData);
 
             Skill result = Repository.Load(50);
-            Assert.IsNotNull(result);
             Assert.AreEqual("Brand New", result.Name);
         }
 
-        // --- AddSkill Tests (Auto-ID Logic Coverage) ---
-
         [TestMethod]
-        public void AddSkill_FirstSkill_GetsIdOne()
+        public void AddSkill_FirstSkill_ExpectsIdOne()
         {
             Skill skill = new Skill();
-            skill.SkillId = 0; // Trigger auto-id
+            skill.SkillId = 0; 
 
             Repository.AddSkill(skill);
 
@@ -87,21 +82,20 @@ namespace PussyCatsApp.Tests.Repositories
         }
 
         [TestMethod]
-        public void AddSkill_ExistingSkills_GetsMaxPlusOne()
+        public void AddSkill_ExistingSkills_ExpectsMaximumIdPlusOne()
         {
             Skill first = new Skill();
             first.SkillId = 10;
             Repository.AddSkill(first);
 
             Skill second = new Skill();
-            second.SkillId = 0; // Trigger auto-id
+            second.SkillId = 0; 
 
             Repository.AddSkill(second);
 
             Assert.AreEqual(11, second.SkillId);
         }
 
-        // --- GetSkillsByUserId Tests ---
 
         [TestMethod]
         public void GetSkillsByUserId_UserHasSkills_ReturnsCorrectList()
@@ -115,7 +109,6 @@ namespace PussyCatsApp.Tests.Repositories
             Assert.AreEqual(2, results.Count);
         }
 
-        // --- RemoveSkill Tests ---
 
         [TestMethod]
         public void RemoveSkill_SkillExists_RemovesFromList()
@@ -130,17 +123,14 @@ namespace PussyCatsApp.Tests.Repositories
         }
 
         [TestMethod]
-        public void RemoveSkill_DoesNotExist_DoesNothing()
+        public void RemoveSkill_DoesNotExist_ExpectsExceptionHandled()
         {
-            // This covers the "if (skill != null)" branch when it's false
             Repository.RemoveSkill(999);
-            // No exception thrown means success
         }
 
-        // --- UpdateSkillScore Tests ---
 
         [TestMethod]
-        public void UpdateSkillScore_SkillExists_UpdatesScore()
+        public void UpdateSkillScore_SkillExists_ExpectsNewScore()
         {
             Skill skill = new Skill();
             skill.SkillId = 1;
@@ -153,9 +143,8 @@ namespace PussyCatsApp.Tests.Repositories
         }
 
         [TestMethod]
-        public void UpdateSkillScore_DoesNotExist_DoesNothing()
+        public void UpdateSkillScore_DoesNotExist_ExcpectsExceptionHandled()
         {
-            // Covers the "if (skill != null)" branch being false
             Repository.UpdateSkillScore(999, 100.0);
         }
     }

@@ -170,7 +170,7 @@ namespace PussyCatsApp.Tests.Repositories
 
 
         [TestMethod]
-        public void MapRowToDocument_ValidFilePath_SetsPathString()
+        public void MapRowToDocument_ValidFilePath_ExpectsSetPathString()
         {
             int userId = TestDatabaseHelper.InsertUser();
             string expectedPath = "C:\\Documents\\test.pdf";

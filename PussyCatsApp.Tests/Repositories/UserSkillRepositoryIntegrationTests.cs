@@ -51,7 +51,7 @@ namespace PussyCatsApp.Tests.Repositories
         }
 
         [TestMethod]
-        public void GetVerifiedSkillsByUserId_SkillExists_IsAlwaysVerified()
+        public void GetVerifiedSkillsByUserId_SkillExists_ExpectsSkillVerified()
         {
             int userId = TestDatabaseHelper.InsertUser();
             TestDatabaseHelper.InsertSkill(userId, "Git", 50);

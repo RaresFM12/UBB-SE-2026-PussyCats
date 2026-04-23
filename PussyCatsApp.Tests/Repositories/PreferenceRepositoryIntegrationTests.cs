@@ -63,7 +63,6 @@ namespace PussyCatsApp.Tests.Repositories
         [TestMethod]
         public void RemovePreference_PreferenceExists_ExpectsOnlyThatPreferenceRemoved()
         {
-            // Arrange
             int userId = TestDatabaseHelper.InsertUser();
             int prefId1 = TestDatabaseHelper.InsertPreference(userId, "A", "1");
             int prefId2 = TestDatabaseHelper.InsertPreference(userId, "B", "2");
