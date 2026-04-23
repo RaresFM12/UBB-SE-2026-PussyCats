@@ -36,8 +36,6 @@ namespace PussyCatsApp.Views
 
             btnEdit.Click += OnEditProfileClick;
             btnOldTests.Click += OnGoToOldTestsClick;
-            btnPublicProfile.Click += OnSeePublicProfileClick;
-            btnViewDocuments.Click += OnViewDocumentsClick;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
