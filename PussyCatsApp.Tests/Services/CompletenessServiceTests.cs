@@ -125,7 +125,7 @@ namespace PussyCatsApp.Tests.Services
             var result = service.GetNextEmptyFieldPrompt(profile);
             //Assert
             Assert.IsTrue(result.StartsWith("Add your"));
-            Assert.IsTrue(result.EndsWith("completeness!"));
+            Assert.IsTrue(result.EndsWith("14% completeness!"));
         }
     }
 }
