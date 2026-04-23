@@ -24,10 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <Folder Include="ViewModels\" />
     <Folder Include="Repositories\" />
-=======
     <Folder Include="Services\" />
   </ItemGroup>
 
@@ -35,7 +33,6 @@
     <None Update="appsettings.test.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
->>>>>>> 34bda2a4c7d3f286dbdbec6a098d586b52cab20a
   </ItemGroup>
 
 </Project>

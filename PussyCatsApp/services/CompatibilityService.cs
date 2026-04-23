@@ -118,14 +118,9 @@ namespace PussyCatsApp.Services
                 {
                     if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (userSkill.IsVerified)
-                        {
-                            ci = userSkill.Score / ScoreNormalizationFactor;
-                        }
-                        else
-                        {
-                            ci = UnverifiedSkillScore;
-                        }
+                        ci = userSkill.IsVerified
+                            ? userSkill.Score / ScoreNormalizationFactor
+                            : UnverifiedSkillScore;
 
                         break;
                     }
@@ -165,6 +160,10 @@ namespace PussyCatsApp.Services
         private double ComputeGain(SkillGroup group, double groupScore, int totalWeight)
         {
             return ScoreNormalizationFactor * group.Weight * (TargetGroupScore - groupScore) / totalWeight;
+        }
+        private int CompareGains(Suggestion a, Suggestion b)
+        {
+            return b.GainScore.CompareTo(a.GainScore);
         }
 
         private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
@@ -231,7 +230,7 @@ namespace PussyCatsApp.Services
                 }
             }
 
-            suggestions.Sort((a, b) => b.GainScore.CompareTo(a.GainScore));
+            suggestions.Sort(CompareGains);
 
             if (suggestions.Count > MaxSuggestions)
             {

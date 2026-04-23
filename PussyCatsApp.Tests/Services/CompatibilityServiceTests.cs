@@ -57,12 +57,13 @@ public class CompatibilityServiceTest
     [TestMethod]
     public void CalculateForRole_NoGroups_ReturnsInvalidScore()
     {
+        //Arrange
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserSkillRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns(string.Empty);
         mockSkillGroupRepo.Setup(r => r.GetSkillsGroupByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>());
-
+        //Act
         var result = service.CalculateForRole(1, JobRole.FrontendDeveloper);
-
+        //Assert
         Assert.AreEqual(-1, result.MatchScore);
     }
 
@@ -70,15 +71,16 @@ public class CompatibilityServiceTest
     [TestMethod]
     public void CalculateForRole_WithCvSkills_ReturnsNonZeroScore()
     {
+        //Arrange
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserSkillRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns("line1\nline2\nReact");
-        mockSkillGroupRepo.Setup(r => r.GetByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>
+        mockSkillGroupRepo.Setup(r => r.GetSkillsGroupByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>
         {
             new SkillGroup { GroupName = "G1", Skills = new List<string> { "React" }, Weight = 10 }
         });
-
+        //Act
         var result = service.CalculateForRole(1, JobRole.FrontendDeveloper);
-
+        //Assert
         Assert.IsTrue(result.MatchScore > 0);
     }
 
@@ -86,30 +88,32 @@ public class CompatibilityServiceTest
     [TestMethod]
     public void CalculateForRole_CvLessThan3Lines_ReturnsZeroScore()
     {
+        //Arrange
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserSkillRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns("line1\nline2");
         mockSkillGroupRepo.Setup(r => r.GetSkillsGroupByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>
         {
             new SkillGroup { GroupName = "G1", Skills = new List<string> { "React" }, Weight = 10 }
         });
-
+        //Act
         var result = service.CalculateForRole(1, JobRole.FrontendDeveloper);
-
+        //Assert
         Assert.AreEqual(0, result.MatchScore);
     }
 
     [TestMethod]
     public void CalculateForRole_CvThirdLineEmpty_ReturnsZeroScore()
     {
+        //Arrange
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserSkillRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns("line1\nline2\n   ");
         mockSkillGroupRepo.Setup(r => r.GetSkillsGroupByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>
         {
             new SkillGroup { GroupName = "G1", Skills = new List<string> { "React" }, Weight = 10 }
         });
-
+        //Act
         var result = service.CalculateForRole(1, JobRole.FrontendDeveloper);
-
+        //Assert
         Assert.AreEqual(0, result.MatchScore);
     }
 
@@ -117,6 +121,7 @@ public class CompatibilityServiceTest
     [TestMethod]
     public void CalculateForRole_HighGroupScore_ReturnsEmptySuggestions()
     {
+        //Arrange
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>
         {
             new UserSkill { SkillName = "React", IsVerified = true, Score = 90 }
@@ -126,15 +131,16 @@ public class CompatibilityServiceTest
         {
             new SkillGroup { GroupName = "G1", Skills = new List<string> { "React" }, Weight = 10 }
         });
-
+        //Act
         var result = service.CalculateForRole(1, JobRole.FrontendDeveloper);
-
+        //Assert
         Assert.AreEqual(0, result.Suggestions.Count);
     }
 
     [TestMethod]
     public void CalculateForRole_MoreThan3Gaps_Returns3Suggestions()
     {
+        //Arrange
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserSkillRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns(string.Empty);
         mockSkillGroupRepo.Setup(r => r.GetSkillsGroupByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>
@@ -144,21 +150,22 @@ public class CompatibilityServiceTest
             new SkillGroup { GroupName = "G3", Skills = new List<string> { "Skill3" }, Weight = 8 },
             new SkillGroup { GroupName = "G4", Skills = new List<string> { "Skill4" }, Weight = 7 }
         });
-
+        //Act
         var result = service.CalculateForRole(1, JobRole.FrontendDeveloper);
-
+        //Assert
         Assert.AreEqual(3, result.Suggestions.Count);
     }
 
     [TestMethod]
     public void CalculateAll_ReturnsResultForEachRole()
     {
+        //Arrange
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserSkillRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns(string.Empty);
         mockSkillGroupRepo.Setup(r => r.GetSkillsGroupByRole(It.IsAny<JobRole>())).Returns(new List<SkillGroup>());
-
+        //Act
         var results = service.CalculateAll(1);
-
+        //Assert
         Assert.AreEqual(Enum.GetValues(typeof(JobRole)).Length, results.Count);
     }
 }
