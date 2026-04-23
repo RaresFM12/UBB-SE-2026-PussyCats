@@ -313,5 +313,192 @@ namespace PussyCatsApp.Tests.ViewModels
             viewModel.AddSkill(skill);
             Assert.IsTrue(viewModel.IsDuplicateSkill(skill));
         }
+
+        [TestMethod]
+        public void TestFilterSkillSuggestionsReturnsMatchingSkill()
+        {
+            string searchTextQuery = "Webpa";
+            List<string> results = viewModel.FilterSkillSuggestions(searchTextQuery);
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results.Contains("Webpack"));
+        }
+
+        [TestMethod]
+        public void TestFilterSkillSuggestionsReturnsEmptyListOnEmptyQuery()
+        {
+            string emptyTextQuery = string.Empty;
+            List<string> results = viewModel.FilterSkillSuggestions(emptyTextQuery);
+            Assert.AreEqual(0, results.Count);
+        }
+
+        [TestMethod]
+        public void TestFilterSkillsSuggestionsDoesntRecommendDuplicateSkill()
+        {
+            viewModel.AddSkill("Webpack");
+            string searchTextQuery = "Webpa";
+            List<string> results = viewModel.FilterSkillSuggestions(searchTextQuery);
+            Assert.AreEqual(0, results.Count);
+        }
+
+        [TestMethod]
+        public void TestPopulateFromParsedProfileWorksWhenNoMissingData()
+        {
+            UserProfile parsedUserProfile = new UserProfile
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Age = 25,
+                Gender = "Male",
+                Email = "johndoe@gmail.com",
+                Country = "Romania",
+                City = "Cluj-Napoca",
+                University = "University of Test",
+                Degree = "Bachelor's in Testing",
+                ExpectedGraduationYear = 2022,
+                PhoneNumber = "+40123456789",
+                Skills = new List<string> { "Testing", "C#" },
+                WorkExperiences = new List<WorkExperience>
+                {
+                    new WorkExperience
+                    {
+                        Company = "Test Company",
+                        JobTitle = "Tester",
+                        StartDate = new DateTime(2020, 1, 1),
+                        EndDate = new DateTime(2021, 1, 1),
+                        Description = "Testing software",
+                        CurrentlyWorking = false
+                    }
+                },
+                Projects = new List<Project>
+                {
+                    new Project
+                    {
+                        Name = "Test Project",
+                        Description = "A project for testing",
+                        Technologies = new List<string> { "C#, NUnit" },
+                        Url = "http://testproject.com"
+                    }
+                },
+                ExtraCurricularActivities = new List<ExtraCurricularActivity>
+                {
+                    new ExtraCurricularActivity
+                    {
+                        ActivityName = "Testing Club",
+                        Description = "A club for testing enthusiasts"
+                    }
+                }
+            };
+            viewModel.PopulateFromParsedProfile(parsedUserProfile);
+            Assert.IsFalse(viewModel.IsInfoBarOpen);
+            Assert.AreEqual(parsedUserProfile.FirstName, viewModel.FirstName);
+            Assert.AreEqual(parsedUserProfile.LastName, viewModel.LastName);
+            Assert.AreEqual(parsedUserProfile.Skills.Count, viewModel.Skills.Count);
+        }
+
+        [TestMethod]
+        public void TestPopulateFromParsedProfileFailsWhenMissingAge()
+        {
+            /// Missing mandatory fields: Age
+            UserProfile parsedUserProfileMissingValues = new UserProfile
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Gender = "Male",
+                Email = "johndoe@gmail.com",
+                Country = "Romania",
+                City = "Cluj-Napoca",
+                University = "University of Test",
+                Degree = "Bachelor's in Testing",
+                ExpectedGraduationYear = 2022,
+                PhoneNumber = "+40123456789",
+                Skills = new List<string> { "Testing", "C#" },
+                WorkExperiences = new List<WorkExperience>
+                {
+                    new WorkExperience
+                    {
+                        Company = "Test Company",
+                        JobTitle = "Tester",
+                        StartDate = new DateTime(2020, 1, 1),
+                        EndDate = new DateTime(2021, 1, 1),
+                        Description = "Testing software",
+                        CurrentlyWorking = false
+                    }
+                },
+                Projects = new List<Project>
+                {
+                    new Project
+                    {
+                        Name = "Test Project",
+                        Description = "A project for testing",
+                        Technologies = new List<string> { "C#, NUnit" },
+                        Url = "http://testproject.com"
+                    }
+                },
+                ExtraCurricularActivities = new List<ExtraCurricularActivity>
+                {
+                    new ExtraCurricularActivity
+                    {
+                        ActivityName = "Testing Club",
+                        Description = "A club for testing enthusiasts"
+                    }
+                }
+            };
+            viewModel.PopulateFromParsedProfile(parsedUserProfileMissingValues);
+            Assert.IsTrue(viewModel.IsInfoBarOpen);
+            Assert.AreEqual("Missing fields: Age", viewModel.InfoBarMessage);
+        }
+
+        [TestMethod]
+        public void TestPopulateFromParsedProfileFailsWhenMissingEmail()
+        {
+            /// Missing mandatory fields: Email
+            UserProfile parsedUserProfileMissingValues = new UserProfile
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Gender = "Male",
+                Age = 25,
+                Country = "Romania",
+                City = "Cluj-Napoca",
+                University = "University of Test",
+                Degree = "Bachelor's in Testing",
+                ExpectedGraduationYear = 2022,
+                PhoneNumber = "+40123456789",
+                Skills = new List<string> { "Testing", "C#" },
+                WorkExperiences = new List<WorkExperience>
+                {
+                    new WorkExperience
+                    {
+                        Company = "Test Company",
+                        JobTitle = "Tester",
+                        StartDate = new DateTime(2020, 1, 1),
+                        EndDate = new DateTime(2021, 1, 1),
+                        Description = "Testing software",
+                        CurrentlyWorking = false
+                    }
+                },
+                Projects = new List<Project>
+                {
+                    new Project
+                    {
+                        Name = "Test Project",
+                        Description = "A project for testing",
+                        Technologies = new List<string> { "C#, NUnit" },
+                        Url = "http://testproject.com"
+                    }
+                },
+                ExtraCurricularActivities = new List<ExtraCurricularActivity>
+                {
+                    new ExtraCurricularActivity
+                    {
+                        ActivityName = "Testing Club",
+                        Description = "A club for testing enthusiasts"
+                    }
+                }
+            };
+            viewModel.PopulateFromParsedProfile(parsedUserProfileMissingValues);
+            Assert.IsTrue(viewModel.IsInfoBarOpen);
+            Assert.AreEqual("Missing fields: Email", viewModel.InfoBarMessage);
+        }
     }
 }

@@ -307,7 +307,7 @@ namespace PussyCatsApp.ViewModels
             }
         }
 
-        private void PopulateFromParsedProfile(UserProfile parsedUserProfile)
+        public void PopulateFromParsedProfile(UserProfile parsedUserProfile)
         {
             if (!string.IsNullOrEmpty(parsedUserProfile.FirstName))
             {
@@ -387,7 +387,6 @@ namespace PussyCatsApp.ViewModels
             Projects.Clear();
             ExtraCurricularActivities.Clear();
 
-            // Add skills with duplicate detection (R20)
             if (parsedUserProfile.Skills != null)
             {
                 foreach (var skill in parsedUserProfile.Skills)
@@ -432,7 +431,6 @@ namespace PussyCatsApp.ViewModels
                 }
             }
 
-            // List missing fields (R18)
             var missingFields = new List<string>();
             var fieldsOfTypeString = new Dictionary<string, string>
             {
