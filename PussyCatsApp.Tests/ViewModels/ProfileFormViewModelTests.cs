@@ -114,5 +114,50 @@ namespace PussyCatsApp.Tests.ViewModels
             Assert.IsTrue(viewModel.IsInfoBarOpen);
             Assert.AreEqual(skillNameTooLongInfoBarMessage, viewModel.InfoBarMessage);
         }
+
+        [TestMethod]
+        public void TestRemoveSkillRemovesSkillFromList()
+        {
+            string skill = "C#";
+            viewModel.AddSkill(skill);
+            viewModel.RemoveSkill(skill);
+            Assert.AreEqual(0, viewModel.Skills.Count);
+        }
+
+        [TestMethod]
+        public void TestAddWorkExperienceAddsExperienceToList()
+        {
+            viewModel.AddWorkExperience();
+            Assert.AreEqual(1, viewModel.WorkExperiences.Count);
+        }
+
+        [TestMethod]
+        public void TestAddWorkExperienceFailsWhenMaximumNumberOfWorkExperiencesIsReached()
+        {
+            int maximumNumberOfWorkExperiencesAllowed = 10;
+            for (int experienceIndex = 0; experienceIndex < maximumNumberOfWorkExperiencesAllowed; experienceIndex++)
+            {
+                viewModel.AddWorkExperience();
+            }
+
+            viewModel.AddWorkExperience();
+
+            Assert.AreEqual(maximumNumberOfWorkExperiencesAllowed, viewModel.WorkExperiences.Count);
+        }
+
+        [TestMethod]
+        public void TestAddWorkExperienceShowInfoBarWhenMaximumNumberOfWorkExperiencesIsReached()
+        {
+            int maximumNumberOfWorkExperiencesAllowed = 10;
+            for (int experienceIndex = 0; experienceIndex < maximumNumberOfWorkExperiencesAllowed; experienceIndex++)
+            {
+                viewModel.AddWorkExperience();
+            }
+
+            viewModel.AddWorkExperience();
+
+            Assert.AreEqual(maximumNumberOfWorkExperiencesAllowed, viewModel.WorkExperiences.Count);
+        }
+
     }
 }
