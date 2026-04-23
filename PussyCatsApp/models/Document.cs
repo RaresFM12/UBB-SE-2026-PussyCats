@@ -6,7 +6,7 @@ namespace PussyCatsApp.Models
 
         public int UserId { get; set; }
 
-        public string DocumentName { get; set; }
+        public string DocumentName { get; set; } = string.Empty;
 
         public string FilePath { get; set; }
 

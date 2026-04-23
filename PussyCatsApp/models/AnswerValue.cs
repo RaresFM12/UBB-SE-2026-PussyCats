@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PussyCatsApp.Models
 {
+    /// <summary>
+    /// Possible answers for the personality test questions.
+    /// </summary>
     public enum AnswerValue
     {
         /// <summary>
