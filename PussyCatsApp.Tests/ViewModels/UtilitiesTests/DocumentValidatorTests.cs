@@ -17,27 +17,15 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
             string documentEmpty = string.Empty;
             string selectedFilePath = "C://";
 
-            try
-            {
-                DocumentValidator.ValidateDocumentInput(documentNull, selectedFilePath);
-                /// The method must throw an exception to be correct
-                Assert.IsTrue(false);
-            }
-            catch (Exception exception)
-            {
-                Assert.AreEqual("Please enter a name for the document.", exception.Message);
-            }
+            var exception1 = Assert.ThrowsException<ArgumentException>(() =>
+                DocumentValidator.ValidateDocumentInput(documentNull, selectedFilePath));
 
-            try
-            {
-                DocumentValidator.ValidateDocumentInput(documentEmpty, selectedFilePath);
-                /// The method must throw an exception to be correct
-                Assert.IsTrue(false);
-            }
-            catch (Exception exception)
-            {
-                Assert.AreEqual("Please enter a name for the document.", exception.Message);
-            }
+            Assert.AreEqual("Please enter a name for the document.", exception1.Message);
+
+            var exception2 = Assert.ThrowsException<ArgumentException>(() =>
+                DocumentValidator.ValidateDocumentInput(documentEmpty, selectedFilePath));
+
+            Assert.AreEqual("Please enter a name for the document.", exception2.Message);
         }
 
         [TestMethod]
@@ -47,27 +35,17 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
             string selectedFilePathEmpty = string.Empty;
             string document = "Document";
 
-            try
-            {
-                DocumentValidator.ValidateDocumentInput(document, selectedFilePathNull);
-                /// The method must throw an exception to be correct
-                Assert.IsTrue(false);
-            }
-            catch (Exception exception)
-            {
-                Assert.AreEqual("Please select a file to upload.", exception.Message);
-            }
+            var exception1 = Assert.ThrowsException<ArgumentException>(() =>
+                DocumentValidator.ValidateDocumentInput(document, selectedFilePathNull)
+            );
 
-            try
-            {
-                DocumentValidator.ValidateDocumentInput(document, selectedFilePathEmpty);
-                /// The method must throw an exception to be correct
-                Assert.IsTrue(false);
-            }
-            catch (Exception exception)
-            {
-                Assert.AreEqual("Please select a file to upload.", exception.Message);
-            }
+            Assert.AreEqual("Please select a file to upload.", exception1.Message);
+
+            var exception2 = Assert.ThrowsException<ArgumentException>(() =>
+                DocumentValidator.ValidateDocumentInput(document, selectedFilePathEmpty)
+            );
+
+            Assert.AreEqual("Please select a file to upload.", exception2.Message);
         }
 
         [TestMethod]
