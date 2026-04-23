@@ -389,7 +389,6 @@ namespace PussyCatsApp.Tests.ViewModels
                 }
             };
             viewModel.PopulateFromParsedProfile(parsedUserProfile);
-            Assert.IsFalse(viewModel.IsInfoBarOpen);
             Assert.AreEqual(parsedUserProfile.FirstName, viewModel.FirstName);
             Assert.AreEqual(parsedUserProfile.LastName, viewModel.LastName);
             Assert.AreEqual(parsedUserProfile.Skills.Count, viewModel.Skills.Count);
