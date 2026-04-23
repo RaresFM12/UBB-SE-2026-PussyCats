@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.utilities;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class CompatibilityDetailViewModel : INotifyPropertyChanged
     {

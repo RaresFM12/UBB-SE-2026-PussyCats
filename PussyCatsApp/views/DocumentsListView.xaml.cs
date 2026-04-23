@@ -1,17 +1,17 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
-using PussyCatsApp.storage;
-using PussyCatsApp.viewModels;
-using System;
-using System.Diagnostics;
-using System.IO;
+using PussyCatsApp.Services;
+using PussyCatsApp.Storage;
+using PussyCatsApp.ViewModels;
 using Windows.Storage.Pickers;
 
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
     /// <summary>
     /// View — responsible only for:
@@ -68,7 +68,6 @@ namespace PussyCatsApp.views
             lblStatus.Text = message;
             lblStatus.Visibility = Visibility.Visible;
         }
-
 
         private void OnDocumentNameChanged(object sender, TextChangedEventArgs e)
         {
@@ -127,7 +126,9 @@ namespace PussyCatsApp.views
         private async void OnDeleteClick(object sender, RoutedEventArgs e)
         {
             if (sender is not Button btn || btn.Tag is not Document doc)
+            {
                 return;
+            }
 
             var dialog = new ContentDialog
             {
@@ -140,7 +141,9 @@ namespace PussyCatsApp.views
 
             var result = await dialog.ShowAsync();
             if (result != ContentDialogResult.Primary)
+            {
                 return;
+            }
 
             try
             {
@@ -156,7 +159,9 @@ namespace PussyCatsApp.views
         private void OnViewClick(object sender, RoutedEventArgs e)
         {
             if (sender is not Button btn || btn.Tag is not Document doc)
+            {
                 return;
+            }
 
             lblStatus.Visibility = Visibility.Collapsed;
 
@@ -182,7 +187,9 @@ namespace PussyCatsApp.views
         private void OnBackClick(object sender, RoutedEventArgs e)
         {
             if (Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
         }
     }
 }

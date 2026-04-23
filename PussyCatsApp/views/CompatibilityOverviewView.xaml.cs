@@ -1,16 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
-using PussyCatsApp.viewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using PussyCatsApp.Services;
+using PussyCatsApp.ViewModels;
 
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// View for displaying an overview of compatibility results for different job roles,
+    /// including navigation and error handling.
+    /// </summary>
     public sealed partial class CompatibilityOverviewView : Page
     {
         private CompatibilityOverviewViewModel viewModel;
@@ -52,13 +56,19 @@ namespace PussyCatsApp.views
 
             foreach (RoleResult result in results)
             {
-                string formattedName = "";
+                string formattedName = string.Empty;
                 if (result.JobRole == JobRole.UIUXDesigner)
+                {
                     formattedName = "UI/UX Designer";
+                }
                 else if (result.JobRole == JobRole.AIMLEngineer)
+                {
                     formattedName = "AI/ML Engineer";
+                }
                 else
+                {
                     formattedName = FormatRoleName(result.JobRole.ToString());
+                }
 
                 displayItems.Add(new
                 {
@@ -81,7 +91,9 @@ namespace PussyCatsApp.views
             foreach (char c in raw)
             {
                 if (char.IsUpper(c) && newString.Length > 0)
+                {
                     newString.Append(' ');
+                }
 
                 newString.Append(c);
             }
@@ -89,10 +101,12 @@ namespace PussyCatsApp.views
             return newString.ToString();
         }
 
-        private void lstRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LstRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstRoles.SelectedItem == null || viewModel == null)
+            {
                 return;
+            }
 
             dynamic selected = lstRoles.SelectedItem;
             RoleResult result = selected.Result;
@@ -104,21 +118,27 @@ namespace PussyCatsApp.views
         private void NavigateToDetail(RoleResult result)
         {
             if (result == null)
+            {
                 return;
+            }
 
             Frame.Navigate(typeof(CompatibilityDetailView), result);
         }
 
-        private void btnClose_Click(object sender, RoutedEventArgs e)
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             if (Frame != null && Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             if (Frame != null && Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
         }
 
         public async Task ShowError(string message)

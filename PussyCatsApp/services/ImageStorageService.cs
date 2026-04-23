@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.UI.Xaml.Media;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
-    public class ImageStorageService: IImageStorageService
+    public class ImageStorageService : IImageStorageService
     {
         private string basePath = Path.Combine("uploads", "avatars");
 
@@ -42,7 +42,9 @@ namespace PussyCatsApp.services
             using (FileStream destinationStream = new FileStream(fullPath, FileMode.Create))
             {
                 if (fileStream.CanSeek)
+                {
                     fileStream.Position = 0;
+                }
 
                 fileStream.CopyTo(destinationStream);
             }
@@ -52,7 +54,10 @@ namespace PussyCatsApp.services
 
         public void DeleteImage(string relativePath)
         {
-            if (string.IsNullOrWhiteSpace(relativePath)) return;
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                return;
+            }
 
             string fullPath = relativePath;
             if (!Path.IsPathRooted(fullPath))
