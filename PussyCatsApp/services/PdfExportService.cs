@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
-using PussyCatsApp;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using Windows.Storage.Pickers;
