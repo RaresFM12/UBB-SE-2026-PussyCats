@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class CompatibilityOverviewViewModel : INotifyPropertyChanged
     {

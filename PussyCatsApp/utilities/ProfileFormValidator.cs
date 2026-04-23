@@ -1,14 +1,14 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using PussyCatsApp.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls;
+using PussyCatsApp.Models;
 using Windows.Networking;
 
-namespace PussyCatsApp.utilities
+namespace PussyCatsApp.Utilities
 {
     public class ProfileFormValidator
     {

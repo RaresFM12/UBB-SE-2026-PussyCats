@@ -1,17 +1,4 @@
-﻿// ============================================================================
-// REFACTORED SkillTest.cs
-// ============================================================================
-// Changes made:
-//   1. Removed unused usings
-//   2. Made backing fields truly private (removed public modifier from _name, _score)
-//   3. Renamed isRetakeEligible() → IsRetakeEligible()
-//   4. Renamed GetExperiencePoints() → GetExperiencePoints()
-//   5. Extracted ALL magic numbers into named constants
-//   6. Fixed grammatical errors in exception messages
-//   7. Added XML documentation comments (StyleCop requirement)
-// ============================================================================
-
-using System;
+﻿using System;
 
 namespace PussyCatsApp.Models
 {

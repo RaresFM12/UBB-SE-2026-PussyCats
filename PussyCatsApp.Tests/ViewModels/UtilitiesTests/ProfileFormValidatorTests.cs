@@ -1,10 +1,10 @@
-﻿using PussyCatsApp.Models;
-using PussyCatsApp.utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
+using PussyCatsApp.Utilities;
 
 namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
 {

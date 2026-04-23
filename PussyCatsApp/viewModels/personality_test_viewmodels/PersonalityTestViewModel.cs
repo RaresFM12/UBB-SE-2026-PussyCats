@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 using Windows.Networking.Sockets;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.converters;
+using PussyCatsApp.Converters;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the personality test workflow, including loading questions,
+    /// handling user answers, submitting the test, and saving the selected role result.
+    /// </summary>
     public partial class PersonalityTestViewModel : ObservableObject
     {
         private readonly IPersonalityTestService personalityTestService;

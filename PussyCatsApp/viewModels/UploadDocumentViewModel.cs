@@ -1,9 +1,9 @@
 ﻿using System;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Services;
+using PussyCatsApp.Utilities;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     /// <summary>
     /// ViewModel for the upload panel.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="PussyCatsApp.views.CompatibilityOverviewView"
+    x:Class="PussyCatsApp.Views.CompatibilityOverviewView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Loaded="Page_Loaded">
@@ -13,10 +13,10 @@
 
 		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
 			<TextBlock Text="Role Compatibility" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
-            <Button Grid.Row="0" Content="Back" Click="btnBack_Click" Margin="15,15,0,16"/>
+            <Button Grid.Row="0" Content="Back" Click="BtnBack_Click" Margin="15,15,0,16"/>
         </StackPanel>
 
-		<ListView x:Name="lstRoles" Grid.Row="1" SelectionChanged="lstRoles_SelectionChanged">
+		<ListView x:Name="lstRoles" Grid.Row="1" SelectionChanged="LstRoles_SelectionChanged">
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<Grid Margin="0,8,0,8">

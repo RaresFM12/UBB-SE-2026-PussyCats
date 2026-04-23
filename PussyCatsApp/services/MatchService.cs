@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class MatchService : IMatchService
     {
-        private readonly IMatchRepository _matchRepository;
+        private readonly IMatchRepository matchRepository;
 
         public MatchService(IMatchRepository matchRepository)
         {
-            _matchRepository = matchRepository;
+            this.matchRepository = matchRepository;
         }
 
         private int CountMatchesInLastMonths(List<Match> matches, int months)
@@ -55,12 +54,12 @@ namespace PussyCatsApp.services
 
         public List<Match> GetMatchesForUser(int userId)
         {
-            return _matchRepository.GetMatchesByUserId(userId);
+            return matchRepository.GetMatchesByUserId(userId);
         }
 
         public MatchStatistics GetMatchStatistics(int userId)
         {
-            var matches = _matchRepository.GetMatchesByUserId(userId);
+            var matches = matchRepository.GetMatchesByUserId(userId);
             var stats = new MatchStatistics();
 
             stats.TotalMatches = matches.Count;
