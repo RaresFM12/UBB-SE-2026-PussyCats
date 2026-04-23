@@ -39,9 +39,9 @@ namespace PussyCatsApp.ViewModels
                 Profile = userProfileService.GetProfile(userId);
                 Tests = userProfileService.GetSkillTestsForUser(userId);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error loading public profile: {ex.Message}";
+                ErrorMessage = $"Error loading public profile: {exception.Message}";
             }
         }
         public string GetAvailabilityMessage()

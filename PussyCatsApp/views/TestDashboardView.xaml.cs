@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
@@ -29,7 +30,7 @@ namespace PussyCatsApp.Views
     {
         private TestDashboardViewModel testDashboardViewModel;
 
-        public TestDashboardView()
+        public TestDashboardView()  
         {
             this.InitializeComponent();
         }
@@ -43,10 +44,10 @@ namespace PussyCatsApp.Views
             base.OnNavigatedTo(e);
             if (e.Parameter is UserProfile profile && profile.UserId != 0)
             {
-                var skillTestRepository = new SkillTestRepository();
+                var skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
                 ISkillTestService skillTestService = new SkillTestService(skillTestRepository);
 
-                var userProfileRepository = new UserProfileRepository();
+                var userProfileRepository = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
                 IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
                 IImageStorageService imageStorageService = new ImageStorageService();
                 ICompletenessService completenessService = new CompletenessService();

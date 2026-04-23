@@ -1,7 +1,7 @@
 ﻿using System;
 using PussyCatsApp.Models;
 using PussyCatsApp.Services;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Utilities;
 
 namespace PussyCatsApp.ViewModels
 {
@@ -24,9 +24,9 @@ namespace PussyCatsApp.ViewModels
             this.userId = userId;
         }
 
-        public void SetSelectedFilePath(string path)
+        public void SetSelectedFilePath(string filePath)
         {
-            selectedFilePath = path;
+            selectedFilePath = filePath;
         }
 
         public bool ValidateDocumentInput()
@@ -60,9 +60,21 @@ namespace PussyCatsApp.ViewModels
             documentService.UploadDocument(document, selectedFilePath);
         }
 
-        public string GetDocumentName() => documentName;
-        public void SetDocumentName(string name) => documentName = name;
-        public string GetErrorMessage() => errorMessage;
-        public string GetSelectedFilePath() => selectedFilePath;
+        public string GetDocumentName()
+        {
+            return documentName;
+        }
+        public void SetDocumentName(string documentName)
+        {
+            this.documentName = documentName;
+        }
+        public string GetErrorMessage()
+        {
+            return errorMessage;
+        }
+        public string GetSelectedFilePath()
+        {
+            return selectedFilePath;
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
@@ -29,7 +30,7 @@ namespace PussyCatsApp.Views
 
             int currentUserId = 1; // replace with real session user id
 
-            var documentRepository = new DocumentRepository();
+            var documentRepository = new DocumentRepository(DatabaseConfiguration.GetConnectionString());
             var localStorageService = new LocalFileStorageService();
             var documentService = new DocumentService(documentRepository, localStorageService);
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Services;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Utilities;
 
 namespace PussyCatsApp.ViewModels
 {
@@ -53,7 +53,9 @@ namespace PussyCatsApp.ViewModels
                 return;
             }
 
-            int newTestScore = Helpers.GenerateRandomScore(0, 100);
+            int minimumScore = 0;
+            int maximumScore = 100;
+            int newTestScore = Helpers.GenerateRandomScore(minimumScore, maximumScore);
 
             badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newTestScore);
 
@@ -72,12 +74,6 @@ namespace PussyCatsApp.ViewModels
         public void UpdateBadge()
         {
             badge = Badge.AssignTier(skillTest.Score);
-        }
-
-        private int GenerateRandomScore()
-        {
-            Random random = new Random();
-            return random.Next(0, 101);
         }
     }
 }

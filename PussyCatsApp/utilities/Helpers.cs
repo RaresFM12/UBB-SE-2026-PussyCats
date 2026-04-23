@@ -1,11 +1,11 @@
-﻿using PussyCatsApp.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.utilities
+namespace PussyCatsApp.Utilities
 {
     public class Helpers
     {
