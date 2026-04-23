@@ -52,7 +52,6 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         [TestMethod]
         public void ValidateFormReturnsEveryErrorExceptLastNameAndAge()
         {
-            // Arrange
             string firstName = string.Empty;
             string lastName = "Doe";
             double age = 25;
@@ -78,7 +77,6 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         [TestMethod]
         public void ValidateFormReturnsErrorLastName()
         {
-            // Arrange
             string firstName = "John";
             string gender = "Male";
             string email = "validemail@gmail.com";
@@ -92,18 +90,17 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
             string lastName = string.Empty;
             double age = 25;
 
-            List<string> errorsUnderage = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
+            List<string> errors = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
 
             int numberOfExpectedErrors = 1;
 
-            Assert.AreEqual(numberOfExpectedErrors, errorsUnderage.Count);
-            Assert.IsTrue(errorsUnderage.Contains("Last Name"));
+            Assert.AreEqual(numberOfExpectedErrors, errors.Count);
+            Assert.IsTrue(errors.Contains("Last Name"));
         }
 
         [TestMethod]
-        public void ValidateFormReturnsErrorAge()
+        public void ValidateFormReturnsErrorWhenUnderageAge()
         {
-            // Arrange
             string firstName = "John";
             string gender = "Male";
             string email = "validemail@gmail.com";
@@ -124,15 +121,34 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
 
             Assert.AreEqual(numberOfExpectedErrors, errorsUnderage.Count);
             Assert.IsTrue(errorsUnderage.Contains($"Age (must be between {minimumAge}-{maximumAge})"));
+        }
+
+        [TestMethod]
+        public void ValidateFormReturnsErrorWhenOverageAge()
+        {
+            string firstName = "John";
+            string gender = "Male";
+            string email = "validemail@gmail.com";
+            string phonePrefix = "+40";
+            string phoneNumber = "12345";
+            string country = "Romania";
+            string city = "Cluj-Napoca";
+            string university = "UBB";
+            int expectedGraduationYear = 2027;
+            List<WorkExperience> workExperiences = new List<WorkExperience>();
+            string lastName = "Doe";
+
+            double minimumAge = 16, maximumAge = 60;
+            int numberOfExpectedErrors = 1;
 
             double ageOverLimit = 100;
             List<string> errorsOverAge = ProfileFormValidator.ValidateForm(firstName, lastName, ageOverLimit, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
 
             Assert.AreEqual(numberOfExpectedErrors, errorsOverAge.Count);
-            Assert.IsTrue(errorsUnderage.Contains($"Age (must be between {minimumAge}-{maximumAge})"));
+            Assert.IsTrue(errorsOverAge.Contains($"Age (must be between {minimumAge}-{maximumAge})"));
         }
 
-        [TestMethod]
+            [TestMethod]
         public void ValidatorCatchesExperiencesWithStartDateAfterEndDate()
         {
             // Arrange
