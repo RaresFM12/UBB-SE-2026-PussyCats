@@ -12,7 +12,12 @@ namespace PussyCatsApp.Repositories.PersonalityTestRepo;
 
 public class PersonalityTestRepository : IPersonalityTestRepository
 {
-    private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
+    private readonly string connectionString;
+
+    public PersonalityTestRepository(string connectionString)
+    {
+        this.connectionString = connectionString;
+    }
 
     public string? Load(int id)
     {

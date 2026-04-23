@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
@@ -24,8 +25,8 @@ namespace PussyCatsApp.Views
         public UserProfileView()
         {
             this.InitializeComponent();
-            ISkillTestRepository skillTestRepository = new SkillTestRepository();
-            IUserProfileRepository userProfileRepository = new UserProfileRepository();
+            ISkillTestRepository skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
+            IUserProfileRepository userProfileRepository = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
             UserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
             IImageStorageService imageStorageService = new ImageStorageService();
             ICompletenessService completenessService = new CompletenessService();

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
@@ -29,7 +30,7 @@ namespace PussyCatsApp.Views
             base.OnNavigatedTo(e);
             int userId = (int)e.Parameter;
 
-            IUserSkillRepository userSkillRepo = new UserSkillRepository();
+            IUserSkillRepository userSkillRepo = new UserSkillRepository(DatabaseConfiguration.GetConnectionString());
             ISkillGroupRepository skillGroupRepository = new SkillGroupRepository();
             ICompatibilityService compatibilityService = new CompatibilityService(userSkillRepo, skillGroupRepository);
             viewModel = new CompatibilityOverviewViewModel(userId, compatibilityService);

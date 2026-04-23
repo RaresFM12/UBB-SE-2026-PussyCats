@@ -13,6 +13,7 @@ using PussyCatsApp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.Utilities;
+using PussyCatsApp.Configuration;
 
 namespace PussyCatsApp.ViewModels
 {
@@ -80,8 +81,8 @@ namespace PussyCatsApp.ViewModels
 
         public static ProfileFormViewModel Create()
         {
-            var userProfileRepo = new UserProfileRepository();
-            var skillTestRepo = new SkillTestRepository();
+            var userProfileRepo = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
+            var skillTestRepo = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
             var profileService = new UserProfileService(skillTestRepo, userProfileRepo);
             var cvParsingService = new CVParsingService();
             return new ProfileFormViewModel(profileService, cvParsingService);
