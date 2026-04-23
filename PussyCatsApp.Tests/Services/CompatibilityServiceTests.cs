@@ -72,7 +72,7 @@ public class CompatibilityServiceTest
     {
         mockUserSkillRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserSkillRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns("line1\nline2\nReact");
-        mockSkillGroupRepo.Setup(r => r.GetByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>
+        mockSkillGroupRepo.Setup(r => r.GetSkillsGroupByRole(JobRole.FrontendDeveloper)).Returns(new List<SkillGroup>
         {
             new SkillGroup { GroupName = "G1", Skills = new List<string> { "React" }, Weight = 10 }
         });

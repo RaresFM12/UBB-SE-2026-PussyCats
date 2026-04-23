@@ -35,7 +35,6 @@
     </None>
     <Folder Include="ViewModels\" />
     <Folder Include="Repositories\" />
->>>>>>>>> Temporary merge branch 2
   </ItemGroup>
 
 </Project>

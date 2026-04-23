@@ -52,7 +52,6 @@ namespace PussyCatsApp.Services
                 new (23, "I am comfortable working with data, probabilities, and logical frameworks.", TraitType.ABSTRACTION,  23),
                 new (24, "I prefer to understand the logic and first principles of a system rather than just knowing how to operate it.", TraitType.ABSTRACTION,  24),
             ];
-
         }
         private int CompareRoleScores(KeyValuePair<JobRole, double> a, KeyValuePair<JobRole, double> b)
         {
