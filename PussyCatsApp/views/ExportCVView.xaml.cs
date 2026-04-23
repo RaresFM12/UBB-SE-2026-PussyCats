@@ -7,6 +7,7 @@ using System.IO;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
+using PussyCatsApp.Configuration;
 
 namespace PussyCatsApp.views
 {
@@ -52,7 +53,7 @@ namespace PussyCatsApp.views
                 CoreWebView2HostResourceAccessKind.Allow);
 
             IPdfExportService pdfExportService = new PdfExportService(CvWebView);
-            ISkillTestRepository skillTestRepository = new SkillTestRepository();
+            ISkillTestRepository skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
             IUserProfileRepository userProfileRepository = new UserProfileRepository();
             IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
 

@@ -82,5 +82,26 @@ namespace PussyCatsApp.Tests.Repositories
                 Assert.Fail($"Expected no exception, but got: {ex.Message}");
             }
         }
+
+        [TestMethod]
+        public void Load_SqlException_ExpectsExceptionBeingCaught()
+        {
+
+            string deadConnectionString = "Server=NonExistentServer;Database=FakeDb;Trusted_Connection=True;Connect Timeout=1;TrustServerCertificate=True;";
+            var repo = new PersonalityTestRepository(deadConnectionString);
+
+            var result = repo.Load(1);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void Save_SqlException_ExceptionBeingHandledInDebugLine()
+        {
+            string deadConnectionString = "Server=NonExistentServer;Database=FakeDb;Trusted_Connection=True;Connect Timeout=1;TrustServerCertificate=True;";
+            var repo = new PersonalityTestRepository(deadConnectionString);
+
+            repo.Save(1, "Some Result");
+        }
     }
 }

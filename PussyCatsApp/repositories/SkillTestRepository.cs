@@ -8,7 +8,11 @@ namespace PussyCatsApp.Repositories
 {
     public class SkillTestRepository : ISkillTestRepository
     {
-        private readonly string connectionString = DatabaseConfiguration.GetConnectionString();
+        private readonly string connectionString;
+        public SkillTestRepository(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
 
         public SkillTest Load(int skillId)
         {
@@ -16,35 +20,49 @@ namespace PussyCatsApp.Repositories
 
             try
             {
-                using var connection = new SqlConnection(connectionString);
-                connection.Open();
-
-                using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id", skillId);
-
-                using var reader = command.ExecuteReader();
-                if (reader.Read())
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    return new SkillTest(
-                        skillTestId: (int)reader["skillID"],
-                        userId: (int)reader["userID"],
-                        testName: reader["name"].ToString(),
-                        testScore: (int)reader["score"],
-                        achievedDate: reader["achievedDate"] != DBNull.Value
-                            ? DateOnly.FromDateTime((DateTime)reader["achievedDate"])
-                            : default);
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", skillId);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int skillIdToLoad = (int)reader["skillID"];
+                                int userId = (int)reader["userID"];
+                                string name = reader["name"].ToString();
+                                int score = (int)reader["score"];
+
+                                DateOnly dateResult;
+                                if (reader["achievedDate"] != DBNull.Value)
+                                {
+                                    DateTime dbDate = (DateTime)reader["achievedDate"];
+                                    dateResult = DateOnly.FromDateTime(dbDate);
+                                }
+                                else
+                                {
+                                    dateResult = default;
+                                }
+
+                                return new SkillTest(skillIdToLoad, userId, name, score, dateResult);
+                            }
+                        }
+                    }
                 }
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error loading skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("Database error loading skill " + skillId + ": " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred loading skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("An error occurred loading skill " + skillId + ": " + ex.Message);
             }
 
-            throw new Exception($"SkillTest with ID {skillId} not found.");
+            throw new Exception("SkillTest with ID " + skillId + " not found.");
         }
 
         public void Save(int skillId, SkillTest data)
@@ -53,59 +71,76 @@ namespace PussyCatsApp.Repositories
 
             try
             {
-                using var connection = new SqlConnection(connectionString);
-                connection.Open();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@score", data.Score);
+                        command.Parameters.AddWithValue("@date", data.AchievedDate);
+                        command.Parameters.AddWithValue("@id", skillId);
 
-                using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@score", data.Score);
-                command.Parameters.AddWithValue("@date", data.AchievedDate);
-                command.Parameters.AddWithValue("@id", skillId);
-
-                command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error saving skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("Database error saving skill " + skillId + ": " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred saving skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("An error occurred saving skill " + skillId + ": " + ex.Message);
             }
         }
 
         public List<SkillTest> GetSkillTestsByUserId(int userId)
         {
-            var tests = new List<SkillTest>();
+            List<SkillTest> tests = new List<SkillTest>();
             const string query = "SELECT * FROM SKILLS WHERE userID = @userId";
 
             try
             {
-                using var connection = new SqlConnection(connectionString);
-                connection.Open();
-
-                using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@userId", userId);
-
-                using var reader = command.ExecuteReader();
-                while (reader.Read())
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    tests.Add(new SkillTest(
-                        skillTestId: (int)reader["skillID"],
-                        userId: (int)reader["userID"],
-                        testName: reader["name"].ToString(),
-                        testScore: (int)reader["score"],
-                        achievedDate: reader["achievedDate"] != DBNull.Value
-                            ? DateOnly.FromDateTime((DateTime)reader["achievedDate"])
-                            : default));
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@userId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int skillId = (int)reader["skillID"];
+                                int userIdToGet = (int)reader["userID"];
+                                string name = reader["name"].ToString();
+                                int score = (int)reader["score"];
+
+                                DateOnly dateResult;
+                                if (reader["achievedDate"] != DBNull.Value)
+                                {
+                                    DateTime dbDate = (DateTime)reader["achievedDate"];
+                                    dateResult = DateOnly.FromDateTime(dbDate);
+                                }
+                                else
+                                {
+                                    dateResult = default;
+                                }
+
+                                SkillTest test = new SkillTest(skillId, userIdToGet, name, score, dateResult);
+                                tests.Add(test);
+                            }
+                        }
+                    }
                 }
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error retrieving skills for user {userId}: {ex.Message}");
+                Console.Error.WriteLine("Database error retrieving skills for user " + userId + ": " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred retrieving skills for user {userId}: {ex.Message}");
+                Console.Error.WriteLine("An error occurred retrieving skills for user " + userId + ": " + ex.Message);
             }
 
             return tests;
@@ -117,22 +152,25 @@ namespace PussyCatsApp.Repositories
 
             try
             {
-                using var connection = new SqlConnection(connectionString);
-                connection.Open();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@score", score);
+                        command.Parameters.AddWithValue("@id", skillId);
 
-                using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@score", score);
-                command.Parameters.AddWithValue("@id", skillId);
-
-                command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error updating score for skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("Database error updating score for skill " + skillId + ": " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred updating score for skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("An error occurred updating score for skill " + skillId + ": " + ex.Message);
             }
         }
 
@@ -142,22 +180,25 @@ namespace PussyCatsApp.Repositories
 
             try
             {
-                using var connection = new SqlConnection(connectionString);
-                connection.Open();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@date", date);
+                        command.Parameters.AddWithValue("@id", skillId);
 
-                using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@date", date);
-                command.Parameters.AddWithValue("@id", skillId);
-
-                command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
             catch (SqlException ex)
             {
-                Console.Error.WriteLine($"Database error updating achieved date for skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("Database error updating achieved date for skill " + skillId + ": " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred updating achieved date for skill {skillId}: {ex.Message}");
+                Console.Error.WriteLine("An error occurred updating achieved date for skill " + skillId + ": " + ex.Message);
             }
         }
     }

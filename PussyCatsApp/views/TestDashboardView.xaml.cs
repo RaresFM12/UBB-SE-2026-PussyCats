@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
@@ -33,7 +34,7 @@ namespace PussyCatsApp.views
         {
             this.InitializeComponent();
             var userProfileRepository = new UserProfileRepository();
-            var skillTestRepository = new SkillTestRepository();
+            var skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
             var skillTestService = new SkillTestService(skillTestRepository);
 
             WebView2 view = new WebView2();

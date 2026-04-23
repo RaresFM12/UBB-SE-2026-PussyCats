@@ -11,87 +11,87 @@ namespace PussyCatsApp.Repositories
 
         public Skill Load(int skillId)
         {
-            foreach (Skill skill in skills)
+            foreach (Skill currentSkill in skills)
             {
-                if (skill.SkillId == skillId)
+                if (currentSkill.SkillId == skillId)
                 {
-                    return skill;
+                    return currentSkill;
                 }
             }
             return null;
         }
 
-        public void Save(int skillId, Skill data)
+        public void Save(int targetSkillId, Skill providedSkillData)
         {
-            Skill existing = null;
-            foreach (Skill skill in skills)
+            Skill skillFoundInStorage = null;
+            foreach (Skill currentSkill in skills)
             {
-                if (skill.SkillId == skillId)
+                if (currentSkill.SkillId == targetSkillId)
                 {
-                    existing = skill;
+                    skillFoundInStorage = currentSkill;
                     break;
                 }
             }
 
-            if (existing != null)
+            if (skillFoundInStorage != null)
             {
-                existing.Name = data.Name;
-                existing.Score = data.Score;
-                existing.UserId = data.UserId;
-                existing.AchievedDate = data.AchievedDate;
+                skillFoundInStorage.Name = providedSkillData.Name;
+                skillFoundInStorage.Score = providedSkillData.Score;
+                skillFoundInStorage.UserId = providedSkillData.UserId;
+                skillFoundInStorage.AchievedDate = providedSkillData.AchievedDate;
             }
             else
             {
-                data.SkillId = skillId;
-                skills.Add(data);
+                providedSkillData.SkillId = targetSkillId;
+                skills.Add(providedSkillData);
             }
         }
 
         public List<Skill> GetSkillsByUserId(int userId)
         {
             List<Skill> userSkills = new List<Skill>();
-            foreach (Skill skill in skills)
+            foreach (Skill currentSkill in skills)
             {
-                if (skill.UserId == userId)
+                if (currentSkill.UserId == userId)
                 {
-                    userSkills.Add(skill);
+                    userSkills.Add(currentSkill);
                 }
             }
             return userSkills;
         }
 
-        public void AddSkill(Skill skill)
+        public void AddSkill(Skill newSkill)
         {
-            if (skill.SkillId == 0)
+            if (newSkill.SkillId == 0)
             {
                 if (skills.Count == 0)
                 {
-                    skill.SkillId = 1;
+                    newSkill.SkillId = 1;
                 }
                 else
                 {
-                    int maxId = 0;
-                    foreach (Skill s in skills)
+                    int highestIdFound = 0;
+                    foreach (Skill currentSkill in skills)
                     {
-                        if (s.SkillId > maxId)
+                        if (currentSkill.SkillId > highestIdFound)
                         {
-                            maxId = s.SkillId;
+                            highestIdFound = currentSkill.SkillId;
                         }
                     }
-                    skill.SkillId = maxId + 1;
+                    newSkill.SkillId = highestIdFound + 1;
                 }
             }
-            skills.Add(skill);
+            skills.Add(newSkill);
         }
 
         public void RemoveSkill(int skillId)
         {
             Skill skillToRemove = null;
-            foreach (Skill s in skills)
+            foreach (Skill currentSkill in skills)
             {
-                if (s.SkillId == skillId)
+                if (currentSkill.SkillId == skillId)
                 {
-                    skillToRemove = s;
+                    skillToRemove = currentSkill;
                     break;
                 }
             }
@@ -102,21 +102,21 @@ namespace PussyCatsApp.Repositories
             }
         }
 
-        public void UpdateSkillScore(int skillId, double score)
+        public void UpdateSkillScore(int skillId, double newScore)
         {
             Skill skillToUpdate = null;
-            foreach (Skill skill in skills)
+            foreach (Skill currentSkill in skills)
             {
-                if (skill.SkillId == skillId)
+                if (currentSkill.SkillId == skillId)
                 {
-                    skillToUpdate = skill;
+                    skillToUpdate = currentSkill;
                     break;
                 }
             }
 
             if (skillToUpdate != null)
             {
-                skillToUpdate.Score = score;
+                skillToUpdate.Score = newScore;
             }
         }
     }

@@ -128,6 +128,57 @@ namespace PussyCatsApp.Tests.Repositories
             Assert.AreEqual(DateTime.MinValue, result.UploadDate);
         }
 
-      
+
+        [TestMethod]
+        public void GetDocumentsByUserId_MalformedConnectionString_ExpectsEmptyList()
+        {
+
+            var repoWithGeneralError = new DocumentRepository("");
+
+            var result = repoWithGeneralError.GetDocumentsByUserId(1);
+
+            Assert.AreEqual(0, result.Count, "Should return an empty list after catching a general exception.");
+        }
+
+        [TestMethod]
+        public void GetDocumentById_MalformedConnectionString_ExpectsNullResult()
+        {
+
+            var repoWithGeneralError = new DocumentRepository("");
+
+            var result = repoWithGeneralError.GetDocumentById(1);
+
+            Assert.IsNull(result, "Should return null after catching a general exception.");
+        }
+        [TestMethod]
+        public void AddDocument_MalformedConnectionString_ExpectsErrorBeingHandled()
+        {
+
+            var repoWithGeneralError = new DocumentRepository("");
+            Document dummyDoc = new Document { UserId = 1, DocumentName = "Test" };
+
+            repoWithGeneralError.AddDocument(dummyDoc);
+
+        }
+
+        [TestMethod]
+        public void DeleteDocument_MalformedConnectionString_CatchesGeneralException()
+        {
+            var repoWithGeneralError = new DocumentRepository("");
+            repoWithGeneralError.DeleteDocument(1);
+        }
+
+
+        [TestMethod]
+        public void MapRowToDocument_ValidFilePath_SetsPathString()
+        {
+            int userId = TestDatabaseHelper.InsertUser();
+            string expectedPath = "C:\\Documents\\test.pdf";
+            int docId = TestDatabaseHelper.InsertDocument(userId, "TestDoc", expectedPath);
+
+            Document result = Repository.GetDocumentById(docId);
+
+            Assert.AreEqual(expectedPath, result.FilePath);
+        }
     }
 }

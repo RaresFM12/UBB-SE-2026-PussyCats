@@ -20,7 +20,6 @@ namespace PussyCatsApp.Repositories
             this.connectionString = connectionString;
         }
 
-        // public MatchRepository() {}
         public List<Models.Match> GetMatchesByUserId(int userId)
         {
             var matches = new List<Match>();
