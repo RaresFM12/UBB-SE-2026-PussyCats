@@ -210,5 +210,46 @@ namespace PussyCatsApp.Tests.ViewModels
             viewModel.RemoveProject(project);
             Assert.AreEqual(0, viewModel.Projects.Count);
         }
+
+        [TestMethod]
+        public void AddExtraCurricularActivityAddsActivityToList()
+        {
+            viewModel.AddExtraCurricularActivity();
+            Assert.AreEqual(1, viewModel.ExtraCurricularActivities.Count);
+        }
+
+        [TestMethod]
+        public void AddExtraCurricularActivityFailsWhenMaximumNumberOfActivitiesIsReached()
+        {
+            int maximumNumberOfExtraCurricularActivitiesAllowed = 10;
+            for (int activityIndex = 0; activityIndex < maximumNumberOfExtraCurricularActivitiesAllowed; activityIndex++)
+            {
+                viewModel.AddExtraCurricularActivity();
+            }
+            viewModel.AddExtraCurricularActivity();
+            Assert.AreEqual(maximumNumberOfExtraCurricularActivitiesAllowed, viewModel.ExtraCurricularActivities.Count);
+        }
+
+        [TestMethod]
+        public void AddExtraCurricularActivityShowInfoBarWhenMaximumNumberOfActivitiesIsReached()
+        {
+            int maximumNumberOfExtraCurricularActivitiesAllowed = 10;
+            for (int activityIndex = 0; activityIndex < maximumNumberOfExtraCurricularActivitiesAllowed; activityIndex++)
+            {
+                viewModel.AddExtraCurricularActivity();
+            }
+            viewModel.AddExtraCurricularActivity();
+            Assert.IsTrue(viewModel.IsInfoBarOpen);
+            Assert.AreEqual($"Maximum of {maximumNumberOfExtraCurricularActivitiesAllowed} extra-curricular activities allowed.", viewModel.InfoBarMessage);
+        }
+
+        [TestMethod]
+        public void RemoveExtraCurricularActivityRemovesActivityFromList()
+        {
+            viewModel.AddExtraCurricularActivity();
+            var activity = viewModel.ExtraCurricularActivities.First();
+            viewModel.RemoveExtraCurricularActivity(activity);
+            Assert.AreEqual(0, viewModel.ExtraCurricularActivities.Count);
+        }
     }
 }
