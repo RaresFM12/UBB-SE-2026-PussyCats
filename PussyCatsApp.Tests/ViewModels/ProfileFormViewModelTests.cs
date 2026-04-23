@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Services;
 using PussyCatsApp.ViewModels;
+using PussyCatsApp.Models;
 
 namespace PussyCatsApp.Tests.ViewModels
 {
@@ -250,6 +251,59 @@ namespace PussyCatsApp.Tests.ViewModels
             var activity = viewModel.ExtraCurricularActivities.First();
             viewModel.RemoveExtraCurricularActivity(activity);
             Assert.AreEqual(0, viewModel.ExtraCurricularActivities.Count);
+        }
+
+        [TestMethod]
+        public void TestLoadProfile()
+        {
+            UserProfile userProfile = new UserProfile
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Age = 25,
+                University = "University of Test",
+                Degree = "Bachelor's in Testing",
+                ExpectedGraduationYear = 2022,
+                PhoneNumber = "+40123456789",
+                Skills = new List<string> { "Testing", "C#" },
+                WorkExperiences = new List<WorkExperience>
+                {
+                    new WorkExperience
+                    {
+                        Company = "Test Company",
+                        JobTitle = "Tester",
+                        StartDate = new DateTime(2020, 1, 1),
+                        EndDate = new DateTime(2021, 1, 1),
+                        Description = "Testing software",
+                        CurrentlyWorking = false
+                    }
+                },
+                Projects = new List<Project>
+                {
+                    new Project
+                    {
+                        Name = "Test Project",
+                        Description = "A project for testing",
+                        Technologies = new List<string> { "C#, NUnit" },
+                        Url = "http://testproject.com"
+                    }
+                },
+                ExtraCurricularActivities = new List<ExtraCurricularActivity>
+                {
+                    new ExtraCurricularActivity
+                    {
+                        ActivityName = "Testing Club",
+                        Description = "A club for testing enthusiasts"
+                    }
+                }
+            };
+            viewModel.LoadProfile(userProfile);
+            Assert.AreEqual(userProfile.FirstName, viewModel.FirstName);
+            Assert.AreEqual(userProfile.LastName, viewModel.LastName);
+            Assert.AreEqual(userProfile.Skills.Count, viewModel.Skills.Count);
+            Assert.AreEqual(userProfile.WorkExperiences.Count, viewModel.WorkExperiences.Count);
+            Assert.AreEqual(userProfile.Projects.Count, viewModel.Projects.Count);
+            Assert.AreEqual(userProfile.ExtraCurricularActivities.Count, viewModel.ExtraCurricularActivities.Count);
         }
     }
 }
