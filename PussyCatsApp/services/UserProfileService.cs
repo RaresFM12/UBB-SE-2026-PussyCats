@@ -10,6 +10,9 @@ namespace PussyCatsApp.Services
 {
     public class UserProfileService : IUserProfileService
     {
+        private const string StatusActive = "ACTIVE";
+        private const string StatusInactive = "INACTIVE";
+
         private readonly ISkillTestRepository skillTestRepository;
         private readonly IUserProfileRepository userProfileRepository;
 
@@ -43,7 +46,16 @@ namespace PussyCatsApp.Services
 
         public void ToggleAccountStatus(int userId, string currentStatus)
         {
-            string newStatus = currentStatus == "ACTIVE" ? "INACTIVE" : "ACTIVE";
+            string newStatus;
+
+            if (currentStatus == StatusActive)
+            {
+                newStatus = StatusInactive;
+            }
+            else
+            {
+                newStatus = StatusActive;
+            }
             userProfileRepository.UpdateAccountStatus(userId, newStatus);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }

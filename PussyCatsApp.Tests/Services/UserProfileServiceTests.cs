@@ -2,7 +2,7 @@
 
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 
 namespace PussyCatsApp.Tests.Services;
 

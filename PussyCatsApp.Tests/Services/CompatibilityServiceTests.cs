@@ -1,7 +1,7 @@
 ﻿using Moq;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 
 namespace PussyCatsApp.Tests.Services;
 
@@ -99,8 +99,6 @@ public class CompatibilityServiceTest
 
         mockGroupRepo.Setup(r => r.GetByRole(JobRole.BackendDeveloper)).Returns(groups);
 
-      //  var service = new CompatibilityService(mockUserRepo.Object, mockGroupRepo.Object);
-
         var result = service.CalculateForRole(1, JobRole.BackendDeveloper);
 
         Assert.AreEqual(50, result.MatchScore); // 0.5 * 100
@@ -120,8 +118,6 @@ public class CompatibilityServiceTest
     };
 
         mockGroupRepo.Setup(r => r.GetByRole(JobRole.BackendDeveloper)).Returns(groups);
-
-       // var service = new CompatibilityService(mockUserRepo.Object, mockGroupRepo.Object);
 
         var result = service.CalculateForRole(1, JobRole.BackendDeveloper);
 
@@ -159,8 +155,6 @@ public class CompatibilityServiceTest
         mockUserRepo.Setup(r => r.GetVerifiedSkillsByUserId(1)).Returns(new List<UserSkill>());
         mockUserRepo.Setup(r => r.GetParsedCvByUserId(1)).Returns("");
         mockGroupRepo.Setup(r => r.GetByRole(It.IsAny<JobRole>())).Returns(new List<SkillGroup>());
-
-      
 
         var results = service.CalculateAll(1);
 

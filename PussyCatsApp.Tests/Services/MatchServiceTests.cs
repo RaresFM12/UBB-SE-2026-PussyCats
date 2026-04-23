@@ -1,6 +1,6 @@
 ﻿using Moq;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 using Match = PussyCatsApp.Models.Match;
 
 
