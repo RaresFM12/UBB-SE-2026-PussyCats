@@ -11,10 +11,15 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
     public class PhoneNumberHelperTests
     {
         [TestMethod]
-        public void TestExtractPhonePrefixAndNumber_ReturnsBothEmptyIfNullOrEmpty()
+        public void TestExtractPhonePrefixAndNumberReturnsBothEmptyIfNullOrEmpty()
         {
-            Assert.AreEqual(("", ""), PhoneNumberHelper.ExtractPhonePrefixAndNumber(null));
-            Assert.AreEqual(("", ""), PhoneNumberHelper.ExtractPhonePrefixAndNumber(""));
+            Assert.AreEqual((string.Empty, string.Empty), PhoneNumberHelper.ExtractPhonePrefixAndNumber(null));
+        }
+
+        [TestMethod]
+        public void TestExtractPhonePrefixAndNumberReturnsBothEmptyIfEmpty()
+        {
+            Assert.AreEqual((string.Empty, string.Empty), PhoneNumberHelper.ExtractPhonePrefixAndNumber(string.Empty));
         }
 
         [TestMethod]
@@ -29,7 +34,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         public void TestExtractPhonePrefixAndNumber_ReturnsEmptyPrefixWhenNoMatch()
         {
             var result = PhoneNumberHelper.ExtractPhonePrefixAndNumber("123456789");
-            Assert.AreEqual("", result.prefix);
+            Assert.AreEqual(string.Empty, result.prefix);
             Assert.AreEqual("123456789", result.number);
         }
     }

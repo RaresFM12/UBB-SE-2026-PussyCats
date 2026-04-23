@@ -308,7 +308,7 @@ namespace PussyCatsApp.ViewModels
             }
         }
 
-        private void PopulateFromParsedProfile(UserProfile parsedUserProfile)
+        public void PopulateFromParsedProfile(UserProfile parsedUserProfile)
         {
             if (!string.IsNullOrEmpty(parsedUserProfile.FirstName))
             {
@@ -388,7 +388,6 @@ namespace PussyCatsApp.ViewModels
             Projects.Clear();
             ExtraCurricularActivities.Clear();
 
-            // Add skills with duplicate detection (R20)
             if (parsedUserProfile.Skills != null)
             {
                 foreach (var skill in parsedUserProfile.Skills)
@@ -433,7 +432,6 @@ namespace PussyCatsApp.ViewModels
                 }
             }
 
-            // List missing fields (R18)
             var missingFields = new List<string>();
             var fieldsOfTypeString = new Dictionary<string, string>
             {
@@ -473,21 +471,7 @@ namespace PussyCatsApp.ViewModels
 
         public List<string> FilterUniversities(string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                return new List<string>();
-            }
-
-            var queryWordsList = query.ToLower().Split(' ');
-            var results = new List<string>();
-            foreach (string university in ProfileFormData.UniversityList)
-            {
-                if (ProfileFormHelpers.UniversityMatchesAllWords(university, queryWordsList))
-                {
-                    results.Add(university);
-                }
-            }
-            return results;
+            return ProfileFormHelpers.FilterUniversitiesHelper(query);
         }
 
         public List<string> FilterSkillSuggestions(string searchTextQuery)
@@ -501,7 +485,7 @@ namespace PussyCatsApp.ViewModels
             var results = new List<string>();
             foreach (string skill in ProfileFormData.SkillSuggestions)
             {
-                if (SkillMatchesSearch(skill, searchText))
+                if (SkillMatchesSearchAndIsNotDuplicate(skill, searchText))
                 {
                     results.Add(skill);
                 }
@@ -516,7 +500,7 @@ namespace PussyCatsApp.ViewModels
             IsInfoBarOpen = true;
         }
 
-        private bool IsDuplicateSkill(string skill)
+        public bool IsDuplicateSkill(string skill)
         {
             foreach (string existingSkill in Skills)
             {
@@ -527,7 +511,7 @@ namespace PussyCatsApp.ViewModels
             }
             return false;
         }
-        private bool SkillMatchesSearch(string skill, string searchText)
+        public bool SkillMatchesSearchAndIsNotDuplicate(string skill, string searchText)
         {
             return skill.ToLower().Contains(searchText) && !IsDuplicateSkill(skill);
         }
