@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;
-using Match = PussyCatsApp.models.Match;
+using Match = PussyCatsApp.Models.Match;
 
 
 namespace PussyCatsApp.Tests.Services;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.services;
 
 namespace PussyCatsApp.viewModels
@@ -15,11 +15,11 @@ namespace PussyCatsApp.viewModels
         private MatchStatistics statistics;
         private string errorMessage;
         private int currentUserId;
-        private MatchService matchService; 
+        private IMatchService matchService;
 
-        public MatchHistoryViewModel(int userId)
+        public MatchHistoryViewModel(int userId, IMatchService matchService)
         {
-            matchService = new MatchService();
+            this.matchService = matchService;
             currentUserId = userId;
             matches = new List<Match>();
             errorMessage = string.Empty;
@@ -27,7 +27,7 @@ namespace PussyCatsApp.viewModels
 
         public void LoadMatches()
         {
-            errorMessage = string.Empty; 
+            errorMessage = string.Empty;
             try
             {
                 matches = matchService.GetMatchesForUser(currentUserId);
@@ -40,7 +40,7 @@ namespace PussyCatsApp.viewModels
 
         public void LoadStatistics()
         {
-            errorMessage = string.Empty; 
+            errorMessage = string.Empty;
             try
             {
                 statistics = matchService.GetMatchStatistics(currentUserId);

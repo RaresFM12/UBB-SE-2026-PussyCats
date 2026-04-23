@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.UI.Xaml.Media;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class ImageStorageService: IImageStorageService
     {

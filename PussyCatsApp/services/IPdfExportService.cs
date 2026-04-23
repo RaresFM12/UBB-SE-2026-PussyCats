@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-using System.Threading.Tasks;
-using PussyCatsApp.models;
-
-public interface IPdfExportService
+using PussyCatsApp.Models;
+namespace PussyCatsApp.Services
 {
-    Task RenderProfileAsync(UserProfile profile);
-    Task DownloadPdfAsync();
+    public interface IPdfExportService
+    {
+        Task RenderProfileAsync(UserProfile profile);
+        Task DownloadPdfAsync();
+    }
 }

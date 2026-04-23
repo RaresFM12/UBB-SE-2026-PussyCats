@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
 namespace PussyCatsApp.viewModels
 {
@@ -16,7 +16,13 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty]
         public partial int? SelectedAnswer { get; set; }
 
-        public bool IsAnswered => SelectedAnswer != null;
+        public bool IsAnswered
+        {
+            get
+            {
+                return SelectedAnswer != null;
+            }
+        }
 
         public QuestionViewModel(Question question)
         {

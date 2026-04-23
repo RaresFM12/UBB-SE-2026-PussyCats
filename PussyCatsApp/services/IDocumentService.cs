@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public interface IDocumentService
     {
-        List<Document> GetDocumentsByUser(int userId);
+        List<Document> GetDocumentsByUserId(int userId);
 
         void UploadDocument(Document document, string filePath);
 

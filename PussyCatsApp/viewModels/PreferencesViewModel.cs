@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.services;
 
 namespace PussyCatsApp.viewModels
@@ -17,11 +17,13 @@ namespace PussyCatsApp.viewModels
         private List<string> locationSuggestions;
         private string errorMessage;
         private int currentUserId;
-        private PreferenceService preferencesService;
+        private IPreferenceService preferencesService;
 
-        public PreferencesViewModel(PreferenceService service, int userId)
+        private const int MaximumJobRolesAllowed = 3;
+
+        public PreferencesViewModel(IPreferenceService preferencesService, int userId)
         {
-            preferencesService = service;
+            this.preferencesService = preferencesService;
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();
@@ -69,13 +71,13 @@ namespace PussyCatsApp.viewModels
             }
             else
             {
-                if (selectedJobRoles.Count < 3)
+                if (selectedJobRoles.Count < MaximumJobRolesAllowed)
                 {
                     selectedJobRoles.Add(role);
                 }
                 else
                 {
-                    errorMessage = "You can select a maximum of 3 job roles.";
+                    errorMessage = $"You can select a maximum of {MaximumJobRolesAllowed} job roles.";
                 }
             }
         }

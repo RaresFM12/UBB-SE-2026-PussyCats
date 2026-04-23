@@ -1,89 +1,80 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
-using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
-using PussyCatsApp.views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
 using PussyCatsApp.Repositories;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.Models;
+using PussyCatsApp.services;
+using PussyCatsApp.views;
 
 namespace PussyCatsApp.viewModels
 {
     public partial class UserProfileViewModel : ObservableObject
     {
-        private UserProfileService profileSerivice;
-        private ImageStorageService imageStorageService;
-        private CvUploadService cvUploadService;
-        private CompletenessService completenessService;
+        private IUserProfileService profileService;
+        private IImageStorageService imageStorageService;
+        private ICompletenessService completenessService;
 
         // Nested Export ViewModel
         public ExportCVViewModel ExportVM { get; }
 
-        private UserProfile? __userProfile;
-        public UserProfile? _userProfile
+        private UserProfile? userProfile;
+        public UserProfile? UserProfile
         {
-            get => __userProfile;
-            set => SetProperty(ref __userProfile, value);
+            get => userProfile;
+            set => SetProperty(ref userProfile, value);
         }
 
-        public bool _isLoading { get; set; }
+        public bool IsLoading { get; set; }
         public int CompletenessPercentage { get; set; }
-        public string NextEmptyFieldPrompt { get; set; } = "";
+        public string NextEmptyFieldPrompt { get; set; } = string.Empty;
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
-        public string ErrorMessage { get; set; } = "";
-        public string FreshnessText { get; set; } = "";
+        public string ErrorMessage { get; set; } = string.Empty;
+        public string FreshnessText { get; set; } = string.Empty;
         public int TotalXP { get; private set; } = 0;
 
-        public UserProfileViewModel()
+        public UserProfileViewModel(IUserProfileService userProfileService, IImageStorageService imageStorageService, ICompletenessService completenessService)
         {
-            this.profileSerivice = new UserProfileService();
-            this.imageStorageService = new ImageStorageService();
-            this.cvUploadService = new CvUploadService();
-            this.completenessService = new CompletenessService();
-        }
-
-        public static UserProfileViewModel Create()
-        {
-            return new UserProfileViewModel();
+            this.profileService = userProfileService;
+            this.imageStorageService = imageStorageService;
+            this.completenessService = completenessService;
         }
 
         public event Action OnLevelUpdated;
-        public void recalculateLevelCommand()
+        public void RecalculateLevelCommand()
         {
-            if (_userProfile == null) return;
+            if (UserProfile == null)
+            {
+                return;
+            }
 
             try
             {
-                TotalXP = profileSerivice.RecalculateLevel(_userProfile); 
+                TotalXP = profileService.RecalculateLevel(UserProfile);
                 OnLevelUpdated?.Invoke();
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ErrorMessage = $"Error recalculating user level: {ex.Message}";
             }
-            
         }
-        
-
         public async Task LoadUserAsync(int userId)
         {
-            ErrorMessage = "";
-            _isLoading = true;
+            ErrorMessage = string.Empty;
+            IsLoading = true;
             try
             {
-                _userProfile = await Task.Run(() => profileSerivice.GetProfile(userId));
+                UserProfile = await Task.Run(() => profileService.GetProfile(userId));
 
-                if (_userProfile != null)
+                if (UserProfile != null)
                 {
-                    FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(_userProfile.LastUpdated);
+                    FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(UserProfile.LastUpdated);
 
-                    CompletenessPercentage = completenessService.CalculateCompleteness(_userProfile);
-                    NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(_userProfile);
+                    CompletenessPercentage = completenessService.CalculateCompleteness(UserProfile);
+                    NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(UserProfile);
                 }
             }
             catch (Exception ex)
@@ -92,26 +83,32 @@ namespace PussyCatsApp.viewModels
             }
             finally
             {
-                _isLoading = false;
+                IsLoading = false;
             }
         }
 
         public void ToggleAccountStatusCommand()
         {
-            if (_userProfile == null) return;
-            string currentStatusStr = _userProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
-            profileSerivice.ToggleAccountStatus(_userProfile.UserId, currentStatusStr);
-            _userProfile.ActiveAccount = !_userProfile.ActiveAccount;
+            if (UserProfile == null)
+            {
+                return;
+            }
+            string currentStatusStr = UserProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
+            profileService.ToggleAccountStatus(UserProfile.UserId, currentStatusStr);
+            UserProfile.ActiveAccount = !UserProfile.ActiveAccount;
         }
 
         public void UploadAvatarCommand(Stream fileStream, string fileName)
         {
-            if (_userProfile == null) return;
+            if (UserProfile == null)
+            {
+                return;
+            }
             try
             {
                 string newPath = imageStorageService.SaveImage(fileStream, fileName);
-                profileSerivice.UpdateAvatarPath(_userProfile.UserId, newPath);
-                _userProfile.ProfilePicture = newPath;
+                profileService.UpdateAvatarPath(UserProfile.UserId, newPath);
+                UserProfile.ProfilePicture = newPath;
             }
             catch (Exception ex)
             {
@@ -122,18 +119,20 @@ namespace PussyCatsApp.viewModels
 
         public void RemoveAvatarCommand()
         {
-            if (!string.IsNullOrEmpty(_userProfile?.ProfilePicture))
+            if (!string.IsNullOrEmpty(UserProfile?.ProfilePicture))
             {
-                imageStorageService.DeleteImage(_userProfile.ProfilePicture);
-                profileSerivice.RemoveAvatarPath(_userProfile.UserId);
-                _userProfile.ProfilePicture = null;
+                imageStorageService.DeleteImage(UserProfile.ProfilePicture);
+                profileService.RemoveAvatarPath(UserProfile.UserId);
+                UserProfile.ProfilePicture = null;
             }
         }
 
         public string GetPersonalityButtonText()
         {
-            if (_userProfile != null && string.IsNullOrEmpty(_userProfile.PersonalityTestResult))
+            if (UserProfile != null && string.IsNullOrEmpty(UserProfile.PersonalityTestResult))
+            {
                 return "TAKE PERSONALITY TEST";
+            }
             return "RETAKE PERSONALITY TEST";
         }
         public void TakePersonalityTestCommand()

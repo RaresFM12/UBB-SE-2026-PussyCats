@@ -17,6 +17,8 @@
 # Mono auto generated files
 mono_crash.*
 
+appsettings.local.json
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -416,3 +418,4 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/Assignment3_TeamPlan.md

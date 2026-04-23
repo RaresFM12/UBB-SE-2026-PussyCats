@@ -12,7 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.models;
+using PussyCatsApp.Models;
 using PussyCatsApp.viewModels;
 using PussyCatsApp.services;
 using PussyCatsApp.Repositories;
@@ -34,7 +34,7 @@ namespace PussyCatsApp.views
 
             var skillTestRepo = new SkillTestRepository();
             var userProfileRepo = new UserProfileRepository();
-            var userProfileService = new UserProfileService();
+            var userProfileService = new UserProfileService(skillTestRepo, userProfileRepo);
             viewModel = new PublicProfileViewModel(userProfileService);
         }
 

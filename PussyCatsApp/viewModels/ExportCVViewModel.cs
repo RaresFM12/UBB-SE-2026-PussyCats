@@ -9,45 +9,51 @@ namespace PussyCatsApp.viewModels
 {
     public partial class ExportCVViewModel : ObservableObject
     {
-        private readonly PdfExportService _pdfExportService;
-        private readonly UserProfileService _userProfileService;
+        private readonly IPdfExportService pdfExportService;
+        private readonly IUserProfileService userProfileService;
         public int UserId { get; set; }
 
-        private string _statusText = string.Empty;
+        private string statusText = string.Empty;
         public string StatusText
         {
-            get => _statusText;
-            set => SetProperty(ref _statusText, value);
+            get => statusText;
+            set => SetProperty(ref statusText, value);
         }
 
-        private bool _isLoading = false;
+        private bool isLoading = false;
         public bool IsLoading
         {
-            get => _isLoading;
-            set => SetProperty(ref _isLoading, value);
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
         }
 
-        public ExportCVViewModel(PdfExportService pdfExportService)
+        public ExportCVViewModel(IPdfExportService pdfExportService, IUserProfileService userProfileService)
         {
-            _pdfExportService = pdfExportService;
-            _userProfileService = new UserProfileService();
+            this.pdfExportService = pdfExportService;
+            this.userProfileService = userProfileService;
         }
 
         public async Task LoadAndRenderCVAsync()
         {
-            if (UserId <= 0) return;
+            int minimumValidUserId = 1; // Assuming user IDs start from 1
+            if (UserId < minimumValidUserId)
+            {
+                return;
+            }
 
             IsLoading = true;
             StatusText = "Loading CV preview...";
 
             try
             {
-                var profile = _userProfileService.GetProfile(UserId);
+                var profile = userProfileService.GetProfile(UserId);
 
                 if (profile == null)
+                {
                     throw new Exception("User profile not found in database.");
+                }
 
-                await _pdfExportService.RenderProfileAsync(profile);
+                await pdfExportService.RenderProfileAsync(profile);
 
                 StatusText = string.Empty;
             }
@@ -69,7 +75,7 @@ namespace PussyCatsApp.viewModels
 
             try
             {
-                await _pdfExportService.DownloadPdfAsync();
+                await pdfExportService.DownloadPdfAsync();
                 StatusText = "Downloaded successfully!";
             }
             catch (OperationCanceledException)

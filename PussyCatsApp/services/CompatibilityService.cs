@@ -1,7 +1,7 @@
-﻿using PussyCatsApp.models;
-using PussyCatsApp.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.services
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
-using PussyCatsApp.models;
+﻿using Moq;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.services;

@@ -1,26 +1,28 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.converters;
-using PussyCatsApp.models;
-using PussyCatsApp.services;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Networking.Sockets;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.converters;
+using PussyCatsApp.Models;
+using PussyCatsApp.services;
 
 namespace PussyCatsApp.viewModels
 {
     public partial class PersonalityTestViewModel : ObservableObject
     {
-        private readonly PersonalityTestService PersonalityTestService;
-        private readonly int UserId;
+        private readonly IPersonalityTestService personalityTestService;
+        private readonly int userId;
+        private const int NumberOfTopRolesToDisplay = 3;
 
         public List<QuestionViewModel> Questions { get; }
 
         [ObservableProperty]
-        public partial List<RoleResultViewModel> TopRoles { get; set; } = new();
+        public partial List<RoleResultViewModel> TopRoles { get; set; } = new ();
 
         [ObservableProperty]
         public partial RoleResultViewModel? SelectedRole { get; set; }
@@ -31,53 +33,70 @@ namespace PussyCatsApp.viewModels
         [ObservableProperty]
         public partial bool IsTestSubmitted { get; set; }
 
-        public bool CanSubmit => Questions.All(q => q.IsAnswered == true);
-
-        public bool CanSave => SelectedRole != null;
-
-        public PersonalityTestViewModel(int userId)
+        public bool CanSubmit
         {
-            PersonalityTestService = new PersonalityTestService();
-            UserId = userId;
-
-            Questions = PersonalityTestService.LoadQuestions()
-                .Select(question => new QuestionViewModel(question))
-                .ToList();
-
-            // Subscribe to answer changes to trigger CanSubmit validation
-            // WHEN to re-evaluate the CanSubmit condition
-            foreach (var question in Questions)
+            get
             {
-                question.PropertyChanged += (s, e) =>
+                foreach (var question in Questions)
                 {
-                    if (e.PropertyName == nameof(QuestionViewModel.SelectedAnswer))
+                    if (question.IsAnswered == false)
                     {
-                        SubmitCommand.NotifyCanExecuteChanged();
+                        return false; // At least one question is unanswered
                     }
-                };
+                }
+                return true;
             }
+        }
+
+        public bool CanSave
+        {
+            get
+            {
+                return SelectedRole != null;
+            }
+        }
+
+        public PersonalityTestViewModel(int userId, IPersonalityTestService personalityTestService)
+        {
+            this.personalityTestService = personalityTestService;
+            this.userId = userId;
+
+            var rawQuestionsList = PersonalityTestService.LoadQuestions();
+            Questions = WrapQuestionsInViewModels(rawQuestionsList);
+            SubscribeToAnswerChanges();
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private void Submit()
         {
-            // Collect answers from questions
-            var answers = new Dictionary<Question, AnswerValue>();
-            foreach (var questionVm in Questions)
-                answers[questionVm.Question] = (AnswerValue)questionVm.SelectedAnswer!;
+            var answers = CollectAnswers();
+            var traitScores = personalityTestService.CalculateTraitScores(answers);
+            var roleScores = personalityTestService.CalculateRoleScores(traitScores);
 
-            // Calculate trait scores
-            var traitScores = PersonalityTestService.CalculateTraitScores(answers);
+            var topRolePairs = personalityTestService.GetTopRoles(roleScores, NumberOfTopRolesToDisplay);
+            TopRoles = WrapRolesInViewModels(topRolePairs);
 
-            // Calculate role scores
-            var roleScores = PersonalityTestService.CalculateRoleScores(traitScores);
-
-            TopRoles = PersonalityTestService.GetTopRoles(roleScores, 3)
-                .Select(role => new RoleResultViewModel(role.Key, role.Value))
-                .ToList();
-
-            // Mark test as submitted
             IsTestSubmitted = true;
+        }
+
+        private Dictionary<Question, AnswerValue> CollectAnswers()
+        {
+            var answers = new Dictionary<Question, AnswerValue>();
+            foreach (QuestionViewModel questionViewModel in Questions)
+            {
+                answers[questionViewModel.Question] = (AnswerValue)questionViewModel.SelectedAnswer!;
+            }
+            return answers;
+        }
+
+        private static List<RoleResultViewModel> WrapRolesInViewModels(IEnumerable<KeyValuePair<JobRole, double>> rolePairs)
+        {
+            var roleViewModels = new List<RoleResultViewModel>();
+            foreach (KeyValuePair<JobRole, double> rolePair in rolePairs)
+            {
+                roleViewModels.Add(new RoleResultViewModel(rolePair.Key, rolePair.Value));
+            }
+            return roleViewModels;
         }
 
         [RelayCommand]
@@ -85,7 +104,9 @@ namespace PussyCatsApp.viewModels
         {
             // Deselect all roles
             foreach (var topRole in TopRoles)
+            {
                 topRole.IsSelected = false;
+            }
 
             // Select the clicked role
             role.IsSelected = true;
@@ -100,7 +121,7 @@ namespace PussyCatsApp.viewModels
         {
             if (SelectedRole != null)
             {
-                PersonalityTestService.SaveResult(UserId, SelectedRole.Role.ToString());
+                personalityTestService.SaveResult(this.userId, SelectedRole.Role.ToString());
 
                 // Convert role to a friendly display name using the existing converter
                 var converter = new JobRoleToDisplayNameConverter();
@@ -111,6 +132,31 @@ namespace PussyCatsApp.viewModels
                 SaveMessage = $"Your personality test result has been updated to {displayName}.";
             }
         }
-    }
 
+        private static List<QuestionViewModel> WrapQuestionsInViewModels(List<Question> rawQuestions)
+        {
+            var questionViewModels = new List<QuestionViewModel>();
+            foreach (Question question in rawQuestions)
+            {
+                questionViewModels.Add(new QuestionViewModel(question));
+            }
+            return questionViewModels;
+        }
+
+        private void SubscribeToAnswerChanges()
+        {
+            foreach (QuestionViewModel questionViewModel in Questions)
+            {
+                questionViewModel.PropertyChanged += OnQuestionAnswerChanged;
+            }
+        }
+
+        private void OnQuestionAnswerChanged(object? sender, PropertyChangedEventArgs eventArgs)
+        {
+            if (eventArgs.PropertyName == nameof(QuestionViewModel.SelectedAnswer))
+            {
+                SubmitCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
 }

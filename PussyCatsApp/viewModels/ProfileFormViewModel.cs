@@ -1,8 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.models;
-using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,136 +7,67 @@ using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PussyCatsApp.utilities;
 
 namespace PussyCatsApp.viewModels
 {
     public partial class ProfileFormViewModel : ObservableObject
     {
-        private readonly UserProfileService _profileService;
-        private readonly CVParsingService _cvParsingService;
-        private UserProfile _userProfile;
+        private readonly IUserProfileService profileService;
+        private readonly ICVParsingService cvParsingService;
+        private UserProfile userProfile;
 
         // Required Fields
-        [ObservableProperty] private string _firstName = string.Empty;
-        [ObservableProperty] private string _lastName = string.Empty;
-        [ObservableProperty] private double _age;
-        [ObservableProperty] private string _gender = string.Empty;
-        [ObservableProperty] private string _email = string.Empty;
-        [ObservableProperty] private string _phonePrefix = string.Empty;
-        [ObservableProperty] private string _phoneNumber = string.Empty;
-        [ObservableProperty] private string _gitHub = string.Empty;
-        [ObservableProperty] private string _linkedIn = string.Empty;
-        [ObservableProperty] private string _country = string.Empty;
-        [ObservableProperty] private string _city = string.Empty;
-        [ObservableProperty] private string _university = string.Empty;
-        [ObservableProperty] private string _address = string.Empty;
-        [ObservableProperty] private int _expectedGraduationYear;
-        [ObservableProperty] private string _motivation = string.Empty;
-        [ObservableProperty] private bool _hasDisabilities;
+        [ObservableProperty] private string firstName = string.Empty;
+        [ObservableProperty] private string lastName = string.Empty;
+        [ObservableProperty] private double age;
+        [ObservableProperty] private string gender = string.Empty;
+        [ObservableProperty] private string email = string.Empty;
+        [ObservableProperty] private string phonePrefix = string.Empty;
+        [ObservableProperty] private string phoneNumber = string.Empty;
+        [ObservableProperty] private string gitHub = string.Empty;
+        [ObservableProperty] private string linkedIn = string.Empty;
+        [ObservableProperty] private string country = string.Empty;
+        [ObservableProperty] private string city = string.Empty;
+        [ObservableProperty] private string university = string.Empty;
+        [ObservableProperty] private string address = string.Empty;
+        [ObservableProperty] private int expectedGraduationYear;
+        [ObservableProperty] private string motivation = string.Empty;
+        [ObservableProperty] private bool hasDisabilities;
 
         // Status
-        [ObservableProperty] private string _errorMessage = string.Empty;
-        [ObservableProperty] private string _cvStatusText = string.Empty;
-        [ObservableProperty] private string _infoBarMessage = string.Empty;
-        [ObservableProperty] private int _infoBarSeverity; // 0=Info, 1=Success, 2=Warning, 3=Error
-        [ObservableProperty] private bool _isInfoBarOpen;
+        [ObservableProperty] private string errorMessage = string.Empty;
+        [ObservableProperty] private string cvStatusText = string.Empty;
+        [ObservableProperty] private string infoBarMessage = string.Empty;
+        [ObservableProperty] private InformationBarSeverityStatus infoBarSeverity; // 1=Success, 2=Warning, 3=Error
+        [ObservableProperty] private bool isInfoBarOpen;
 
-        public ObservableCollection<string> Skills { get; } = new();
-        public ObservableCollection<WorkExperience> WorkExperiences { get; } = new();
-        public ObservableCollection<Project> Projects { get; } = new();
-        public ObservableCollection<ExtraCurricularActivity> ExtraCurricularActivities { get; } = new();
+        public ObservableCollection<string> Skills { get; } = new ();
+        public ObservableCollection<WorkExperience> WorkExperiences { get; } = new ();
+        public ObservableCollection<Project> Projects { get; } = new ();
+        public ObservableCollection<ExtraCurricularActivity> ExtraCurricularActivities { get; } = new ();
 
-        public List<string> UniversityList { get; } = new()
+        public List<int> GraduationYears { get; } = new ();
+
+        private readonly int maximumNumberOfExtraCurricularActivitiesAllowed = 10;
+        private readonly int maximumNumberOfSkillsAllowed = 30;
+        private readonly int maximumSkillNameLength = 60;
+        private readonly int maximumNumberOfWorkExperiencesAllowed = 10;
+        private readonly int maximumNumberOfProjectsAllowed = 10;
+
+        public ProfileFormViewModel(IUserProfileService profileService, ICVParsingService cvParsingService)
         {
-            "Babes-Bolyai University",
-            "Technical University of Cluj-Napoca",
-            "University of Bucharest",
-            "Politehnica University of Bucharest",
-            "Alexandru Ioan Cuza University",
-            "West University of Timisoara",
-            "University of Medicine and Pharmacy Cluj-Napoca",
-            "Academy of Economic Studies Bucharest"
-        };
-
-        public List<string> SkillSuggestions { get; } = new()
-        {
-            // Languages
-            "JavaScript", "TypeScript", "Python", "Java", "C#", "Go", "R", "Julia",
-
-            // Frontend
-            "HTML", "CSS", "SCSS", "Tailwind",
-
-            // Frameworks & Libraries
-            "React", "Angular", "Vue.js", "Svelte", "Node.js", "Spring Boot", "ASP.NET", "Django", "FastAPI",
-
-            // Build Tools
-            "Webpack", "Vite", "Parcel",
-
-            // Version Control
-            "Git", "GitHub",
-
-            // Testing
-            "Jest", "Cypress", "Selenium", "JUnit", "NUnit", "pytest",
-
-            // APIs & Communication
-            "REST", "GraphQL", "gRPC", "Postman",
-
-            // Databases
-            "SQL", "PostgreSQL", "MySQL", "MongoDB", "Redis", "BigQuery",
-
-            // DevOps / Cloud
-            "Docker", "Podman", "Kubernetes", "Docker Swarm", "OpenShift",
-            "Jenkins", "GitHub Actions", "GitLab CI", "CircleCI",
-            "AWS", "Azure", "Google Cloud",
-            "Terraform", "Ansible", "Pulumi",
-            "Prometheus", "Grafana", "Datadog",
-
-            // Design & UX
-            "Figma", "Adobe XD", "Zeplin", "Sketch", "InVision", "Marvel", "Axure",
-            "Figma Prototyping", "Typography", "Color Theory", "Grid Systems",
-            "Storybook",
-
-            // Research & UX Methods
-            "Interviews", "Surveys", "Usability Testing",
-
-            // Analytics & BI
-            "Google Analytics", "Hotjar", "Mixpanel",
-            "Power BI", "Tableau", "Looker",
-            "Excel", "Google Sheets", "OpenRefine",
-
-            // Data Science & AI
-            "Pandas", "NumPy", "TensorFlow", "PyTorch", "scikit-learn", "Keras",
-            "Apache Spark", "MLflow", "Hugging Face",
-            "OpenCV", "NLTK", "spaCy",
-            "Descriptive Statistics", "Regression", "Hypothesis Testing",
-            "Linear Algebra", "Calculus", "Probability", "Statistics",
-
-            // Security
-            "Firewalls", "VPN", "IDS/IPS", "TCP/IP",
-            "Metasploit", "Burp Suite", "Nmap",
-            "Splunk", "IBM QRadar", "Microsoft Sentinel",
-            "AES", "RSA", "PKI", "TLS/SSL",
-            "ISO 27001", "GDPR", "NIST", "SOC 2",
-            "Forensics", "Malware Analysis", "DFIR",
-
-            // Project Management
-            "Scrum", "Kanban", "Agile", "Waterfall",
-            "Jira", "Trello", "Asana",
-            "Risk Assessment", "Mitigation Planning",
-            "Stakeholder Management", "Reporting",
-            "Presentations", "Cost Estimation", "Budget Tracking",
-            "MS Project"
-        };
-
-        public List<int> GraduationYears { get; } = new();
-
-        public ProfileFormViewModel(UserProfileService profileService, CVParsingService cvParsingService)
-        {
-            _profileService = profileService;
-            _cvParsingService = cvParsingService;
+            this.profileService = profileService;
+            this.cvParsingService = cvParsingService;
 
             int currentYear = DateTime.Now.Year;
-            for (int year = currentYear; year <= currentYear + 10; year++)
+            int numberOfYearsToShow = 10;
+            for (int year = currentYear; year <= currentYear + numberOfYearsToShow; year++)
             {
                 GraduationYears.Add(year);
             }
@@ -151,77 +77,87 @@ namespace PussyCatsApp.viewModels
         {
             var userProfileRepo = new UserProfileRepository();
             var skillTestRepo = new SkillTestRepository();
-            var profileService = new UserProfileService();
+            var profileService = new UserProfileService(skillTestRepo, userProfileRepo);
             var cvParsingService = new CVParsingService();
             return new ProfileFormViewModel(profileService, cvParsingService);
         }
 
         public void LoadProfile(UserProfile profile)
         {
-            _userProfile = profile ?? new UserProfile();
+            userProfile = profile ?? new UserProfile();
 
-            FirstName = _userProfile.FirstName;
-            LastName = _userProfile.LastName;
-            Age = _userProfile.Age;
-            Gender = _userProfile.Gender;
-            Email = _userProfile.Email;
-            GitHub = _userProfile.GitHub;
-            LinkedIn = _userProfile.LinkedIn;
-            University = _userProfile.University;
-            Address = _userProfile.Address;
-            Motivation = _userProfile.Motivation;
-            Country = _userProfile.Country;
-            City = _userProfile.City;
-            ExpectedGraduationYear = _userProfile.ExpectedGraduationYear;
-            HasDisabilities = _userProfile.HasDisabilities;
+            FirstName = userProfile.FirstName;
+            LastName = userProfile.LastName;
+            Age = userProfile.Age;
+            Gender = userProfile.Gender;
+            Email = userProfile.Email;
+            GitHub = userProfile.GitHub;
+            LinkedIn = userProfile.LinkedIn;
+            University = userProfile.University;
+            Address = userProfile.Address;
+            Motivation = userProfile.Motivation;
+            Country = userProfile.Country;
+            City = userProfile.City;
+            ExpectedGraduationYear = userProfile.ExpectedGraduationYear;
+            HasDisabilities = userProfile.HasDisabilities;
 
             // Extract phone prefix and number
-            if (!string.IsNullOrEmpty(_userProfile.PhoneNumber))
+            if (!string.IsNullOrEmpty(userProfile.PhoneNumber))
             {
-                var parts = ExtractPhonePrefixAndNumber(_userProfile.PhoneNumber);
-                PhonePrefix = parts.prefix;
-                PhoneNumber = parts.number;
+                var phoneNumberParts = PhoneNumberHelper.ExtractPhonePrefixAndNumber(userProfile.PhoneNumber);
+                PhonePrefix = phoneNumberParts.prefix;
+                PhoneNumber = phoneNumberParts.number;
             }
 
             Skills.Clear();
-            foreach (var skill in _userProfile.Skills)
+            foreach (var skill in userProfile.Skills)
+            {
                 Skills.Add(skill);
+            }
 
             WorkExperiences.Clear();
-            foreach (var we in _userProfile.WorkExperiences)
-                WorkExperiences.Add(we);
+            foreach (var workExperience in userProfile.WorkExperiences)
+            {
+                WorkExperiences.Add(workExperience);
+            }
 
             Projects.Clear();
-            foreach (var project in _userProfile.Projects)
+            foreach (var project in userProfile.Projects)
+            {
                 Projects.Add(project);
+            }
 
             ExtraCurricularActivities.Clear();
-            foreach (var activity in _userProfile.ExtraCurricularActivities)
+            foreach (var activity in userProfile.ExtraCurricularActivities)
+            {
                 ExtraCurricularActivities.Add(activity);
+            }
         }
 
         public void AddSkill(string skill)
         {
             if (string.IsNullOrWhiteSpace(skill))
+            {
                 return;
+            }
 
             skill = skill.Trim();
 
-            if (Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase)))
+            if (IsDuplicateSkill(skill))
             {
-                ShowInfoBar("This skill has already been added.", 2);
+                ShowInfoBar("This skill has already been added.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
-            if (Skills.Count >= 30)
+            if (Skills.Count >= maximumNumberOfSkillsAllowed)
             {
-                ShowInfoBar("Maximum of 30 skills allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfSkillsAllowed} skills allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
-            if (skill.Length > 60)
+            if (skill.Length > maximumSkillNameLength)
             {
-                ShowInfoBar("Skill name must be less than 60 characters.", 2);
+                ShowInfoBar($"Skill name must be less than {maximumSkillNameLength} characters.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -235,9 +171,9 @@ namespace PussyCatsApp.viewModels
 
         public void AddWorkExperience()
         {
-            if (WorkExperiences.Count >= 10)
+            if (WorkExperiences.Count >= maximumNumberOfWorkExperiencesAllowed)
             {
-                ShowInfoBar("Maximum of 10 work experiences allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfWorkExperiencesAllowed} work experiences allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -255,9 +191,9 @@ namespace PussyCatsApp.viewModels
 
         public void AddProject()
         {
-            if (Projects.Count >= 10)
+            if (Projects.Count >= maximumNumberOfProjectsAllowed)
             {
-                ShowInfoBar("Maximum of 10 projects allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfProjectsAllowed} projects allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -271,9 +207,9 @@ namespace PussyCatsApp.viewModels
 
         public void AddExtraCurricularActivity()
         {
-            if (ExtraCurricularActivities.Count >= 10)
+            if (ExtraCurricularActivities.Count >= maximumNumberOfExtraCurricularActivitiesAllowed)
             {
-                ShowInfoBar("Maximum of 10 extra-curricular activities allowed.", 2);
+                ShowInfoBar($"Maximum of {maximumNumberOfExtraCurricularActivitiesAllowed} extra-curricular activities allowed.", InformationBarSeverityStatus.Warning);
                 return;
             }
 
@@ -285,46 +221,12 @@ namespace PussyCatsApp.viewModels
             ExtraCurricularActivities.Remove(activity);
         }
 
-        public List<string> ValidateForm()
-        {
-            var errors = new List<string>();
-
-            if (string.IsNullOrWhiteSpace(FirstName))
-                errors.Add("First Name");
-            if (string.IsNullOrWhiteSpace(LastName))
-                errors.Add("Last Name");
-            if (Age < 16 || Age > 60)
-                errors.Add("Age (must be between 16-60)");
-            if (string.IsNullOrWhiteSpace(Gender))
-                errors.Add("Gender");
-            if (string.IsNullOrWhiteSpace(Email) || !IsValidEmail(Email))
-                errors.Add("Valid Email");
-            if (string.IsNullOrWhiteSpace(PhonePrefix) || string.IsNullOrWhiteSpace(PhoneNumber))
-                errors.Add("Phone Number");
-            if (string.IsNullOrWhiteSpace(Country))
-                errors.Add("Country");
-            if (string.IsNullOrWhiteSpace(City))
-                errors.Add("City");
-            if (string.IsNullOrWhiteSpace(University))
-                errors.Add("University");
-            if (ExpectedGraduationYear == 0)
-                errors.Add("Expected Graduation Year");
-
-            foreach (var we in WorkExperiences)
-            {
-                if (!we.CurrentlyWorking && we.EndDate.HasValue && we.EndDate.Value < we.StartDate)
-                    errors.Add($"Work Experience \"{we.Company}\": End date is before start date");
-            }
-
-            return errors;
-        }
-
         public bool SaveProfile()
         {
-            var errors = ValidateForm();
+            var errors = ProfileFormValidator.ValidateForm(FirstName, LastName, Age, Gender, Email, PhonePrefix, PhoneNumber, Country, City, University, ExpectedGraduationYear, WorkExperiences.ToList());
             if (errors.Any())
             {
-                ShowInfoBar($"Please fill in required fields: {string.Join(", ", errors)}", 3);
+                ShowInfoBar($"Please fill in required fields: {string.Join(", ", errors)}", InformationBarSeverityStatus.Error);
                 return false;
             }
 
@@ -332,13 +234,13 @@ namespace PussyCatsApp.viewModels
 
             try
             {
-                _profileService.SaveProfile(_userProfile.UserId, _userProfile);
-                ShowInfoBar("Profile saved successfully!", 1);
+                profileService.SaveProfile(userProfile.UserId, userProfile);
+                ShowInfoBar("Profile saved successfully!", InformationBarSeverityStatus.Success);
                 return true;
             }
             catch (Exception ex)
             {
-                ShowInfoBar($"Error saving profile: {ex.Message}", 3);
+                ShowInfoBar($"Error saving profile: {ex.Message}", InformationBarSeverityStatus.Error);
                 return false;
             }
         }
@@ -346,70 +248,122 @@ namespace PussyCatsApp.viewModels
         public UserProfile GetUpdatedProfile()
         {
             UpdateProfileFromForm();
-            return _userProfile;
+            return userProfile;
         }
 
         private void UpdateProfileFromForm()
         {
-            _userProfile.FirstName = FirstName.Trim();
-            _userProfile.LastName = LastName.Trim();
-            _userProfile.Age = (int)Age;
-            _userProfile.Gender = Gender;
-            _userProfile.Email = Email.Trim().ToLowerInvariant();
-            _userProfile.PhoneNumber = PhonePrefix + PhoneNumber.Trim();
-            _userProfile.GitHub = GitHub.Trim();
-            _userProfile.LinkedIn = LinkedIn.Trim();
-            _userProfile.Country = Country;
-            _userProfile.City = City.Trim();
-            _userProfile.University = University.Trim();
-            _userProfile.ExpectedGraduationYear = ExpectedGraduationYear;
-            _userProfile.Address = Address.Trim();
-            _userProfile.Motivation = Motivation.Trim();
-            _userProfile.HasDisabilities = HasDisabilities;
-            _userProfile.Skills = Skills.ToList();
-            _userProfile.WorkExperiences = WorkExperiences.ToList();
-            _userProfile.Projects = Projects.ToList();
-            _userProfile.ExtraCurricularActivities = ExtraCurricularActivities.ToList();
-            _userProfile.LastUpdated = DateTime.Now;
+            userProfile.FirstName = FirstName.Trim();
+            userProfile.LastName = LastName.Trim();
+            userProfile.Age = (int)Age;
+            userProfile.Gender = Gender;
+            userProfile.Email = Email.Trim().ToLowerInvariant();
+            userProfile.PhoneNumber = PhonePrefix + PhoneNumber.Trim();
+            userProfile.GitHub = GitHub.Trim();
+            userProfile.LinkedIn = LinkedIn.Trim();
+            userProfile.Country = Country;
+            userProfile.City = City.Trim();
+            userProfile.University = University.Trim();
+            userProfile.ExpectedGraduationYear = ExpectedGraduationYear;
+            userProfile.Address = Address.Trim();
+            userProfile.Motivation = Motivation.Trim();
+            userProfile.HasDisabilities = HasDisabilities;
+            userProfile.Skills = Skills.ToList();
+            userProfile.WorkExperiences = WorkExperiences.ToList();
+            userProfile.Projects = Projects.ToList();
+            userProfile.ExtraCurricularActivities = ExtraCurricularActivities.ToList();
+            userProfile.LastUpdated = DateTime.Now;
         }
 
         public void ProcessCVFile(string content, string fileType)
         {
             try
             {
-                var parsedProfile = _cvParsingService.ParseCVFile(content, fileType);
+                var parsedProfile = cvParsingService.ParseCVFile(content, fileType);
                 PopulateFromParsedProfile(parsedProfile);
                 CvStatusText = "CV loaded successfully!";
-                ShowInfoBar("CV data has been loaded. Please review and complete any missing fields.", 1);
+                ShowInfoBar("CV data has been loaded. Please review and complete any missing fields.", InformationBarSeverityStatus.Success);
             }
             catch (Exception ex)
             {
                 var errorMsg = ex.InnerException?.Message ?? ex.Message;
-                ShowInfoBar($"Error processing CV file: {errorMsg}", 3);
+                ShowInfoBar($"Error processing CV file: {errorMsg}", InformationBarSeverityStatus.Error);
             }
         }
 
         private void PopulateFromParsedProfile(UserProfile parsed)
         {
-            if (!string.IsNullOrEmpty(parsed.FirstName)) FirstName = parsed.FirstName;
-            if (!string.IsNullOrEmpty(parsed.LastName)) LastName = parsed.LastName;
-            if (parsed.Age > 0) Age = parsed.Age;
-            if (!string.IsNullOrEmpty(parsed.Gender)) Gender = parsed.Gender;
-            if (!string.IsNullOrEmpty(parsed.Email)) Email = parsed.Email;
+            if (!string.IsNullOrEmpty(parsed.FirstName))
+            {
+                FirstName = parsed.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.LastName))
+            {
+                LastName = parsed.LastName;
+            }
+
+            if (parsed.Age > 0)
+            {
+                Age = parsed.Age;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Gender))
+            {
+                Gender = parsed.Gender;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Email))
+            {
+                Email = parsed.Email;
+            }
+
             if (!string.IsNullOrEmpty(parsed.PhoneNumber))
             {
-                var parts = ExtractPhonePrefixAndNumber(parsed.PhoneNumber);
+                var parts = PhoneNumberHelper.ExtractPhonePrefixAndNumber(parsed.PhoneNumber);
                 PhonePrefix = parts.prefix;
                 PhoneNumber = parts.number;
             }
-            if (!string.IsNullOrEmpty(parsed.GitHub)) GitHub = parsed.GitHub;
-            if (!string.IsNullOrEmpty(parsed.LinkedIn)) LinkedIn = parsed.LinkedIn;
-            if (!string.IsNullOrEmpty(parsed.Country)) Country = parsed.Country;
-            if (!string.IsNullOrEmpty(parsed.City)) City = parsed.City;
-            if (!string.IsNullOrEmpty(parsed.University)) University = parsed.University;
-            if (parsed.ExpectedGraduationYear > 0) ExpectedGraduationYear = parsed.ExpectedGraduationYear;
-            if (!string.IsNullOrEmpty(parsed.Address)) Address = parsed.Address;
-            if (!string.IsNullOrEmpty(parsed.Motivation)) Motivation = parsed.Motivation;
+
+            if (!string.IsNullOrEmpty(parsed.GitHub))
+            {
+                GitHub = parsed.GitHub;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.LinkedIn))
+            {
+                LinkedIn = parsed.LinkedIn;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Country))
+            {
+                Country = parsed.Country;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.City))
+            {
+                City = parsed.City;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.University))
+            {
+                University = parsed.University;
+            }
+
+            if (parsed.ExpectedGraduationYear > 0)
+            {
+                ExpectedGraduationYear = parsed.ExpectedGraduationYear;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Address))
+            {
+                Address = parsed.Address;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Motivation))
+            {
+                Motivation = parsed.Motivation;
+            }
 
             // Clear existing collections before loading new CV data
             Skills.Clear();
@@ -422,117 +376,169 @@ namespace PussyCatsApp.viewModels
             {
                 foreach (var skill in parsed.Skills)
                 {
-                    if (!Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase)) && Skills.Count < 30)
+                    if (!IsDuplicateSkill(skill) && Skills.Count < maximumNumberOfSkillsAllowed)
+                    {
                         Skills.Add(skill);
+                    }
                 }
             }
 
             if (parsed.WorkExperiences != null)
             {
-                foreach (var we in parsed.WorkExperiences)
+                foreach (var workExperience in parsed.WorkExperiences)
                 {
-                    if (WorkExperiences.Count < 10)
-                        WorkExperiences.Add(we);
+                    if (WorkExperiences.Count < maximumNumberOfWorkExperiencesAllowed)
+                    {
+                        WorkExperiences.Add(workExperience);
+                    }
                 }
             }
 
             if (parsed.Projects != null)
             {
-                foreach (var proj in parsed.Projects)
+                foreach (var project in parsed.Projects)
                 {
-                    if (Projects.Count < 10)
-                        Projects.Add(proj);
+                    if (Projects.Count < maximumNumberOfProjectsAllowed)
+                    {
+                        Projects.Add(project);
+                    }
                 }
             }
 
             if (parsed.ExtraCurricularActivities != null)
             {
-                foreach (var activity in parsed.ExtraCurricularActivities)
+                foreach (var extraCurricularActivity in parsed.ExtraCurricularActivities)
                 {
-                    if (ExtraCurricularActivities.Count < 10)
-                        ExtraCurricularActivities.Add(activity);
+                    if (ExtraCurricularActivities.Count < maximumNumberOfExtraCurricularActivitiesAllowed)
+                    {
+                        ExtraCurricularActivities.Add(extraCurricularActivity);
+                    }
                 }
             }
 
             // List missing fields (R18)
             var missingFields = new List<string>();
-            if (string.IsNullOrEmpty(FirstName)) missingFields.Add("First Name");
-            if (string.IsNullOrEmpty(LastName)) missingFields.Add("Last Name");
-            if (Age == 0) missingFields.Add("Age");
-            if (string.IsNullOrEmpty(Gender)) missingFields.Add("Gender");
-            if (string.IsNullOrEmpty(Email)) missingFields.Add("Email");
-            if (string.IsNullOrEmpty(PhoneNumber)) missingFields.Add("Phone Number");
-            if (string.IsNullOrEmpty(Country)) missingFields.Add("Country");
-            if (string.IsNullOrEmpty(City)) missingFields.Add("City");
-            if (string.IsNullOrEmpty(University)) missingFields.Add("University");
-            if (ExpectedGraduationYear == 0) missingFields.Add("Expected Graduation Year");
+            var fieldsOfTypeString = new Dictionary<string, string>
+            {
+                { "First Name", FirstName },
+                { "Last Name", LastName },
+                { "Gender", Gender },
+                { "Email", Email },
+                { "Phone Number", PhoneNumber },
+                { "Country", Country },
+                { "City", City },
+                { "University", University }
+            };
+
+            foreach (var field in fieldsOfTypeString)
+            {
+                if (string.IsNullOrEmpty(field.Value))
+                {
+                    missingFields.Add(field.Key);
+                }
+            }
+
+            if (Age == 0)
+            {
+                missingFields.Add("Age");
+            }
+
+            if (ExpectedGraduationYear == 0)
+            {
+                missingFields.Add("Expected Graduation Year");
+            }
 
             if (missingFields.Any())
             {
-                ShowInfoBar($"Missing fields: {string.Join(", ", missingFields)}", 2);
+                ShowInfoBar($"Missing fields: {string.Join(", ", missingFields)}", InformationBarSeverityStatus.Warning);
             }
         }
 
         public List<string> FilterUniversities(string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return new List<string>();
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return new List<string>();
+            }
 
-            var splitText = query.ToLower().Split(' ');
-            return UniversityList.Where(uni =>
-                splitText.All(key => uni.ToLower().Contains(key))
-            ).ToList();
+            var queryWords = query.ToLower().Split(' ');
+            var results = new List<string>();
+            foreach (string university in ProfileFormData.UniversityList)
+            {
+                if (ProfileFormHelpers.UniversityMatchesAllWords(university, queryWords))
+                {
+                    results.Add(university);
+                }
+            }
+            return results;
         }
 
         public List<string> FilterSkillSuggestions(string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return new List<string>();
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return new List<string>();
+            }
 
             var searchText = query.ToLower();
-            return SkillSuggestions.Where(skill =>
-                skill.ToLower().Contains(searchText) &&
-                !Skills.Any(s => s.Equals(skill, StringComparison.OrdinalIgnoreCase))
-            ).ToList();
+            var results = new List<string>();
+            foreach (string skill in ProfileFormData.SkillSuggestions)
+            {
+                if (SkillMatchesSearch(skill, searchText))
+                {
+                    results.Add(skill);
+                }
+            }
+            return results;
         }
 
-        private void ShowInfoBar(string message, int severity)
+        private void ShowInfoBar(string message, InformationBarSeverityStatus severity)
         {
             InfoBarMessage = message;
             InfoBarSeverity = severity;
             IsInfoBarOpen = true;
         }
 
-        private static (string prefix, string number) ExtractPhonePrefixAndNumber(string phoneNumber)
+        private bool IsDuplicateSkill(string skill)
         {
-            if (string.IsNullOrEmpty(phoneNumber))
-                return ("", "");
-
-            var prefixes = new[] {
-                "+40", "+44", "+49", "+33", "+39", "+34", "+31", "+48", "+43", "+32",
-                "+46", "+351", "+420", "+36", "+359", "+30", "+45", "+358", "+353", "+385",
-                "+421", "+370", "+371", "+372", "+386", "+352", "+356", "+357",
-                "+1", "+61",
-                "+47", "+41", "+90", "+380", "+381", "+373", "+387", "+382", "+389", "+355", "+375", "+7"
-            };
-            // Sort by length descending so longer prefixes match first (e.g. +351 before +3)
-            foreach (var prefix in prefixes.OrderByDescending(p => p.Length))
+            foreach (string existingSkill in Skills)
             {
-                if (phoneNumber.StartsWith(prefix))
-                    return (prefix, phoneNumber.Substring(prefix.Length));
+                if (existingSkill.Equals(skill, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
             }
-            return ("", phoneNumber);
+            return false;
+        }
+        private bool SkillMatchesSearch(string skill, string searchText)
+        {
+            return skill.ToLower().Contains(searchText) && !IsDuplicateSkill(skill);
         }
 
-        private static bool IsValidEmail(string email)
+        /// <summary>
+        /// Severity Status codes for the Information Bar.
+        /// </summary>
+        public enum InformationBarSeverityStatus
         {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
+            /// <summary>
+            /// Only an informational message should be displayed, without any specific severity.
+            /// </summary>
+            Informational = 0,
+
+            /// <summary>
+            /// Indicates that the operation completed successfully.
+            /// </summary>
+            Success = 1,
+
+            /// <summary>
+            /// Indicates that a warning should be displayed
+            /// </summary>
+            Warning = 2,
+
+            /// <summary>
+            /// Indicates that an error occurred during the operation.
+            /// </summary>
+            Error = 3
         }
     }
 }

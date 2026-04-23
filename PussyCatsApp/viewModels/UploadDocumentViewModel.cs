@@ -1,6 +1,7 @@
-﻿using PussyCatsApp.models;
+﻿using System;
+using PussyCatsApp.Models;
 using PussyCatsApp.services;
-using System;
+using PussyCatsApp.utilities;
 
 namespace PussyCatsApp.viewModels
 {
@@ -11,42 +12,44 @@ namespace PussyCatsApp.viewModels
     /// </summary>
     public class UploadDocumentViewModel
     {
-        private string documentName;
-        private string selectedFilePath;
-        private string errorMessage;
-        private readonly DocumentService documentService;
+        private string documentName = string.Empty;
+        private string selectedFilePath = string.Empty;
+        private string errorMessage = string.Empty;
+        private readonly IDocumentService documentService;
         private readonly int userId;
 
-        public UploadDocumentViewModel(DocumentService documentService, int userId)
+        public UploadDocumentViewModel(IDocumentService documentService, int userId)
         {
             this.documentService = documentService;
             this.userId = userId;
         }
 
-        public void SetSelectedFilePath(string path) => selectedFilePath = path;
+        public void SetSelectedFilePath(string path)
+        {
+            selectedFilePath = path;
+        }
 
         public bool ValidateDocumentInput()
         {
-            if (string.IsNullOrWhiteSpace(documentName))
+            try
             {
-                errorMessage = "Please enter a name for the document.";
+                DocumentValidator.ValidateDocumentInput(documentName, selectedFilePath);
+                errorMessage = string.Empty;
+                return true;
+            }
+            catch (ArgumentException exception)
+            {
+                errorMessage = exception.Message;
                 return false;
             }
-
-            if (string.IsNullOrEmpty(selectedFilePath))
-            {
-                errorMessage = "Please select a file to upload.";
-                return false;
-            }
-
-            errorMessage = string.Empty;
-            return true;
         }
 
         public void UploadDocument()
         {
             if (!ValidateDocumentInput())
+            {
                 return;
+            }
 
             var document = new Document
             {
