@@ -169,10 +169,10 @@ namespace PussyCatsApp.Tests.ViewModels
         [TestMethod]
         public void TestRecalculateLevelCommandUserIsNull()
         {
-            int olExperiencePoints = viewModel.TotalExperiencePoints;
+            int oldExperiencePoints = viewModel.TotalExperiencePoints;
             viewModel.UserProfile = null;
             viewModel.RecalculateLevelCommand();
-            Assert.AreEqual(olExperiencePoints, viewModel.TotalExperiencePoints);
+            Assert.AreEqual(oldExperiencePoints, viewModel.TotalExperiencePoints);
         }
 
         [TestMethod]
