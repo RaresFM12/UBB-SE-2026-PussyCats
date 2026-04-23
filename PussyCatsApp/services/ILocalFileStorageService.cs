@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace PussyCatsApp.Storage
+namespace PussyCatsApp.Services
 {
     public interface ILocalFileStorageService
     {
