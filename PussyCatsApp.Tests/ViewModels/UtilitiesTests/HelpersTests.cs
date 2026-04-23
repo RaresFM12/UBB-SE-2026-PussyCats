@@ -20,9 +20,14 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         }
 
         [TestMethod]
-        public void TestGetFormattedNameFromJobRoleUIAndAI()
+        public void TestGetFormattedNameFromJobRoleUIUX()
         {
             Assert.AreEqual("UI/UX Designer", Helpers.GetFormattedNameFromJobRole(JobRole.UIUXDesigner));
+        }
+
+        [TestMethod]
+        public void TestGetFormattedNameFromJobRoleAI()
+        {
             Assert.AreEqual("AI/ML Engineer", Helpers.GetFormattedNameFromJobRole(JobRole.AIMLEngineer));
         }
 

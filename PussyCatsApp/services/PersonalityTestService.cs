@@ -53,8 +53,6 @@ namespace PussyCatsApp.Services
                 new (24, "I prefer to understand the logic and first principles of a system rather than just knowing how to operate it.", TraitType.ABSTRACTION,  24),
             ];
 
-            // return questions.OrderBy(_ => Random.Shared.Next()).ToList
-            // TODO see what is the best way to shuffle a list in C#
         }
         private int CompareRoleScores(KeyValuePair<JobRole, double> a, KeyValuePair<JobRole, double> b)
         {
@@ -189,20 +187,6 @@ namespace PussyCatsApp.Services
         {
             personalityTestRepository.Save(userId, personalityTestResult);
         }
-        /*
-        public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
-        {
-            return roleScores
-                .OrderByDescending(kvp => kvp.Value)
-                .Take(length)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
-
-        public void SaveResult(int userId, string personalityTestResult)
-        {
-            personalityTestRepository.Save(userId, personalityTestResult);
-
-
-        }*/
+        
     }
 }

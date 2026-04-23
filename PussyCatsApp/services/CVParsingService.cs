@@ -286,48 +286,6 @@ namespace PussyCatsApp.Services
 
             return result;
         }
-        /*private List<Project> ProcessProjects(List<Project> projects)
-        {
-            if (projects == null || !projects.Any())
-            {
-                return new List<Project>();
-            }
-
-            return projects.Take(10) // Max 10 projects
-                .Select(p => new Project
-                {
-                    Name = SanitizeString(p.Name, 100),
-                    Description = SanitizeString(p.Description, 600),
-                    Technologies = p.Technologies?.Take(10).Select(t => SanitizeString(t, 60)).ToList() ?? new List<string>(),
-                    Url = SanitizeString(p.Url, 200)
-                })
-                .Where(p => !string.IsNullOrEmpty(p.Name))
-                .ToList();
-        }*/
-
-        /// <summary>
-        /// Processes extracurricular activities with validation
-        /// </summary>
-        /*
-        private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
-        {
-            if (activities == null || !activities.Any())
-            {
-                return new List<ExtraCurricularActivity>();
-            }
-
-            return activities.Take(10) // Max 10 activities
-                .Select(a => new ExtraCurricularActivity
-                {
-                    ActivityName = SanitizeString(a.ActivityName, 150),
-                    Organization = SanitizeString(a.Organization, 100),
-                    Role = SanitizeString(a.Role, 80),
-                    Period = SanitizeString(a.Period, 60),
-                    Description = SanitizeString(a.Description, 300)
-                })
-                .Where(a => !string.IsNullOrEmpty(a.ActivityName))
-                .ToList();
-        }*/
         private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
         {
             var result = new List<ExtraCurricularActivity>();

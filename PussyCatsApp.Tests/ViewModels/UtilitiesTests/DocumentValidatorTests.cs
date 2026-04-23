@@ -11,41 +11,53 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
     public class DocumentValidatorTests
     {
         [TestMethod]
-        public void TestNullOrWhiteSpaceDocumentThrowsError()
+        public void TestNullDocumentThrowsError()
         {
             string documentNull = null;
             string documentEmpty = string.Empty;
             string selectedFilePath = "C://";
 
-            var exception1 = Assert.ThrowsException<ArgumentException>(() =>
+            var exception = Assert.ThrowsException<ArgumentException>(() =>
                 DocumentValidator.ValidateDocumentInput(documentNull, selectedFilePath));
 
-            Assert.AreEqual("Please enter a name for the document.", exception1.Message);
-
-            var exception2 = Assert.ThrowsException<ArgumentException>(() =>
-                DocumentValidator.ValidateDocumentInput(documentEmpty, selectedFilePath));
-
-            Assert.AreEqual("Please enter a name for the document.", exception2.Message);
+            Assert.AreEqual("Please enter a name for the document.", exception.Message);
         }
 
         [TestMethod]
-        public void TestNullOrWhiteSpaceSelectedFilePathThrowsError()
+        public void TestEmptyStringDocumentThrowsError()
+        {
+            string documentEmpty = string.Empty;
+            string selectedFilePath = "C://";
+            var exception = Assert.ThrowsException<ArgumentException>(() =>
+                DocumentValidator.ValidateDocumentInput(documentEmpty, selectedFilePath));
+
+            Assert.AreEqual("Please enter a name for the document.", exception.Message);
+        }
+
+        [TestMethod]
+        public void TestNullSelectedFilePathThrowsError()
         {
             string selectedFilePathNull = null;
-            string selectedFilePathEmpty = string.Empty;
             string document = "Document";
 
-            var exception1 = Assert.ThrowsException<ArgumentException>(() =>
+            var exception = Assert.ThrowsException<ArgumentException>(() =>
                 DocumentValidator.ValidateDocumentInput(document, selectedFilePathNull)
             );
 
-            Assert.AreEqual("Please select a file to upload.", exception1.Message);
+            Assert.AreEqual("Please select a file to upload.", exception.Message);
+        }
 
-            var exception2 = Assert.ThrowsException<ArgumentException>(() =>
+        [TestMethod]
+        public void TestEmptySelectedFilePathThrowsError()
+        {
+            string selectedFilePathEmpty = string.Empty;
+            string document = "Document";
+
+            var exception = Assert.ThrowsException<ArgumentException>(() =>
                 DocumentValidator.ValidateDocumentInput(document, selectedFilePathEmpty)
             );
 
-            Assert.AreEqual("Please select a file to upload.", exception2.Message);
+            Assert.AreEqual("Please select a file to upload.", exception.Message);
         }
 
         [TestMethod]
