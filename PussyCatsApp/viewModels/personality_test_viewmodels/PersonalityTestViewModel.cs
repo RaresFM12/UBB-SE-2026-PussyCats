@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 using Windows.Networking.Sockets;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.converters;
+using PussyCatsApp.Converters;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the personality test workflow, including loading questions,
+    /// handling user answers, submitting the test, and saving the selected role result.
+    /// </summary>
     public partial class PersonalityTestViewModel : ObservableObject
     {
         private readonly IPersonalityTestService personalityTestService;
@@ -69,17 +73,17 @@ namespace PussyCatsApp.viewModels
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private void Submit()
         {
-            var answers = CollectAnswers();
+            var answers = CollectAnswersFromQuestions();
             var traitScores = personalityTestService.CalculateTraitScores(answers);
             var roleScores = personalityTestService.CalculateRoleScores(traitScores);
 
-            var topRolePairs = personalityTestService.GetTopRoles(roleScores, NumberOfTopRolesToDisplay);
-            TopRoles = WrapRolesInViewModels(topRolePairs);
+            var topRolesDictionary = personalityTestService.GetTopRoles(roleScores, NumberOfTopRolesToDisplay);
+            TopRoles = WrapRolesInViewModels(topRolesDictionary);
 
             IsTestSubmitted = true;
         }
 
-        private Dictionary<Question, AnswerValue> CollectAnswers()
+        private Dictionary<Question, AnswerValue> CollectAnswersFromQuestions()
         {
             var answers = new Dictionary<Question, AnswerValue>();
             foreach (QuestionViewModel questionViewModel in Questions)
@@ -89,10 +93,10 @@ namespace PussyCatsApp.viewModels
             return answers;
         }
 
-        private static List<RoleResultViewModel> WrapRolesInViewModels(IEnumerable<KeyValuePair<JobRole, double>> rolePairs)
+        private static List<RoleResultViewModel> WrapRolesInViewModels(Dictionary<JobRole, double> rolesDictionary)
         {
             var roleViewModels = new List<RoleResultViewModel>();
-            foreach (KeyValuePair<JobRole, double> rolePair in rolePairs)
+            foreach (KeyValuePair<JobRole, double> rolePair in rolesDictionary)
             {
                 roleViewModels.Add(new RoleResultViewModel(rolePair.Key, rolePair.Value));
             }
@@ -100,17 +104,17 @@ namespace PussyCatsApp.viewModels
         }
 
         [RelayCommand]
-        private void SelectRole(RoleResultViewModel role)
+        private void SelectRole(RoleResultViewModel roleResultViewModel)
         {
             // Deselect all roles
-            foreach (var topRole in TopRoles)
+            foreach (var topRoleViewModel in TopRoles)
             {
-                topRole.IsSelected = false;
+                topRoleViewModel.IsSelected = false;
             }
 
             // Select the clicked role
-            role.IsSelected = true;
-            SelectedRole = role;
+            roleResultViewModel.IsSelected = true;
+            SelectedRole = roleResultViewModel;
 
             // Notify SaveResultCommand that it can execute
             SaveResultCommand.NotifyCanExecuteChanged();
@@ -123,20 +127,20 @@ namespace PussyCatsApp.viewModels
             {
                 personalityTestService.SaveResult(this.userId, SelectedRole.Role.ToString());
 
-                // Convert role to a friendly display name using the existing converter
-                var converter = new JobRoleToDisplayNameConverter();
-                var displayNameObj = converter.Convert(SelectedRole.Role, typeof(string), null, "en-US");
-                var displayName = displayNameObj as string ?? SelectedRole.Role.ToString();
+                // Convert role to a friendly display name using the existing jobRoleToDisplayNameConverter
+                var jobRoleToDisplayNameConverter = new JobRoleToDisplayNameConverter();
+                var displayNameObject = jobRoleToDisplayNameConverter.Convert(SelectedRole.Role, typeof(string), null, "en-US");
+                var displayName = displayNameObject as string ?? SelectedRole.Role.ToString();
 
                 // Notify the view that the result was saved so it can display feedback
                 SaveMessage = $"Your personality test result has been updated to {displayName}.";
             }
         }
 
-        private static List<QuestionViewModel> WrapQuestionsInViewModels(List<Question> rawQuestions)
+        private static List<QuestionViewModel> WrapQuestionsInViewModels(List<Question> rawQuestionsList)
         {
             var questionViewModels = new List<QuestionViewModel>();
-            foreach (Question question in rawQuestions)
+            foreach (Question question in rawQuestionsList)
             {
                 questionViewModels.Add(new QuestionViewModel(question));
             }
@@ -151,9 +155,9 @@ namespace PussyCatsApp.viewModels
             }
         }
 
-        private void OnQuestionAnswerChanged(object? sender, PropertyChangedEventArgs eventArgs)
+        private void OnQuestionAnswerChanged(object? sender, PropertyChangedEventArgs eventArguments)
         {
-            if (eventArgs.PropertyName == nameof(QuestionViewModel.SelectedAnswer))
+            if (eventArguments.PropertyName == nameof(QuestionViewModel.SelectedAnswer))
             {
                 SubmitCommand.NotifyCanExecuteChanged();
             }

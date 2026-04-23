@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
-using PussyCatsApp.Repositories;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using PussyCatsApp.views;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
+using PussyCatsApp.Views;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for displaying and managing a user's profile,
+    /// including profile data, avatar, account status, and related operations.
+    /// </summary>
     public partial class UserProfileViewModel : ObservableObject
     {
         private IUserProfileService profileService;
@@ -19,7 +23,7 @@ namespace PussyCatsApp.viewModels
         private ICompletenessService completenessService;
 
         // Nested Export ViewModel
-        public ExportCVViewModel ExportVM { get; }
+        public ExportCVViewModel ExportCvViewModel { get; }
 
         private UserProfile? userProfile;
         public UserProfile? UserProfile
@@ -34,7 +38,7 @@ namespace PussyCatsApp.viewModels
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
         public string ErrorMessage { get; set; } = string.Empty;
         public string FreshnessText { get; set; } = string.Empty;
-        public int TotalXP { get; private set; } = 0;
+        public int TotalExperiencePoints { get; private set; } = 0;
 
         public UserProfileViewModel(IUserProfileService userProfileService, IImageStorageService imageStorageService, ICompletenessService completenessService)
         {
@@ -53,12 +57,12 @@ namespace PussyCatsApp.viewModels
 
             try
             {
-                TotalXP = profileService.RecalculateLevel(UserProfile);
+                TotalExperiencePoints = profileService.RecalculateLevel(UserProfile);
                 OnLevelUpdated?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error recalculating user level: {ex.Message}";
+                ErrorMessage = $"Error recalculating user level: {exception.Message}";
             }
         }
         public async Task LoadUserAsync(int userId)
@@ -71,15 +75,15 @@ namespace PussyCatsApp.viewModels
 
                 if (UserProfile != null)
                 {
-                    FreshnessText = utilities.TimeFormatter.CalculateFreshnessLabel(UserProfile.LastUpdated);
+                    FreshnessText = Utilities.TimeFormatter.CalculateFreshnessLabel(UserProfile.LastUpdated);
 
                     CompletenessPercentage = completenessService.CalculateCompleteness(UserProfile);
                     NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(UserProfile);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error loading user profile: {ex.Message}";
+                ErrorMessage = $"Error loading user profile: {exception.Message}";
             }
             finally
             {
@@ -93,8 +97,8 @@ namespace PussyCatsApp.viewModels
             {
                 return;
             }
-            string currentStatusStr = UserProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
-            profileService.ToggleAccountStatus(UserProfile.UserId, currentStatusStr);
+            string currentStatusString = UserProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
+            profileService.ToggleAccountStatus(UserProfile.UserId, currentStatusString);
             UserProfile.ActiveAccount = !UserProfile.ActiveAccount;
         }
 
@@ -110,9 +114,9 @@ namespace PussyCatsApp.viewModels
                 profileService.UpdateAvatarPath(UserProfile.UserId, newPath);
                 UserProfile.ProfilePicture = newPath;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error uploading avatar: {ex.Message}";
+                ErrorMessage = $"Error uploading avatar: {exception.Message}";
                 return;
             }
         }

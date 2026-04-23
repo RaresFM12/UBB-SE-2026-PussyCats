@@ -2,11 +2,14 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for exporting and previewing a user's CV as a PDF, handling loading state and export operations.
+    /// </summary>
     public partial class ExportCVViewModel : ObservableObject
     {
         private readonly IPdfExportService pdfExportService;
@@ -46,20 +49,20 @@ namespace PussyCatsApp.viewModels
 
             try
             {
-                var profile = userProfileService.GetProfile(UserId);
+                var userProfile = userProfileService.GetProfile(UserId);
 
-                if (profile == null)
+                if (userProfile == null)
                 {
-                    throw new Exception("User profile not found in database.");
+                    throw new Exception("User userProfile not found in database.");
                 }
 
-                await pdfExportService.RenderProfileAsync(profile);
+                await pdfExportService.RenderProfileAsync(userProfile);
 
                 StatusText = string.Empty;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                StatusText = $"Preview failed: {ex.Message}";
+                StatusText = $"Preview failed: {exception.Message}";
             }
             finally
             {
@@ -82,9 +85,9 @@ namespace PussyCatsApp.viewModels
             {
                 StatusText = string.Empty; // User cancelled save picker
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                StatusText = $"Export failed: {ex.Message}";
+                StatusText = $"Export failed: {exception.Message}";
             }
             finally
             {

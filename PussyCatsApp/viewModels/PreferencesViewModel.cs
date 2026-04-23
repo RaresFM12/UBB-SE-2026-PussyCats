@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class PreferencesViewModel
     {
@@ -21,9 +19,9 @@ namespace PussyCatsApp.viewModels
 
         private const int MaximumJobRolesAllowed = 3;
 
-        public PreferencesViewModel(IPreferenceService preferencesService, int userId)
+        public PreferencesViewModel(IPreferenceService preferenceService, int userId)
         {
-            this.preferencesService = preferencesService;
+            this.preferencesService = preferenceService;
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();
@@ -38,42 +36,42 @@ namespace PussyCatsApp.viewModels
 
             var savedPreferences = preferencesService.GetByUserId(currentUserId);
 
-            foreach (var pref in savedPreferences)
+            foreach (var preference in savedPreferences)
             {
-                if (pref.PreferenceType == "JobRole")
+                if (preference.PreferenceType == "JobRole")
                 {
-                    if (Enum.TryParse<JobRole>(pref.Value, out var role))
+                    if (Enum.TryParse<JobRole>(preference.Value, out var jobRole))
                     {
-                        selectedJobRoles.Add(role);
+                        selectedJobRoles.Add(jobRole);
                     }
                 }
-                else if (pref.PreferenceType == "WorkMode")
+                else if (preference.PreferenceType == "WorkMode")
                 {
-                    if (Enum.TryParse<WorkMode>(pref.Value, out var mode))
+                    if (Enum.TryParse<WorkMode>(preference.Value, out var workMode))
                     {
-                        selectedWorkMode = mode;
+                        selectedWorkMode = workMode;
                     }
                 }
-                else if (pref.PreferenceType == "Location")
+                else if (preference.PreferenceType == "Location")
                 {
-                    preferredLocation = pref.Value;
+                    preferredLocation = preference.Value;
                 }
             }
         }
 
-        public void ToggleJobRole(JobRole role)
+        public void ToggleJobRole(JobRole jobRole)
         {
-            errorMessage = string.Empty; // Clear any previous errors
+            errorMessage = string.Empty;
 
-            if (selectedJobRoles.Contains(role))
+            if (selectedJobRoles.Contains(jobRole))
             {
-                selectedJobRoles.Remove(role);
+                selectedJobRoles.Remove(jobRole);
             }
             else
             {
                 if (selectedJobRoles.Count < MaximumJobRolesAllowed)
                 {
-                    selectedJobRoles.Add(role);
+                    selectedJobRoles.Add(jobRole);
                 }
                 else
                 {
@@ -82,9 +80,9 @@ namespace PussyCatsApp.viewModels
             }
         }
 
-        public void SetWorkMode(WorkMode mode)
+        public void SetWorkMode(WorkMode workMode)
         {
-            selectedWorkMode = mode;
+            selectedWorkMode = workMode;
         }
 
         public void SetLocation(string location)
@@ -104,9 +102,9 @@ namespace PussyCatsApp.viewModels
             {
                 preferencesService.SavePreferences(currentUserId, selectedJobRoles, selectedWorkMode, preferredLocation);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                errorMessage = ex.Message;
+                errorMessage = exception.Message;
             }
         }
 
@@ -118,6 +116,11 @@ namespace PussyCatsApp.viewModels
         public WorkMode GetSelectedWorkMode()
         {
             return selectedWorkMode;
+        }
+
+        public string GetPreferredLocation()
+        {
+            return preferredLocation;
         }
 
         public List<string> GetLocationSuggestions()

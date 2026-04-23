@@ -1,9 +1,9 @@
 ﻿using System;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Services;
+using PussyCatsApp.Utilities;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     /// <summary>
     /// ViewModel for the upload panel.
@@ -24,9 +24,9 @@ namespace PussyCatsApp.viewModels
             this.userId = userId;
         }
 
-        public void SetSelectedFilePath(string path)
+        public void SetSelectedFilePath(string filePath)
         {
-            selectedFilePath = path;
+            selectedFilePath = filePath;
         }
 
         public bool ValidateDocumentInput()
@@ -60,9 +60,21 @@ namespace PussyCatsApp.viewModels
             documentService.UploadDocument(document, selectedFilePath);
         }
 
-        public string GetDocumentName() => documentName;
-        public void SetDocumentName(string name) => documentName = name;
-        public string GetErrorMessage() => errorMessage;
-        public string GetSelectedFilePath() => selectedFilePath;
+        public string GetDocumentName()
+        {
+            return documentName;
+        }
+        public void SetDocumentName(string documentName)
+        {
+            this.documentName = documentName;
+        }
+        public string GetErrorMessage()
+        {
+            return errorMessage;
+        }
+        public string GetSelectedFilePath()
+        {
+            return selectedFilePath;
+        }
     }
 }

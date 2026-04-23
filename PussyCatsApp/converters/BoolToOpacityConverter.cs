@@ -1,7 +1,7 @@
-using Microsoft.UI.Xaml.Data;
 using System;
+using Microsoft.UI.Xaml.Data;
 
-namespace PussyCatsApp.converters
+namespace PussyCatsApp.Converters
 {
     public class BoolToOpacityConverter : IValueConverter
     {

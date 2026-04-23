@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class PublicProfileViewModel
     {
@@ -39,9 +39,9 @@ namespace PussyCatsApp.viewModels
                 Profile = userProfileService.GetProfile(userId);
                 Tests = userProfileService.GetSkillTestsForUser(userId);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error loading public profile: {ex.Message}";
+                ErrorMessage = $"Error loading public profile: {exception.Message}";
             }
         }
         public string GetAvailabilityMessage()

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class MatchHistoryViewModel
     {
@@ -45,9 +44,9 @@ namespace PussyCatsApp.viewModels
             {
                 statistics = matchService.GetMatchStatistics(currentUserId);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                errorMessage = ex.Message;
+                errorMessage = exception.Message;
             }
         }
 

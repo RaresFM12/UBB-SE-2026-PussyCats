@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PussyCatsApp.utilities
+namespace PussyCatsApp.Utilities
 {
-    internal class TimeFormatter
+    public class TimeFormatter
     {
         public static string CalculateFreshnessLabel(DateTime targetDate)
         {

@@ -2,108 +2,131 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using PussyCatsApp.utilities;
+using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.Configuration;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Services;
+using PussyCatsApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
+    /// <summary>
+    /// Page that allows users to set and save their job preferences, including preferred roles
+    /// (up to three), work mode, and geographic location for matchmaking purposes.
+    /// </summary>
     public sealed partial class PreferencesView : Page
     {
+        private PreferencesViewModel viewModel;
+
+        private readonly Dictionary<JobRole, string> roleDisplayNames = new ()
+        {
+            { JobRole.FrontendDeveloper,      "Frontend Developer" },
+            { JobRole.BackendDeveloper,        "Backend Developer" },
+            { JobRole.UIUXDesigner,            "UI/UX Designer" },
+            { JobRole.DevOpsEngineer,          "DevOps Engineer" },
+            { JobRole.ProjectManager,          "Project Manager" },
+            { JobRole.DataAnalyst,             "Data Analyst" },
+            { JobRole.CybersecuritySpecialist, "Cybersecurity Specialist" },
+            { JobRole.AIMLEngineer,            "AI/ML Engineer" }
+        };
+
         public PreferencesView()
         {
             this.InitializeComponent();
-
-            RolesListView.ItemsSource = PreferencesData.AllRoles;
-
-            LoadExistingPreferences();
+            RolesListView.ItemsSource = roleDisplayNames.Values.ToList();
         }
 
-        private void LoadExistingPreferences()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            try
+            base.OnNavigatedTo(e);
+            int userId = e.Parameter is int id ? id : 1;
+            viewModel = new PreferencesViewModel(new PreferenceService(new PreferenceRepository(DatabaseConfiguration.GetConnectionString())), userId);
+            viewModel.LoadPreferences();
+            PopulateUIFromViewModel();
+        }
+
+        /// <summary>
+        /// Reads the loaded preferences from the ViewModel and reflects them in the UI controls.
+        /// </summary>
+        private void PopulateUIFromViewModel()
+        {
+            // --- Roles ---
+            RolesListView.SelectionChanged -= RolesListView_SelectionChanged;
+
+            RolesListView.SelectedItems.Clear();
+
+            foreach (var role in viewModel.GetSelectedJobRoles())
             {
-                //string connectionString = new ConfigurationBuilder()
-                //    .SetBasePath(AppContext.BaseDirectory)
-                //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                //    .Build()
-                //    .GetConnectionString("raresConnectionString");
-
-                var repo = new Repositories.PreferenceRepository(DatabaseConfiguration.GetConnectionString());
-
-                int currentUserId = 1;
-
-                // presupun că metoda asta returnează toate preferințele userului
-                var preferences = repo.GetPreferencesByUserId(currentUserId);
-
-                if (preferences == null || preferences.Count == 0)
-                    return;
-
-                // Roluri
-                var savedRoles = preferences
-                    .Where(p => p.PreferenceType == "JobRole")
-                    .Select(p => p.Value)
-                    .ToList();
-
-                foreach (var role in savedRoles)
+                if (roleDisplayNames.TryGetValue(role, out var displayName))
                 {
-                    if (PreferencesData.AllRoles.Contains(role))
+                    var index = RolesListView.Items
+                        .Cast<string>()
+                        .ToList()
+                        .IndexOf(displayName);
+
+                    if (index >= 0)
                     {
-                        RolesListView.SelectedItems.Add(role);
+                        RolesListView.SelectedItems.Add(RolesListView.Items[index]);
                     }
                 }
-
-                // Work mode
-                var savedWorkMode = preferences
-                    .FirstOrDefault(p => p.PreferenceType == "WorkMode")?.Value;
-
-                if (!string.IsNullOrEmpty(savedWorkMode))
-                {
-                    foreach (var item in WorkModeComboBox.Items)
-                    {
-                        if (item is ComboBoxItem comboBoxItem &&
-                            comboBoxItem.Content?.ToString() == savedWorkMode)
-                        {
-                            WorkModeComboBox.SelectedItem = comboBoxItem;
-                            break;
-                        }
-                    }
-                }
-
-                // Location
-                var savedLocation = preferences
-                    .FirstOrDefault(p => p.PreferenceType == "Location")?.Value;
-
-                if (!string.IsNullOrEmpty(savedLocation))
-                {
-                    LocationAutoSuggestBox.Text = savedLocation;
-                }
             }
-            catch (Exception ex)
+
+            RolesListView.SelectionChanged += RolesListView_SelectionChanged;
+
+            // --- Work mode ---
+            var savedWorkMode = viewModel.GetSelectedWorkMode();
+            var workModeDisplay = savedWorkMode.ToString();
+
+            foreach (var item in WorkModeComboBox.Items)
             {
-                SuccessMessage.Text = "Error loading preferences: " + ex.Message;
-                SuccessMessage.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Red);
-                SuccessMessage.Visibility = Visibility.Visible;
+                if (item is ComboBoxItem comboBoxItem &&
+                    comboBoxItem.Tag?.ToString() == workModeDisplay)
+                {
+                    WorkModeComboBox.SelectedItem = comboBoxItem;
+                    break;
+                }
             }
+
+            // --- Location ---
+            LocationAutoSuggestBox.Text = viewModel.GetPreferredLocation();
         }
 
         private void RolesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (RolesListView.SelectedItems.Count > 3)
+            foreach (var item in e.AddedItems.Cast<string>())
+            {
+                var role = roleDisplayNames.First(kv => kv.Value == item).Key;
+                viewModel.ToggleJobRole(role);
+            }
+
+            foreach (var item in e.RemovedItems.Cast<string>())
+            {
+                var role = roleDisplayNames.First(kv => kv.Value == item).Key;
+                viewModel.ToggleJobRole(role);
+            }
+
+            string error = viewModel.GetErrorMessage();
+            if (!string.IsNullOrEmpty(error))
             {
                 RoleWarningText.Visibility = Visibility.Visible;
 
-                foreach (var item in e.AddedItems)
+                RolesListView.SelectionChanged -= RolesListView_SelectionChanged;
+                foreach (var item in e.AddedItems.Cast<string>())
                 {
-                    RolesListView.SelectedItems.Remove(item);
+                    var role = roleDisplayNames.First(kv => kv.Value == item).Key;
+                    if (!viewModel.GetSelectedJobRoles().Contains(role))
+                    {
+                        RolesListView.SelectedItems.Remove(item);
+                    }
                 }
+                RolesListView.SelectionChanged += RolesListView_SelectionChanged;
             }
             else
             {
@@ -115,86 +138,63 @@ namespace PussyCatsApp.views
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var suitableItems = PreferencesData.MockLocations
-                    .Where(x => x.ToLower().Contains(sender.Text.ToLower()))
-                    .ToList();
-
-                sender.ItemsSource = suitableItems;
+                viewModel.SearchLocation(sender.Text);
+                sender.ItemsSource = viewModel.GetLocationSuggestions();
             }
         }
 
         private void LocationAutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            sender.Text = args.SelectedItem.ToString();
+            string chosen = args.SelectedItem.ToString();
+            sender.Text = chosen;
+            viewModel.SetLocation(chosen);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var selectedRoles = RolesListView.SelectedItems.Cast<string>().ToList();
-            var workMode = (WorkModeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "";
-            var location = LocationAutoSuggestBox.Text;
-
-            if (selectedRoles.Count == 0 || string.IsNullOrEmpty(workMode) || string.IsNullOrEmpty(location))
+            var workMode = (WorkModeComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+            if (!string.IsNullOrEmpty(workMode) && Enum.TryParse<WorkMode>(workMode, out var parsedMode))
             {
-                SuccessMessage.Text = "Please fill in all the fields before saving.";
-                SuccessMessage.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Red);
-                SuccessMessage.Visibility = Visibility.Visible;
+                viewModel.SetWorkMode(parsedMode);
+            }
+
+            viewModel.SetLocation(LocationAutoSuggestBox.Text);
+
+            if (viewModel.GetSelectedJobRoles().Count == 0 ||
+                WorkModeComboBox.SelectedItem == null ||
+                string.IsNullOrEmpty(LocationAutoSuggestBox.Text))
+            {
+                ShowMessage("Please fill in all the fields before saving.", isError: true);
                 return;
             }
 
-            try
+            viewModel.SavePreferences();
+
+            string error = viewModel.GetErrorMessage();
+            if (!string.IsNullOrEmpty(error))
             {
-                //string connectionString = new ConfigurationBuilder()
-                //    .SetBasePath(AppContext.BaseDirectory)
-                //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                //    .Build()
-                //    .GetConnectionString("raresConnectionString");
-
-                var repo = new Repositories.PreferenceRepository(DatabaseConfiguration.GetConnectionString());
-
-                int currentUserId = 1;
-
-                repo.DeleteAllByUserId(currentUserId);
-
-                foreach (var role in selectedRoles)
-                {
-                    repo.AddPreference(new Models.Preference
-                    {
-                        UserId = currentUserId,
-                        PreferenceType = "JobRole",
-                        Value = role
-                    });
-                }
-
-                repo.AddPreference(new Models.Preference
-                {
-                    UserId = currentUserId,
-                    PreferenceType = "WorkMode",
-                    Value = workMode
-                });
-
-                repo.AddPreference(new Models.Preference
-                {
-                    UserId = currentUserId,
-                    PreferenceType = "Location",
-                    Value = location
-                });
-
-                SuccessMessage.Text = "Preferences successfully saved to the database!";
-                SuccessMessage.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Green);
-                SuccessMessage.Visibility = Visibility.Visible;
+                ShowMessage(error, isError: true);
             }
-            catch (Exception ex)
+            else
             {
-                SuccessMessage.Text = "Database Error: " + ex.Message;
-                SuccessMessage.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Red);
-                SuccessMessage.Visibility = Visibility.Visible;
+                ShowMessage("Preferences successfully saved!", isError: false);
             }
         }
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+
+        private void ShowMessage(string text, bool isError)
+        {
+            SuccessMessage.Text = text;
+            SuccessMessage.Foreground = new SolidColorBrush(
+                isError ? Microsoft.UI.Colors.Red : Microsoft.UI.Colors.Green);
+            SuccessMessage.Visibility = Visibility.Visible;
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             if (Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
         }
     }
 }

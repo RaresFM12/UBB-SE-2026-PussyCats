@@ -1,10 +1,9 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
 
-namespace PussyCatsApp.converters
+namespace PussyCatsApp.Converters
 {
     public class ListToVisibilityConverter : IValueConverter
     {

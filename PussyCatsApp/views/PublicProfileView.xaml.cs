@@ -13,15 +13,14 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.Models;
-using PussyCatsApp.viewModels;
-using PussyCatsApp.services;
+using PussyCatsApp.ViewModels;
+using PussyCatsApp.Services;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Configuration;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
-
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -56,14 +55,15 @@ namespace PussyCatsApp.views
                     ProfileContentPanel.Visibility = Visibility.Collapsed;
                     ProfileUnavailableTextBlock.Visibility = Visibility.Visible;
                 }
-              
             }
         }
 
         private Uri GetValidUri(string url, string fallback)
         {
             if (string.IsNullOrWhiteSpace(url))
+            {
                 return new Uri(fallback);
+            }
 
             if (Uri.TryCreate(url, UriKind.Absolute, out Uri result) &&
                 (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps))
@@ -75,7 +75,6 @@ namespace PussyCatsApp.views
         }
         private void UpdateUI(UserProfile profile)
         {
-            
             FirstNameLabel.Text = profile.FirstName;
             LastNameLabel.Text = profile.LastName;
             LevelLabel.Text = $"Level {profile.UserLevel.Title}";

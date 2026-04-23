@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.UI.Xaml.Controls;
-
 using PussyCatsApp.Repositories;
-
 using PussyCatsApp.Models;
 
-
-
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class SkillTestService : ISkillTestService
     {
@@ -33,7 +28,9 @@ namespace PussyCatsApp.services
             SkillTest skill = skillTestRepository.Load(skillId);
 
             if (skill == null)
+            {
                 throw new Exception($"No test found for ID {skillId}");
+            }
 
             return skill.IsRetakeEligible();
         }
@@ -41,8 +38,9 @@ namespace PussyCatsApp.services
         public Badge SubmitRetake(int skillId, int newScore)
         {
             if (!CanRetakeTest(skillId))
+            {
                 throw new Exception("Test is not yet eligible for a retake. Action blocked at service layer.");
-
+            }
 
             skillTestRepository.UpdateSkillTestScore(skillId, newScore);
             skillTestRepository.UpdateAchievedDate(skillId, DateOnly.FromDateTime(DateTime.Now));

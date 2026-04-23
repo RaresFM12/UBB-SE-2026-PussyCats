@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-
 using PussyCatsApp.Models;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public interface IMatchService
     {
