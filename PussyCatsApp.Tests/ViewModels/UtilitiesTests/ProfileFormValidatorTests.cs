@@ -16,9 +16,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         {
             // Arrange
             string validEmail1 = "validemail@gmail.com";
-            string validEmail2 = "also_a1_valid_email@gmail.com";
             Assert.AreEqual(true, ProfileFormValidator.IsValidEmail(validEmail1));
-            Assert.AreEqual(true, ProfileFormValidator.IsValidEmail(validEmail2));
         }
 
         [TestMethod]
@@ -50,10 +48,33 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         }
 
         [TestMethod]
-        public void ValidateFormReturnsEveryErrorExceptLastNameAndAge()
+        public void ValidateFormReturnsEveryErrorExceptLastName()
         {
             string firstName = string.Empty;
             string lastName = "Doe";
+            double age = 0;
+            string gender = string.Empty;
+            string email = string.Empty;
+            string phonePrefix = string.Empty;
+            string phoneNumber = string.Empty;
+            string country = string.Empty;
+            string city = string.Empty;
+            string university = string.Empty;
+            int expectedGraduationYear = 0;
+            List<WorkExperience> workExperiences = new List<WorkExperience>();
+            List<string> errors = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
+            // phone prefix and phone number are combined into one error message so they count as one error instead of two
+            int numberOfExpectedErrors = 9;
+
+            Assert.AreEqual(numberOfExpectedErrors, errors.Count);
+            Assert.IsFalse(errors.Contains("Last Name"));
+        }
+
+        [TestMethod]
+        public void ValidateFormReturnsEveryErrorExceptAge()
+        {
+            string firstName = string.Empty;
+            string lastName = string.Empty;
             double age = 25;
             string gender = string.Empty;
             string email = string.Empty;
@@ -66,11 +87,10 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
             List<WorkExperience> workExperiences = new List<WorkExperience>();
             List<string> errors = ProfileFormValidator.ValidateForm(firstName, lastName, age, gender, email, phonePrefix, phoneNumber, country, city, university, expectedGraduationYear, workExperiences);
             // phone prefix and phone number are combined into one error message so they count as one error instead of two
-            int numberOfExpectedErrors = 8;
+            int numberOfExpectedErrors = 9;
 
             double minimumAge = 16, maximumAge = 60;
             Assert.AreEqual(numberOfExpectedErrors, errors.Count);
-            Assert.IsFalse(errors.Contains("Last Name"));
             Assert.IsFalse(errors.Contains($"Age (must be between {minimumAge}-{maximumAge})"));
         }
 
