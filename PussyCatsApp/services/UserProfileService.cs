@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 
@@ -10,9 +8,6 @@ namespace PussyCatsApp.Services
 {
     public class UserProfileService : IUserProfileService
     {
-        private const string StatusActive = "ACTIVE";
-        private const string StatusInactive = "INACTIVE";
-
         private readonly ISkillTestRepository skillTestRepository;
         private readonly IUserProfileRepository userProfileRepository;
 
@@ -48,13 +43,13 @@ namespace PussyCatsApp.Services
         {
             string newStatus;
 
-            if (currentStatus == StatusActive)
+            if (currentStatus == AccountStatus.Active.ToString().ToUpper())
             {
-                newStatus = StatusInactive;
+                newStatus = AccountStatus.Inactive.ToString().ToUpper();
             }
             else
             {
-                newStatus = StatusActive;
+                newStatus = AccountStatus.Active.ToString().ToUpper();
             }
             userProfileRepository.UpdateAccountStatus(userId, newStatus);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
