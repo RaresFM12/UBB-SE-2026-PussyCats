@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Services;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Utilities;
 
 namespace PussyCatsApp.ViewModels
 {
