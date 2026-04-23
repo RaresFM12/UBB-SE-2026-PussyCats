@@ -182,6 +182,10 @@ namespace PussyCatsApp.Services
 
             return result;
         }
+        public void SaveResult(int userId, string personalityTestResult)
+        {
+            personalityTestRepository.Save(userId, personalityTestResult);
+        }
         /*
         public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
         {

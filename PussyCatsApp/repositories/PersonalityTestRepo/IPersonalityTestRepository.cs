@@ -9,4 +9,5 @@ namespace PussyCatsApp.Repositories.PersonalityTestRepo;
 
 public interface IPersonalityTestRepository : IRepository<string>
 {
+    void Save(int id, string personalityTestResult);
 }
