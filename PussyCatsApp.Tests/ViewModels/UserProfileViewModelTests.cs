@@ -1,13 +1,13 @@
 ﻿using Moq;
-using PussyCatsApp.services;
-using PussyCatsApp.viewModels;
+using PussyCatsApp.Services;
+using PussyCatsApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Utilities;
 
 namespace PussyCatsApp.Tests.ViewModels
 {

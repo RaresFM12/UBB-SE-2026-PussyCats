@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
-using PussyCatsApp.viewModels;
+using PussyCatsApp.Services;
+using PussyCatsApp.ViewModels;
 
 namespace PussyCatsApp.Tests.ViewModels
 {
