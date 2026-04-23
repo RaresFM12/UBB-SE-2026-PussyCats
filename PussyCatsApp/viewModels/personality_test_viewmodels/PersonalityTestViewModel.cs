@@ -100,7 +100,7 @@ namespace PussyCatsApp.viewModels
         }
 
         [RelayCommand]
-        private void SelectRole(RoleResultViewModel role)
+        private void SelectRole(RoleResultViewModel roleResultViewModel)
         {
             // Deselect all roles
             foreach (var topRole in TopRoles)
@@ -109,8 +109,8 @@ namespace PussyCatsApp.viewModels
             }
 
             // Select the clicked role
-            role.IsSelected = true;
-            SelectedRole = role;
+            roleResultViewModel.IsSelected = true;
+            SelectedRole = roleResultViewModel;
 
             // Notify SaveResultCommand that it can execute
             SaveResultCommand.NotifyCanExecuteChanged();
