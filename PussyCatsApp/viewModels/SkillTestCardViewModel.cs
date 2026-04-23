@@ -6,16 +6,16 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 using PussyCatsApp.utilities;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
     public class SkillTestCardViewModel : INotifyPropertyChanged
     {
         private SkillTest skillTest;
         private Badge badge;
-        private SkillTestService skillTestService;
+        private ISkillTestService skillTestService;
         private UserProfileViewModel userProfileViewModel;
         private bool isRetakeEnabled;
 
@@ -26,7 +26,7 @@ namespace PussyCatsApp.viewModels
         public SkillTest SkillTest => skillTest;
         public Badge Badge => badge;
         public bool IsRetakeEnabled => isRetakeEnabled;
-        public SkillTestCardViewModel(SkillTest skillTest, SkillTestService skillTestService, UserProfileViewModel userProfileViewModel)
+        public SkillTestCardViewModel(SkillTest skillTest, ISkillTestService skillTestService, UserProfileViewModel userProfileViewModel)
         {
             this.skillTest = skillTest;
             this.skillTestService = skillTestService;
@@ -72,6 +72,12 @@ namespace PussyCatsApp.viewModels
         public void UpdateBadge()
         {
             badge = Badge.AssignTier(skillTest.Score);
+        }
+
+        private int GenerateRandomScore()
+        {
+            Random random = new Random();
+            return random.Next(0, 101);
         }
     }
 }

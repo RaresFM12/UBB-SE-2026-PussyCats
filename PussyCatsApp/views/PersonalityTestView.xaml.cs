@@ -1,3 +1,9 @@
+using System;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -5,22 +11,15 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PussyCatsApp.viewModels;
-using PussyCatsApp.services;
+using PussyCatsApp.ViewModels;
+using PussyCatsApp.Services;
 using PussyCatsApp.Repositories.PersonalityTestRepo;
-using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
-
-namespace PussyCatsApp.views
+namespace PussyCatsApp.Views
 {
     /// <summary>
     /// Personality Test page where users answer 24 questions to receive role recommendations.
@@ -85,7 +84,9 @@ namespace PussyCatsApp.views
             int userId = 1; // Default value
 
             if (e.Parameter is int passedUserId)
+            {
                 userId = passedUserId;
+            }
 
             InitializeViewModel(userId);
         }

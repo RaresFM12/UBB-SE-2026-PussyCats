@@ -1,20 +1,101 @@
-using PussyCatsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using PussyCatsApp.Models;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class CVParsingService : ICVParsingService
     {
+        private const string JsonExtension = ".json";
+        private const string XmlExtension = ".xml";
+        private const string ParseErrorMessage = "Failed to parse CV file: ";
+
+        private const int MaxSkills = 30;
+        private const int MaxSkillLength = 60;
+        private const int MaxWorkExperiences = 10;
+        private const int MaxProjects = 10;
+        private const int MaxActivities = 10;
+        private const int MaxTechnologiesPerProject = 10;
+
+        private const int MaxFirstNameLength = 50;
+        private const int MaxLastNameLength = 60;
+        private const int MaxCountryLength = 100;
+        private const int MaxCityLength = 100;
+        private const int MaxUniversityLength = 200;
+        private const int MaxGitHubLength = 200;
+        private const int MaxLinkedInLength = 200;
+        private const int MaxAddressLength = 500;
+        private const int MaxMotivationLength = 1000;
+        private const int MaxEmailLength = 254;
+        private const int MaxPhoneLength = 15;
+        private const int MaxCompanyLength = 150;
+        private const int MaxJobTitleLength = 100;
+        private const int MaxWorkDescriptionLength = 500;
+        private const int MaxProjectNameLength = 100;
+        private const int MaxProjectDescriptionLength = 600;
+        private const int MaxProjectUrlLength = 200;
+        private const int MaxActivityNameLength = 150;
+        private const int MaxOrganizationLength = 100;
+        private const int MaxRoleLength = 80;
+        private const int MaxPeriodLength = 60;
+        private const int MaxActivityDescriptionLength = 300;
+
+        private const int MinAge = 16;
+        private const int MaxAge = 60;
+        private const int InvalidAge = 0;
+        private const int InvalidYear = 0;
+        private const int MaxYearsAheadForGraduation = 10;
+
+        private const string GenderMale = "Male";
+        private const string GenderFemale = "Female";
+        private const string GenderMaleShort = "M";
+        private const string GenderFemaleShort = "F";
+
+        private static readonly DateTime MinValidDate = new DateTime(1980, 1, 1);
+        private const int MaxYearsAheadForDate = 1;
+
         /// <summary>
         /// Parses a CV file (JSON or XML) and returns a UserProfile object
         /// </summary>
         public UserProfile ParseCVFile(string content, string fileType)
+        {
+            try
+            {
+                if (string.Equals(fileType, JsonExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    var cvData = JsonSerializer.Deserialize<CVData>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    return MapCVDataToProfile(cvData);
+                }
+
+                if (string.Equals(fileType, XmlExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    var xDoc = XDocument.Parse(content);
+                    var rootName = xDoc.Root?.Name.LocalName ?? "CVData";
+
+                    using var reader = new StringReader(content);
+
+                    var serializer = new XmlSerializer(typeof(CVData), new XmlRootAttribute(rootName));
+                    var cvData = (CVData)serializer.Deserialize(reader);
+
+                    return MapCVDataToProfile(cvData);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ParseErrorMessage + ex.Message, ex);
+            }
+
+            return new UserProfile();
+        }
+        /*public UserProfile ParseCVFile(string content, string fileType)
         {
             UserProfile profile = new UserProfile();
 
@@ -46,7 +127,7 @@ namespace PussyCatsApp.services
             }
 
             return profile;
-        }
+        }*/
 
         /// <summary>
         /// Maps CV data structure to UserProfile
@@ -54,7 +135,40 @@ namespace PussyCatsApp.services
         private UserProfile MapCVDataToProfile(CVData cvData)
         {
             if (cvData == null)
+            {
                 return new UserProfile();
+            }
+
+            return new UserProfile
+            {
+                FirstName = SanitizeString(cvData.FirstName, MaxFirstNameLength),
+                LastName = SanitizeString(cvData.LastName, MaxLastNameLength),
+                Age = ValidateAge(cvData.Age),
+                Gender = ValidateGender(cvData.Gender),
+                Email = SanitizeEmail(cvData.Email),
+                PhoneNumber = FormatPhoneNumber(cvData.PhoneNumber),
+                Country = SanitizeString(cvData.Country, MaxCountryLength),
+                City = SanitizeString(cvData.City, MaxCityLength),
+                University = SanitizeString(cvData.University, MaxUniversityLength),
+                ExpectedGraduationYear = ValidateGraduationYear(cvData.ExpectedGraduationYear),
+
+                GitHub = SanitizeString(cvData.GitHub, MaxGitHubLength),
+                LinkedIn = SanitizeString(cvData.LinkedIn, MaxLinkedInLength),
+                Address = SanitizeString(cvData.Address, MaxAddressLength),
+                Motivation = SanitizeString(cvData.Motivation, MaxMotivationLength),
+
+                Skills = ProcessSkills(cvData.Skills),
+                WorkExperiences = ProcessWorkExperiences(cvData.WorkExperiences),
+                Projects = ProcessProjects(cvData.Projects),
+                ExtraCurricularActivities = ProcessActivities(cvData.ExtraCurricularActivities)
+            };
+        }
+        /*private UserProfile MapCVDataToProfile(CVData cvData)
+        {
+            if (cvData == null)
+            {
+                return new UserProfile();
+            }
 
             var profile = new UserProfile
             {
@@ -84,7 +198,7 @@ namespace PussyCatsApp.services
             };
 
             return profile;
-        }
+        }*/
 
         /// <summary>
         /// Processes and validates skills, removing duplicates
@@ -94,7 +208,9 @@ namespace PussyCatsApp.services
             var result = new List<string>();
 
             if (skills == null)
+            {
                 return result;
+            }
 
             var addedSkills = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -102,10 +218,12 @@ namespace PussyCatsApp.services
 
             foreach (var skill in skills)
             {
-                if (count >= 30)
+                if (count >= MaxSkills)
+                {
                     break;
+                }
 
-                var sanitized = SanitizeString(skill, 60);
+                var sanitized = SanitizeString(skill, MaxSkillLength);
 
                 if (!string.IsNullOrWhiteSpace(sanitized) && addedSkills.Add(sanitized))
                 {
@@ -125,23 +243,27 @@ namespace PussyCatsApp.services
             var result = new List<WorkExperience>();
 
             if (experiences == null)
+            {
                 return result;
+            }
 
             int count = 0;
 
             foreach (var we in experiences)
             {
-                if (count >= 10)
+                if (count >= MaxWorkExperiences)
+                {
                     break;
+                }
 
                 var processed = new WorkExperience
                 {
-                    Company = SanitizeString(we.Company, 150),
-                    JobTitle = SanitizeString(we.JobTitle, 100),
+                    Company = SanitizeString(we.Company, MaxCompanyLength),
+                    JobTitle = SanitizeString(we.JobTitle, MaxJobTitleLength),
                     StartDate = ValidateDate(we.StartDate),
                     EndDate = we.CurrentlyWorking ? null : ValidateDate(we.EndDate),
                     CurrentlyWorking = we.CurrentlyWorking,
-                    Description = SanitizeString(we.Description, 500)
+                    Description = SanitizeString(we.Description, MaxWorkDescriptionLength)
                 };
 
                 if (!string.IsNullOrEmpty(processed.Company) &&
@@ -158,7 +280,9 @@ namespace PussyCatsApp.services
         private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
         {
             if (experiences == null || !experiences.Any())
+            {
                 return new List<WorkExperience>();
+            }
 
             return experiences.Take(10) // Max 10 experiences
                 .Select(we => new WorkExperience
@@ -174,6 +298,7 @@ namespace PussyCatsApp.services
                 .ToList();
         }
         */
+
         /// <summary>
         /// Processes projects with validation
         /// </summary>
@@ -182,20 +307,24 @@ namespace PussyCatsApp.services
             var result = new List<Project>();
 
             if (projects == null)
+            {
                 return result;
+            }
 
             int count = 0;
 
             foreach (var p in projects)
             {
-                if (count >= 10)
+                if (count >= MaxProjects)
+                {
                     break;
+                }
 
                 var proj = new Project
                 {
-                    Name = SanitizeString(p.Name, 100),
-                    Description = SanitizeString(p.Description, 600),
-                    Url = SanitizeString(p.Url, 200),
+                    Name = SanitizeString(p.Name, MaxProjectNameLength),
+                    Description = SanitizeString(p.Description, MaxProjectDescriptionLength),
+                    Url = SanitizeString(p.Url, MaxProjectUrlLength),
                     Technologies = new List<string>()
                 };
 
@@ -204,10 +333,12 @@ namespace PussyCatsApp.services
                     int techCount = 0;
                     foreach (var t in p.Technologies)
                     {
-                        if (techCount >= 10)
+                        if (techCount >= MaxTechnologiesPerProject)
+                        {
                             break;
+                        }
 
-                        proj.Technologies.Add(SanitizeString(t, 60));
+                        proj.Technologies.Add(SanitizeString(t, MaxSkillLength));
                         techCount++;
                     }
                 }
@@ -224,7 +355,9 @@ namespace PussyCatsApp.services
         /*private List<Project> ProcessProjects(List<Project> projects)
         {
             if (projects == null || !projects.Any())
+            {
                 return new List<Project>();
+            }
 
             return projects.Take(10) // Max 10 projects
                 .Select(p => new Project
@@ -245,7 +378,9 @@ namespace PussyCatsApp.services
         private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
         {
             if (activities == null || !activities.Any())
+            {
                 return new List<ExtraCurricularActivity>();
+            }
 
             return activities.Take(10) // Max 10 activities
                 .Select(a => new ExtraCurricularActivity
@@ -264,22 +399,26 @@ namespace PussyCatsApp.services
             var result = new List<ExtraCurricularActivity>();
 
             if (activities == null)
+            {
                 return result;
+            }
 
             int count = 0;
 
             foreach (var a in activities)
             {
-                if (count >= 10)
-                    break;
+                if (count >= MaxActivities)
+                    {
+                        break;
+                    }
 
                 var activity = new ExtraCurricularActivity
                 {
-                    ActivityName = SanitizeString(a.ActivityName, 150),
-                    Organization = SanitizeString(a.Organization, 100),
-                    Role = SanitizeString(a.Role, 80),
-                    Period = SanitizeString(a.Period, 60),
-                    Description = SanitizeString(a.Description, 300)
+                    ActivityName = SanitizeString(a.ActivityName, MaxActivityNameLength),
+                    Organization = SanitizeString(a.Organization, MaxOrganizationLength),
+                    Role = SanitizeString(a.Role, MaxRoleLength),
+                    Period = SanitizeString(a.Period, MaxPeriodLength),
+                    Description = SanitizeString(a.Description, MaxActivityDescriptionLength)
                 };
 
                 if (!string.IsNullOrEmpty(activity.ActivityName))
@@ -298,12 +437,16 @@ namespace PussyCatsApp.services
         private string SanitizeString(string input, int maxLength)
         {
             if (string.IsNullOrWhiteSpace(input))
+            {
                 return string.Empty;
+            }
 
             input = input.Trim();
 
             if (input.Length > maxLength)
+            {
                 input = input.Substring(0, maxLength);
+            }
 
             return input;
         }
@@ -314,16 +457,22 @@ namespace PussyCatsApp.services
         private string SanitizeEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
+            {
                 return string.Empty;
+            }
 
             email = email.Trim().ToLowerInvariant();
 
-            if (email.Length > 254)
+            if (email.Length > MaxEmailLength)
+            {
                 return string.Empty;
+            }
 
             // Basic email validation
             if (!email.Contains('@') || !email.Contains('.'))
+            {
                 return string.Empty;
+            }
 
             return email;
         }
@@ -333,8 +482,10 @@ namespace PussyCatsApp.services
         /// </summary>
         private int ValidateAge(int age)
         {
-            if (age < 16 || age > 60)
-                return 0;
+            if (age < MinAge || age > MaxAge)
+            {
+                return InvalidAge;
+            }
             return age;
         }
 
@@ -344,17 +495,23 @@ namespace PussyCatsApp.services
         private string ValidateGender(string gender)
         {
             if (string.IsNullOrWhiteSpace(gender))
+            {
                 return string.Empty;
+            }
 
             gender = gender.Trim();
 
-            if (gender.Equals("Male", StringComparison.OrdinalIgnoreCase) ||
-                gender.Equals("M", StringComparison.OrdinalIgnoreCase))
-                return "Male";
+            if (gender.Equals(GenderMale, StringComparison.OrdinalIgnoreCase) ||
+        gender.Equals(GenderMaleShort, StringComparison.OrdinalIgnoreCase))
+            {
+                return GenderMale;
+            }
 
-            if (gender.Equals("Female", StringComparison.OrdinalIgnoreCase) ||
-                gender.Equals("F", StringComparison.OrdinalIgnoreCase))
-                return "Female";
+            if (gender.Equals(GenderFemale, StringComparison.OrdinalIgnoreCase) ||
+                gender.Equals(GenderFemaleShort, StringComparison.OrdinalIgnoreCase))
+            {
+                return GenderFemale;
+            }
 
             return string.Empty;
         }
@@ -365,13 +522,17 @@ namespace PussyCatsApp.services
         private string FormatPhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
                 return string.Empty;
+            }
 
             // Remove all non-digit characters except + at the beginning
             phoneNumber = phoneNumber.Trim();
 
-            if (phoneNumber.Length > 15)
+            if (phoneNumber.Length > MaxPhoneLength)
+            {
                 return string.Empty;
+            }
 
             return phoneNumber;
         }
@@ -384,7 +545,9 @@ namespace PussyCatsApp.services
             int currentYear = DateTime.Now.Year;
 
             if (year < currentYear || year > currentYear + 10)
+            {
                 return 0;
+            }
 
             return year;
         }
@@ -395,14 +558,17 @@ namespace PussyCatsApp.services
         private DateTimeOffset ValidateDate(DateTimeOffset? date)
         {
             if (!date.HasValue)
+            {
                 return DateTimeOffset.Now;
+            }
 
-            var minDate = new DateTimeOffset(new DateTime(1980, 1, 1));
-            var maxDate = DateTimeOffset.Now.AddYears(1);
+            var minDate = new DateTimeOffset(MinValidDate);
+            var maxDate = DateTimeOffset.Now.AddYears(MaxYearsAheadForDate);
 
             if (date < minDate || date > maxDate)
+            {
                 return DateTimeOffset.Now;
-
+            }
             return date.Value;
         }
     }

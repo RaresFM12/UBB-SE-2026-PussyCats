@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using PussyCatsApp.Models;
 
 namespace PussyCatsApp.Services

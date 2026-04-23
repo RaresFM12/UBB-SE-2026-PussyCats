@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
-    public class CompatibilityService: ICompatibilityService
+    public class CompatibilityService : ICompatibilityService
     {
+        private const int SkillsLineIndex = 2;
+        private const char SkillDelimiter = ',';
+        private const double UnverifiedSkillScore = 0.5;
+        private const double ScoreNormalizationFactor = 100.0;
+        private const double GapThreshold = 0.5;
+        private const double TargetGroupScore = 0.8;
+        private const int MaxSuggestions = 3;
+        private const int InvalidScore = -1;
+
         private IUserSkillRepository userSkillRepository;
         private ISkillGroupRepository skillGroupRepository;
 
@@ -20,9 +29,7 @@ namespace PussyCatsApp.services
         {
             List<UserSkill> verifiedSkills = userSkillRepository.GetVerifiedSkillsByUserId(userId);
             string parsedCv = userSkillRepository.GetParsedCvByUserId(userId);
-
             List<string> cvSkills = ExtractSkillsFromParsedCv(parsedCv);
-
             return MergeVerifiedAndUnverifiedSkills(verifiedSkills, cvSkills);
         }
 
@@ -31,25 +38,33 @@ namespace PussyCatsApp.services
             List<string> extractedSkills = new List<string>();
 
             if (string.IsNullOrWhiteSpace(parsedCv))
+            {
                 return extractedSkills;
+            }
 
             string[] lines = parsedCv.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
 
-            if (lines.Length < 3)
+            if (lines.Length <= SkillsLineIndex)
+            {
                 return extractedSkills;
+            }
 
-            string skillsLine = lines[2].Trim();
+            string skillsLine = lines[SkillsLineIndex].Trim();
 
             if (string.IsNullOrWhiteSpace(skillsLine))
+            {
                 return extractedSkills;
+            }
 
-            string[] cvSkills = skillsLine.Split(',');
+            string[] cvSkills = skillsLine.Split(SkillDelimiter);
 
             foreach (string cvSkill in cvSkills)
             {
                 string skillName = cvSkill.Trim();
                 if (!string.IsNullOrWhiteSpace(skillName))
+                {
                     extractedSkills.Add(skillName);
+                }
             }
 
             return extractedSkills;
@@ -60,7 +75,9 @@ namespace PussyCatsApp.services
             List<UserSkill> allSkills = new List<UserSkill>();
 
             foreach (UserSkill verifiedSkill in verifiedSkills)
+            {
                 allSkills.Add(verifiedSkill);
+            }
 
             foreach (string cvSkill in cvSkills)
             {
@@ -102,16 +119,22 @@ namespace PussyCatsApp.services
                     if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                     {
                         if (userSkill.IsVerified)
-                            ci = userSkill.Score / 100.0;
+                        {
+                            ci = userSkill.Score / ScoreNormalizationFactor;
+                        }
                         else
-                            ci = 0.5;
+                        {
+                            ci = UnverifiedSkillScore;
+                        }
 
                         break;
                     }
                 }
 
                 if (ci > maxCi)
+                {
                     maxCi = ci;
+                }
             }
 
             return maxCi;
@@ -121,21 +144,27 @@ namespace PussyCatsApp.services
         {
             int totalWeight = 0;
             foreach (SkillGroup group in groups)
+            {
                 totalWeight += group.Weight;
+            }
 
             if (totalWeight == 0)
-                return -1;
+            {
+                return InvalidScore;
+            }
 
             double weightedSum = 0;
             for (int i = 0; i < groups.Count; i++)
+            {
                 weightedSum += groups[i].Weight * groupScores[i];
+            }
 
-            return weightedSum * 100 / totalWeight;
+            return weightedSum * ScoreNormalizationFactor / totalWeight;
         }
 
         private double ComputeGain(SkillGroup group, double gj, int totalWeight)
         {
-            return 100.0 * group.Weight * (0.8 - gj) / totalWeight;
+            return ScoreNormalizationFactor * group.Weight * (TargetGroupScore - gj) / totalWeight;
         }
 
         private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
@@ -145,8 +174,10 @@ namespace PussyCatsApp.services
             foreach (SkillGroup group in groups)
             {
                 double groupScore = ComputeGroupScore(group, userSkills);
-                if (groupScore > 0.5)
+                if (groupScore > GapThreshold)
+                {
                     continue;
+                }
 
                 Suggestion bestSuggestionForGroup = null;
 
@@ -160,14 +191,20 @@ namespace PussyCatsApp.services
                         if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                         {
                             if (userSkill.IsVerified)
+                            {
                                 userHasVerified = true;
+                            }
                             else
+                            {
                                 userHasUnverified = true;
+                            }
                         }
                     }
 
                     if (userHasVerified)
+                    {
                         continue;
+                    }
 
                     double gain = ComputeGain(group, groupScore, totalWeight);
 
@@ -189,13 +226,17 @@ namespace PussyCatsApp.services
                 }
 
                 if (bestSuggestionForGroup != null)
+                {
                     suggestions.Add(bestSuggestionForGroup);
+                }
             }
 
             suggestions.Sort((a, b) => b.GainScore.CompareTo(a.GainScore));
 
-            if (suggestions.Count > 3)
-                suggestions = suggestions.GetRange(0, 3);
+            if (suggestions.Count > MaxSuggestions)
+            {
+                suggestions = suggestions.GetRange(0, MaxSuggestions);
+            }
 
             return suggestions;
         }
@@ -207,20 +248,24 @@ namespace PussyCatsApp.services
 
             int totalWeight = 0;
             foreach (SkillGroup group in groups)
+            {
                 totalWeight += group.Weight;
+            }
 
             List<double> groupScores = new List<double>();
             foreach (SkillGroup group in groups)
+            {
                 groupScores.Add(ComputeGroupScore(group, userSkills));
+            }
 
             double matchScore = ComputeMatchScore(groups, groupScores);
 
             RoleResult result = new RoleResult();
             result.JobRole = role;
 
-            if (matchScore == -1)
+            if (matchScore == InvalidScore)
             {
-                result.MatchScore = -1;
+                result.MatchScore = InvalidScore;
                 result.Suggestions = new List<Suggestion>();
                 return result;
             }
@@ -236,7 +281,9 @@ namespace PussyCatsApp.services
             List<RoleResult> results = new List<RoleResult>();
 
             foreach (JobRole role in Enum.GetValues(typeof(JobRole)))
+            {
                 results.Add(CalculateForRole(userId, role));
+            }
 
             return results;
         }
