@@ -11,7 +11,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
     public class DocumentValidatorTests
     {
         [TestMethod]
-        public void TestNullDocumentThrowsError()
+        public void ValidateDocumentInput_NullDocument_ThrowsError()
         {
             string documentNull = null;
             string documentEmpty = string.Empty;
@@ -24,7 +24,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         }
 
         [TestMethod]
-        public void TestEmptyStringDocumentThrowsError()
+        public void ValidateDocumentInput_EmptyStringDocument_ThrowsError()
         {
             string documentEmpty = string.Empty;
             string selectedFilePath = "C://";
@@ -35,7 +35,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         }
 
         [TestMethod]
-        public void TestNullSelectedFilePathThrowsError()
+        public void ValidateDocumentInput_NullSelectedFilePath_ThrowsError()
         {
             string selectedFilePathNull = null;
             string document = "Document";
@@ -48,7 +48,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         }
 
         [TestMethod]
-        public void TestEmptySelectedFilePathThrowsError()
+        public void ValidateDocumentInput_EmptyStringSelectedFilePath_ThrowsError()
         {
             string selectedFilePathEmpty = string.Empty;
             string document = "Document";
@@ -61,7 +61,7 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
         }
 
         [TestMethod]
-        public void TestCorrectInputReturnsTrue()
+        public void ValidateDocumentInput_CorrectInput_ReturnsTrue()
         {
             string document = "Document";
             string selectedFilePath = "C://";
