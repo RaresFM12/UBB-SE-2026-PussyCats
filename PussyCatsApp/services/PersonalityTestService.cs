@@ -172,7 +172,9 @@ namespace PussyCatsApp.Services
             foreach (var kvp in list)
             {
                 if (count >= length)
+                {
                     break;
+                }
 
                 result.Add(kvp.Key, kvp.Value);
                 count++;

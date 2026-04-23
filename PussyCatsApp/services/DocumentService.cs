@@ -10,9 +10,9 @@ namespace PussyCatsApp.Services
     public class DocumentService : IDocumentService
     {
         private readonly IDocumentRepository documentRepository;
-        private readonly LocalFileStorageService fileStorage;
+        private readonly ILocalFileStorageService fileStorage;
 
-        public DocumentService(IDocumentRepository documentRepository, LocalFileStorageService fileStorage)
+        public DocumentService(IDocumentRepository documentRepository, ILocalFileStorageService fileStorage)
         {
             this.documentRepository = documentRepository;
             this.fileStorage = fileStorage;
