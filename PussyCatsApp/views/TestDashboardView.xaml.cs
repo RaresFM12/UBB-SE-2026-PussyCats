@@ -44,10 +44,10 @@ namespace PussyCatsApp.Views
             base.OnNavigatedTo(e);
             if (e.Parameter is UserProfile profile && profile.UserId != 0)
             {
-                var skillTestRepository = new SkillTestRepository();
+                var skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
                 ISkillTestService skillTestService = new SkillTestService(skillTestRepository);
 
-                var userProfileRepository = new UserProfileRepository();
+                var userProfileRepository = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
                 IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
                 IImageStorageService imageStorageService = new ImageStorageService();
                 ICompletenessService completenessService = new CompletenessService();

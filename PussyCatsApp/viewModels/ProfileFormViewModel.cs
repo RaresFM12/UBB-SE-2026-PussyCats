@@ -12,7 +12,7 @@ using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Utilities;
 using PussyCatsApp.Configuration;
 
 namespace PussyCatsApp.ViewModels

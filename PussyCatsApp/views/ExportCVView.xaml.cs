@@ -7,6 +7,7 @@ using Microsoft.Web.WebView2.Core;
 using PussyCatsApp.ViewModels;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
+using PussyCatsApp.Configuration;
 
 namespace PussyCatsApp.Views
 {

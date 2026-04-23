@@ -48,7 +48,7 @@ namespace PussyCatsApp.Views
         {
             if (viewModel == null)
             {
-                IMatchService matchService = new MatchService(new MatchRepository());
+                IMatchService matchService = new MatchService(new MatchRepository(DatabaseConfiguration.GetConnectionString()));
                 viewModel = new MatchHistoryViewModel(1, matchService);
             }
 
