@@ -20,6 +20,8 @@ namespace PussyCatsApp.Tests.ViewModels
         private UserProfileViewModel viewModel;
 
         private const int testUserId = 1;
+        private string takePersonalityTestText = "TAKE PERSONALITY TEST";
+        private string retakePersonalityTestText = "RETAKE PERSONALITY TEST";
 
         [TestInitialize]
         public void Setup()
@@ -34,7 +36,7 @@ namespace PussyCatsApp.Tests.ViewModels
         [TestMethod]
         public async Task TestSetFreshnessTextWhenLoadingIfProfileIsNotNull()
         {
-            
+
             var userProfile = new UserProfile
             {
                 UserId = testUserId,
@@ -91,5 +93,103 @@ namespace PussyCatsApp.Tests.ViewModels
             Assert.AreEqual(string.Empty, viewModel.NextEmptyFieldPrompt);
         }
 
+        [TestMethod]
+        public void TestToggleAccountStatusCommandActivates()
+        {
+            var userProfile = new UserProfile
+            {
+                UserId = testUserId,
+                ActiveAccount = false
+            };
+            viewModel.UserProfile = userProfile;
+
+            viewModel.ToggleAccountStatusCommand();
+            Assert.IsTrue(viewModel.UserProfile.ActiveAccount);
+        }
+
+        [TestMethod]
+        public void TestToggleAccountStatusCommandDeactivates()
+        {
+            var userProfile = new UserProfile
+            {
+                UserId = testUserId,
+                ActiveAccount = true
+            };
+            viewModel.UserProfile = userProfile;
+
+            viewModel.ToggleAccountStatusCommand();
+            Assert.IsFalse(viewModel.UserProfile.ActiveAccount);
+        }
+
+        [TestMethod]
+        public void TestRemoveAvatarCommand()
+        {
+            var userProfile = new UserProfile
+            {
+                UserId = testUserId,
+                ProfilePicture = "picture"
+            };
+            viewModel.UserProfile = userProfile;
+            viewModel.RemoveAvatarCommand();
+
+            Assert.IsNull(viewModel.UserProfile.ProfilePicture);
+        }
+
+        [TestMethod]
+        public void TestGetPersonalityButtonTextWhenUserIsNull()
+        {
+            viewModel.UserProfile = null;
+            Assert.AreEqual(retakePersonalityTestText, viewModel.GetPersonalityButtonText());
+        }
+
+        [TestMethod]
+        public void TestGetPersonalityButtonTextWhenResultIsEmpty()
+        {
+            var userProfile = new UserProfile
+            {
+                UserId = testUserId,
+                PersonalityTestResult = string.Empty
+            };
+            viewModel.UserProfile = userProfile;
+            Assert.AreEqual(takePersonalityTestText, viewModel.GetPersonalityButtonText());
+        }
+
+        [TestMethod]
+        public void TestGetPersonalityButtonTextWhenRetakeAvailable()
+        {
+            var userProfile = new UserProfile
+            {
+                UserId = testUserId,
+                PersonalityTestResult = "Already done"
+            };
+            viewModel.UserProfile = userProfile;
+            Assert.AreEqual(retakePersonalityTestText, viewModel.GetPersonalityButtonText());
+        }
+
+        [TestMethod]
+        public void TestRecalculateLevelCommandUserIsNull()
+        {
+            int olExperiencePoints = viewModel.TotalXP;
+            viewModel.UserProfile = null;
+            viewModel.RecalculateLevelCommand();
+            Assert.AreEqual(olExperiencePoints, viewModel.TotalXP);
+        }
+
+        [TestMethod]
+        public void TestRecalculateLevelCommandSetsCorrect()
+        {
+            int oldExperiencePoints = 1500, newExperiencePoints = 2000;
+            var userProfile = new UserProfile
+            {
+                UserId = testUserId,
+                TotalXP = oldExperiencePoints
+            };
+            viewModel.UserProfile = userProfile;
+
+            mockUserProfileService.Setup(service => service.RecalculateLevel(userProfile)).Returns(newExperiencePoints);
+
+            viewModel.RecalculateLevelCommand();
+            Assert.AreEqual(newExperiencePoints, viewModel.TotalXP);
+        }
     }
 }
