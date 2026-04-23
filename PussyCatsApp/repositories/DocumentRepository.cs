@@ -110,8 +110,7 @@ namespace PussyCatsApp.Repositories
                 if (document.FilePath == null)
                 {
                     command.Parameters.AddWithValue("@FilePath", DBNull.Value);
-
-                } 
+                }
                 else
                 {
                     command.Parameters.AddWithValue("@FilePath", document.FilePath);
