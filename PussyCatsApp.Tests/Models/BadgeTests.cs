@@ -19,7 +19,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var returnedBadge = Badge.AssignTier(score);
 
-            Assert.AreEqual(tier, returnedBadge.Tier, $"Failed for score: {score}");
+            Assert.AreEqual(tier, returnedBadge.Tier);
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var returnedBadge = Badge.AssignTier(score);
 
-            Assert.AreEqual(expectedXp, returnedBadge.XpValue, $"Failed for score {score}");
+            Assert.AreEqual(expectedXp, returnedBadge.XpValue);
 
         }
     }
