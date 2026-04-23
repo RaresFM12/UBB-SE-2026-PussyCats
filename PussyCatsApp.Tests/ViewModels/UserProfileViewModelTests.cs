@@ -51,5 +51,45 @@ namespace PussyCatsApp.Tests.ViewModels
 
             Assert.AreEqual(expectedAnswer, viewModel.FreshnessText);
         }
+
+        [TestMethod]
+        public async Task TestSetCompletnessPercentageWhenLoadingIfProfileIsNotNull()
+        {
+
+            var userProfile = new UserProfile
+            {
+                UserId = testUserId,
+                LastUpdated = DateTime.Now.AddDays(-5) // Simulate last update was 5 days ago
+            };
+            viewModel.UserProfile = userProfile;
+
+            mockUserProfileService.Setup(service => service.GetProfile(testUserId)).Returns(
+                userProfile
+            );
+
+            int expectedPercentage = 50;
+            mockCompletenessService.Setup(service => service.CalculateCompleteness(userProfile)).Returns(expectedPercentage);
+
+            await viewModel.LoadUserAsync(testUserId);
+
+            Assert.AreEqual(expectedPercentage, viewModel.CompletenessPercentage);
+        }
+
+        [TestMethod]
+        public async Task TestLoadAsyncDoesNothingWhenProfileIsNull()
+        {
+            UserProfile userProfile = null;
+            viewModel.UserProfile = userProfile;
+
+            mockUserProfileService.Setup(service => service.GetProfile(testUserId)).Returns(
+                userProfile
+            );
+
+            await viewModel.LoadUserAsync(testUserId);
+            Assert.AreEqual(string.Empty, viewModel.FreshnessText);
+            Assert.AreEqual(0, viewModel.CompletenessPercentage);
+            Assert.AreEqual(string.Empty, viewModel.NextEmptyFieldPrompt);
+        }
+
     }
 }
