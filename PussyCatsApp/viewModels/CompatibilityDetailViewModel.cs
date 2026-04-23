@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PussyCatsApp.Models;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Utilities;
 
 namespace PussyCatsApp.ViewModels
 {
