@@ -9,13 +9,16 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.utilities;
+using PussyCatsApp.Utilities;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the user profile form, including loading, editing, validating, and saving user profile data and handling CV parsing.
+    /// </summary>
     public partial class ProfileFormViewModel : ObservableObject
     {
         private readonly IUserProfileService profileService;

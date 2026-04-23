@@ -1,11 +1,11 @@
-﻿using PussyCatsApp.Models;
-using PussyCatsApp.Repositories;
-using PussyCatsApp.storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using PussyCatsApp.Models;
+using PussyCatsApp.Repositories;
+using PussyCatsApp.Storage;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public class DocumentService : IDocumentService
     {
@@ -28,7 +28,6 @@ namespace PussyCatsApp.services
         public List<Document> GetDocumentsByUserId(int userId)
         {
             return documentRepository.GetDocumentsByUserId(userId);
-
         }
 
         public void UploadDocument(Document document, string filePath)
@@ -36,8 +35,10 @@ namespace PussyCatsApp.services
             string extension = Path.GetExtension(filePath);
 
             if (!ValidateFileType(extension))
+            {
                 throw new InvalidOperationException(
                     "Invalid file type. Only PDF, JPG, and PNG files are accepted.");
+            }
 
             using var stream = File.OpenRead(filePath);
             string relativePath = fileStorage.SaveFile(stream, Path.GetFileName(filePath));
@@ -46,32 +47,34 @@ namespace PussyCatsApp.services
             document.UploadDate = DateTime.Now;
 
             documentRepository.AddDocument(document);
-
         }
 
         public void DeleteDocument(int documentId)
         {
             Document document = documentRepository.GetDocumentById(documentId);
 
-
             if (document == null)
+            {
                 throw new InvalidOperationException("Document not found.");
+            }
 
             // delete the physical file before the database record
             if (!string.IsNullOrEmpty(document.FilePath))
+            {
                 fileStorage.DeleteFile(document.FilePath);
+            }
 
             documentRepository.DeleteDocument(documentId);
-
         }
 
         public string GetDocumentAbsolutePath(int documentId)
         {
             Document document = documentRepository.GetDocumentById(documentId);
 
-
             if (document == null)
+            {
                 throw new InvalidOperationException("Document not found.");
+            }
 
             return fileStorage.GetFilePath(document.FilePath);
         }

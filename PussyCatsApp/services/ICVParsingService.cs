@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using PussyCatsApp.Models;
 
-namespace PussyCatsApp.services
+namespace PussyCatsApp.Services
 {
     public interface ICVParsingService
     {

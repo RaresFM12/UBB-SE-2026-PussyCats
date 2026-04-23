@@ -2,11 +2,14 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PussyCatsApp.services;
+using PussyCatsApp.Services;
 using PussyCatsApp.Repositories;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for exporting and previewing a user's CV as a PDF, handling loading state and export operations.
+    /// </summary>
     public partial class ExportCVViewModel : ObservableObject
     {
         private readonly IPdfExportService pdfExportService;

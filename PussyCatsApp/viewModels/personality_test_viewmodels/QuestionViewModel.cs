@@ -7,8 +7,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PussyCatsApp.Models;
 
-namespace PussyCatsApp.viewModels
+namespace PussyCatsApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for a single personality test question, tracking the question data and the user's selected answer.
+    /// </summary>
     public partial class QuestionViewModel : ObservableObject
     {
         public Question Question { get; }
