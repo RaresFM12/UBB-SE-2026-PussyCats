@@ -13,6 +13,7 @@ namespace PussyCatsApp.Services
         private const string JsonExtension = ".json";
         private const string XmlExtension = ".xml";
         private const string ParseErrorMessage = "Failed to parse CV file: ";
+        private const string UnsupportedTypeMessage = "Unsupported file type. Only JSON and XML are supported.";
 
         private const int MaxSkills = 30;
         private const int MaxSkillLength = 60;
@@ -77,8 +78,8 @@ namespace PussyCatsApp.Services
 
                 if (string.Equals(fileType, XmlExtension, StringComparison.OrdinalIgnoreCase))
                 {
-                    var xDoc = XDocument.Parse(content);
-                    var rootName = xDoc.Root?.Name.LocalName ?? "CVData";
+                    var xmlDocument = XDocument.Parse(content);
+                    var rootName = xmlDocument.Root?.Name.LocalName ?? "CVData";
 
                     using var reader = new StringReader(content);
 
@@ -87,47 +88,16 @@ namespace PussyCatsApp.Services
 
                     return MapCVDataToProfile(cvData);
                 }
+
+                throw new Exception(UnsupportedTypeMessage);
             }
             catch (Exception ex)
             {
                 throw new Exception(ParseErrorMessage + ex.Message, ex);
             }
 
-            return new UserProfile();
+            // return new UserProfile();
         }
-        /*public UserProfile ParseCVFile(string content, string fileType)
-        {
-            UserProfile profile = new UserProfile();
-
-            try
-            {
-                if (fileType.ToLower() == ".json")
-                {
-                    var cvData = JsonSerializer.Deserialize<CVData>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-                    return MapCVDataToProfile(cvData);
-                }
-                else if (fileType.ToLower() == ".xml")
-                {
-                    var xDoc = XDocument.Parse(content);
-                    var rootName = xDoc.Root?.Name.LocalName ?? "CVData";
-                    using (var reader = new StringReader(content))
-                    {
-                        var serializer = new XmlSerializer(typeof(CVData), new XmlRootAttribute(rootName));
-                        var cvData = (CVData)serializer.Deserialize(reader);
-                        return MapCVDataToProfile(cvData);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to parse CV file: {ex.InnerException?.Message ?? ex.Message}", ex);
-            }
-
-            return profile;
-        }*/
 
         /// <summary>
         /// Maps CV data structure to UserProfile
@@ -163,42 +133,6 @@ namespace PussyCatsApp.Services
                 ExtraCurricularActivities = ProcessActivities(cvData.ExtraCurricularActivities)
             };
         }
-        /*private UserProfile MapCVDataToProfile(CVData cvData)
-        {
-            if (cvData == null)
-            {
-                return new UserProfile();
-            }
-
-            var profile = new UserProfile
-            {
-                // Map required fields
-                FirstName = SanitizeString(cvData.FirstName, 50),
-                LastName = SanitizeString(cvData.LastName, 60),
-                Age = ValidateAge(cvData.Age),
-                Gender = ValidateGender(cvData.Gender),
-                Email = SanitizeEmail(cvData.Email),
-                PhoneNumber = FormatPhoneNumber(cvData.PhoneNumber),
-                Country = SanitizeString(cvData.Country, 100),
-                City = SanitizeString(cvData.City, 100),
-                University = SanitizeString(cvData.University, 200),
-                ExpectedGraduationYear = ValidateGraduationYear(cvData.ExpectedGraduationYear),
-
-                // Map optional fields
-                GitHub = SanitizeString(cvData.GitHub, 200),
-                LinkedIn = SanitizeString(cvData.LinkedIn, 200),
-                Address = SanitizeString(cvData.Address, 500),
-                Motivation = SanitizeString(cvData.Motivation, 1000),
-
-                // Map collections with validation
-                Skills = ProcessSkills(cvData.Skills),
-                WorkExperiences = ProcessWorkExperiences(cvData.WorkExperiences),
-                Projects = ProcessProjects(cvData.Projects),
-                ExtraCurricularActivities = ProcessActivities(cvData.ExtraCurricularActivities)
-            };
-
-            return profile;
-        }*/
 
         /// <summary>
         /// Processes and validates skills, removing duplicates
@@ -249,7 +183,7 @@ namespace PussyCatsApp.Services
 
             int count = 0;
 
-            foreach (var we in experiences)
+            foreach (var workExperience in experiences)
             {
                 if (count >= MaxWorkExperiences)
                 {
@@ -258,12 +192,12 @@ namespace PussyCatsApp.Services
 
                 var processed = new WorkExperience
                 {
-                    Company = SanitizeString(we.Company, MaxCompanyLength),
-                    JobTitle = SanitizeString(we.JobTitle, MaxJobTitleLength),
-                    StartDate = ValidateDate(we.StartDate),
-                    EndDate = we.CurrentlyWorking ? null : ValidateDate(we.EndDate),
-                    CurrentlyWorking = we.CurrentlyWorking,
-                    Description = SanitizeString(we.Description, MaxWorkDescriptionLength)
+                    Company = SanitizeString(workExperience.Company, MaxCompanyLength),
+                    JobTitle = SanitizeString(workExperience.JobTitle, MaxJobTitleLength),
+                    StartDate = ValidateDate(workExperience.StartDate),
+                    EndDate = workExperience.CurrentlyWorking ? null : ValidateDate(workExperience.EndDate),
+                    CurrentlyWorking = workExperience.CurrentlyWorking,
+                    Description = SanitizeString(workExperience.Description, MaxWorkDescriptionLength)
                 };
 
                 if (!string.IsNullOrEmpty(processed.Company) &&
@@ -408,9 +342,9 @@ namespace PussyCatsApp.Services
             foreach (var a in activities)
             {
                 if (count >= MaxActivities)
-                    {
-                        break;
-                    }
+                {
+                    break;
+                }
 
                 var activity = new ExtraCurricularActivity
                 {
@@ -528,7 +462,7 @@ namespace PussyCatsApp.Services
 
             // Remove all non-digit characters except + at the beginning
             phoneNumber = phoneNumber.Trim();
-
+            phoneNumber = System.Text.RegularExpressions.Regex.Replace(phoneNumber, @"[^\d+]", string.Empty);
             if (phoneNumber.Length > MaxPhoneLength)
             {
                 return string.Empty;
@@ -544,7 +478,7 @@ namespace PussyCatsApp.Services
         {
             int currentYear = DateTime.Now.Year;
 
-            if (year < currentYear || year > currentYear + 10)
+            if (year < currentYear || year > currentYear + MaxYearsAheadForGraduation)
             {
                 return 0;
             }
