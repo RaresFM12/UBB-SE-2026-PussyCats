@@ -49,20 +49,20 @@ namespace PussyCatsApp.ViewModels
 
             try
             {
-                var profile = userProfileService.GetProfile(UserId);
+                var userProfile = userProfileService.GetProfile(UserId);
 
-                if (profile == null)
+                if (userProfile == null)
                 {
-                    throw new Exception("User profile not found in database.");
+                    throw new Exception("User userProfile not found in database.");
                 }
 
-                await pdfExportService.RenderProfileAsync(profile);
+                await pdfExportService.RenderProfileAsync(userProfile);
 
                 StatusText = string.Empty;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                StatusText = $"Preview failed: {ex.Message}";
+                StatusText = $"Preview failed: {exception.Message}";
             }
             finally
             {
@@ -85,9 +85,9 @@ namespace PussyCatsApp.ViewModels
             {
                 StatusText = string.Empty; // User cancelled save picker
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                StatusText = $"Export failed: {ex.Message}";
+                StatusText = $"Export failed: {exception.Message}";
             }
             finally
             {

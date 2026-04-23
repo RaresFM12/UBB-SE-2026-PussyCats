@@ -169,10 +169,10 @@ namespace PussyCatsApp.Tests.ViewModels
         [TestMethod]
         public void TestRecalculateLevelCommandUserIsNull()
         {
-            int olExperiencePoints = viewModel.TotalXP;
+            int oldExperiencePoints = viewModel.TotalExperiencePoints;
             viewModel.UserProfile = null;
             viewModel.RecalculateLevelCommand();
-            Assert.AreEqual(olExperiencePoints, viewModel.TotalXP);
+            Assert.AreEqual(oldExperiencePoints, viewModel.TotalExperiencePoints);
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace PussyCatsApp.Tests.ViewModels
             mockUserProfileService.Setup(service => service.RecalculateLevel(userProfile)).Returns(newExperiencePoints);
 
             viewModel.RecalculateLevelCommand();
-            Assert.AreEqual(newExperiencePoints, viewModel.TotalXP);
+            Assert.AreEqual(newExperiencePoints, viewModel.TotalExperiencePoints);
         }
     }
 }

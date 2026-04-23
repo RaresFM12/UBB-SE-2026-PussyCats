@@ -159,12 +159,12 @@ namespace PussyCatsApp.Views
 
             LevelTitleText.Text = $"Level {ViewModel.UserProfile.UserLevel.LevelNumber} — {ViewModel.UserProfile.UserLevel.Title}";
 
-            XpProgressBar.Value = ViewModel.UserProfile.UserLevel.GetLevelProgressPercent(ViewModel.TotalXP);
+            XpProgressBar.Value = ViewModel.UserProfile.UserLevel.GetLevelProgressPercent(ViewModel.TotalExperiencePoints);
 
-            int xpToNext = ViewModel.UserProfile.UserLevel.GetXpToNextLevel(ViewModel.TotalXP);
+            int xpToNext = ViewModel.UserProfile.UserLevel.GetXpToNextLevel(ViewModel.TotalExperiencePoints);
             XpCountText.Text = xpToNext > 0
-                ? $"{ViewModel.TotalXP} XP — {xpToNext} XP needed for next level"
-                : $"{ViewModel.TotalXP} XP — Max level reached!";
+                ? $"{ViewModel.TotalExperiencePoints} XP — {xpToNext} XP needed for next level"
+                : $"{ViewModel.TotalExperiencePoints} XP — Max level reached!";
         }
 
         private async void OnAvatarUploadClick(object sender, RoutedEventArgs e)

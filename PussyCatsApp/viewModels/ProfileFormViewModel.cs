@@ -47,7 +47,7 @@ namespace PussyCatsApp.ViewModels
         [ObservableProperty] private string errorMessage = string.Empty;
         [ObservableProperty] private string cvStatusText = string.Empty;
         [ObservableProperty] private string infoBarMessage = string.Empty;
-        [ObservableProperty] private InformationBarSeverityStatus infoBarSeverity; // 1=Success, 2=Warning, 3=Error
+        [ObservableProperty] private InformationBarSeverityStatus infoBarSeverity; // 0=Informational, 1=Success, 2=Warning, 3=Error
         [ObservableProperty] private bool isInfoBarOpen;
 
         public ObservableCollection<string> Skills { get; } = new ();
@@ -62,6 +62,8 @@ namespace PussyCatsApp.ViewModels
         private readonly int maximumSkillNameLength = 60;
         private readonly int maximumNumberOfWorkExperiencesAllowed = 10;
         private readonly int maximumNumberOfProjectsAllowed = 10;
+        private readonly int missingAgeDefaultValue = 0;
+        private readonly int missingGraduationYearDefaultValue = 0;
 
         public ProfileFormViewModel(IUserProfileService profileService, ICVParsingService cvParsingService)
         {
@@ -87,7 +89,14 @@ namespace PussyCatsApp.ViewModels
 
         public void LoadProfile(UserProfile profile)
         {
-            userProfile = profile ?? new UserProfile();
+            if (profile != null)
+            {
+                userProfile = profile;
+            }
+            else
+            {
+                userProfile = new UserProfile();
+            }
 
             FirstName = userProfile.FirstName;
             LastName = userProfile.LastName;
@@ -131,9 +140,9 @@ namespace PussyCatsApp.ViewModels
             }
 
             ExtraCurricularActivities.Clear();
-            foreach (var activity in userProfile.ExtraCurricularActivities)
+            foreach (var extraCurricularActivity in userProfile.ExtraCurricularActivities)
             {
-                ExtraCurricularActivities.Add(activity);
+                ExtraCurricularActivities.Add(extraCurricularActivity);
             }
         }
 
@@ -187,9 +196,9 @@ namespace PussyCatsApp.ViewModels
             });
         }
 
-        public void RemoveWorkExperience(WorkExperience we)
+        public void RemoveWorkExperience(WorkExperience workExperience)
         {
-            WorkExperiences.Remove(we);
+            WorkExperiences.Remove(workExperience);
         }
 
         public void AddProject()
@@ -241,9 +250,9 @@ namespace PussyCatsApp.ViewModels
                 ShowInfoBar("Profile saved successfully!", InformationBarSeverityStatus.Success);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ShowInfoBar($"Error saving profile: {ex.Message}", InformationBarSeverityStatus.Error);
+                ShowInfoBar($"Error saving profile: {exception.Message}", InformationBarSeverityStatus.Error);
                 return false;
             }
         }
@@ -282,90 +291,94 @@ namespace PussyCatsApp.ViewModels
         {
             try
             {
-                var parsedProfile = cvParsingService.ParseCVFile(content, fileType);
-                PopulateFromParsedProfile(parsedProfile);
+                var userProfileParsedFromCvFile = cvParsingService.ParseCVFile(content, fileType);
+                PopulateFromParsedProfile(userProfileParsedFromCvFile);
                 CvStatusText = "CV loaded successfully!";
                 ShowInfoBar("CV data has been loaded. Please review and complete any missing fields.", InformationBarSeverityStatus.Success);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                var errorMsg = ex.InnerException?.Message ?? ex.Message;
-                ShowInfoBar($"Error processing CV file: {errorMsg}", InformationBarSeverityStatus.Error);
+                var errorMessage = exception.InnerException?.Message;
+                if (errorMessage == null)
+                {
+                    errorMessage = exception.Message;
+                }
+                ShowInfoBar($"Error processing CV file: {errorMessage}", InformationBarSeverityStatus.Error);
             }
         }
 
-        private void PopulateFromParsedProfile(UserProfile parsed)
+        private void PopulateFromParsedProfile(UserProfile parsedUserProfile)
         {
-            if (!string.IsNullOrEmpty(parsed.FirstName))
+            if (!string.IsNullOrEmpty(parsedUserProfile.FirstName))
             {
-                FirstName = parsed.FirstName;
+                FirstName = parsedUserProfile.FirstName;
             }
 
-            if (!string.IsNullOrEmpty(parsed.LastName))
+            if (!string.IsNullOrEmpty(parsedUserProfile.LastName))
             {
-                LastName = parsed.LastName;
+                LastName = parsedUserProfile.LastName;
             }
 
-            if (parsed.Age > 0)
+            if (parsedUserProfile.Age > missingAgeDefaultValue)
             {
-                Age = parsed.Age;
+                Age = parsedUserProfile.Age;
             }
 
-            if (!string.IsNullOrEmpty(parsed.Gender))
+            if (!string.IsNullOrEmpty(parsedUserProfile.Gender))
             {
-                Gender = parsed.Gender;
+                Gender = parsedUserProfile.Gender;
             }
 
-            if (!string.IsNullOrEmpty(parsed.Email))
+            if (!string.IsNullOrEmpty(parsedUserProfile.Email))
             {
-                Email = parsed.Email;
+                Email = parsedUserProfile.Email;
             }
 
-            if (!string.IsNullOrEmpty(parsed.PhoneNumber))
+            if (!string.IsNullOrEmpty(parsedUserProfile.PhoneNumber))
             {
-                var parts = PhoneNumberHelper.ExtractPhonePrefixAndNumber(parsed.PhoneNumber);
+                var parts = PhoneNumberHelper.ExtractPhonePrefixAndNumber(parsedUserProfile.PhoneNumber);
                 PhonePrefix = parts.prefix;
                 PhoneNumber = parts.number;
             }
 
-            if (!string.IsNullOrEmpty(parsed.GitHub))
+            if (!string.IsNullOrEmpty(parsedUserProfile.GitHub))
             {
-                GitHub = parsed.GitHub;
+                GitHub = parsedUserProfile.GitHub;
             }
 
-            if (!string.IsNullOrEmpty(parsed.LinkedIn))
+            if (!string.IsNullOrEmpty(parsedUserProfile.LinkedIn))
             {
-                LinkedIn = parsed.LinkedIn;
+                LinkedIn = parsedUserProfile.LinkedIn;
             }
 
-            if (!string.IsNullOrEmpty(parsed.Country))
+            if (!string.IsNullOrEmpty(parsedUserProfile.Country))
             {
-                Country = parsed.Country;
+                Country = parsedUserProfile.Country;
             }
 
-            if (!string.IsNullOrEmpty(parsed.City))
+            if (!string.IsNullOrEmpty(parsedUserProfile.City))
             {
-                City = parsed.City;
+                City = parsedUserProfile.City;
             }
 
-            if (!string.IsNullOrEmpty(parsed.University))
+            if (!string.IsNullOrEmpty(parsedUserProfile.University))
             {
-                University = parsed.University;
+                University = parsedUserProfile.University;
             }
 
-            if (parsed.ExpectedGraduationYear > 0)
+            if (parsedUserProfile.ExpectedGraduationYear > missingGraduationYearDefaultValue)
             {
-                ExpectedGraduationYear = parsed.ExpectedGraduationYear;
+                ExpectedGraduationYear = parsedUserProfile.ExpectedGraduationYear;
             }
 
-            if (!string.IsNullOrEmpty(parsed.Address))
+            if (!string.IsNullOrEmpty(parsedUserProfile.Address))
             {
-                Address = parsed.Address;
+                Address = parsedUserProfile.Address;
             }
 
-            if (!string.IsNullOrEmpty(parsed.Motivation))
+            if (!string.IsNullOrEmpty(parsedUserProfile.Motivation))
             {
-                Motivation = parsed.Motivation;
+                Motivation = parsedUserProfile.Motivation;
             }
 
             // Clear existing collections before loading new CV data
@@ -375,9 +388,9 @@ namespace PussyCatsApp.ViewModels
             ExtraCurricularActivities.Clear();
 
             // Add skills with duplicate detection (R20)
-            if (parsed.Skills != null)
+            if (parsedUserProfile.Skills != null)
             {
-                foreach (var skill in parsed.Skills)
+                foreach (var skill in parsedUserProfile.Skills)
                 {
                     if (!IsDuplicateSkill(skill) && Skills.Count < maximumNumberOfSkillsAllowed)
                     {
@@ -386,9 +399,9 @@ namespace PussyCatsApp.ViewModels
                 }
             }
 
-            if (parsed.WorkExperiences != null)
+            if (parsedUserProfile.WorkExperiences != null)
             {
-                foreach (var workExperience in parsed.WorkExperiences)
+                foreach (var workExperience in parsedUserProfile.WorkExperiences)
                 {
                     if (WorkExperiences.Count < maximumNumberOfWorkExperiencesAllowed)
                     {
@@ -397,9 +410,9 @@ namespace PussyCatsApp.ViewModels
                 }
             }
 
-            if (parsed.Projects != null)
+            if (parsedUserProfile.Projects != null)
             {
-                foreach (var project in parsed.Projects)
+                foreach (var project in parsedUserProfile.Projects)
                 {
                     if (Projects.Count < maximumNumberOfProjectsAllowed)
                     {
@@ -408,9 +421,9 @@ namespace PussyCatsApp.ViewModels
                 }
             }
 
-            if (parsed.ExtraCurricularActivities != null)
+            if (parsedUserProfile.ExtraCurricularActivities != null)
             {
-                foreach (var extraCurricularActivity in parsed.ExtraCurricularActivities)
+                foreach (var extraCurricularActivity in parsedUserProfile.ExtraCurricularActivities)
                 {
                     if (ExtraCurricularActivities.Count < maximumNumberOfExtraCurricularActivitiesAllowed)
                     {
@@ -441,12 +454,12 @@ namespace PussyCatsApp.ViewModels
                 }
             }
 
-            if (Age == 0)
+            if (Age == missingAgeDefaultValue)
             {
                 missingFields.Add("Age");
             }
 
-            if (ExpectedGraduationYear == 0)
+            if (ExpectedGraduationYear == missingGraduationYearDefaultValue)
             {
                 missingFields.Add("Expected Graduation Year");
             }
@@ -464,11 +477,11 @@ namespace PussyCatsApp.ViewModels
                 return new List<string>();
             }
 
-            var queryWords = query.ToLower().Split(' ');
+            var queryWordsList = query.ToLower().Split(' ');
             var results = new List<string>();
             foreach (string university in ProfileFormData.UniversityList)
             {
-                if (ProfileFormHelpers.UniversityMatchesAllWords(university, queryWords))
+                if (ProfileFormHelpers.UniversityMatchesAllWords(university, queryWordsList))
                 {
                     results.Add(university);
                 }
@@ -476,14 +489,14 @@ namespace PussyCatsApp.ViewModels
             return results;
         }
 
-        public List<string> FilterSkillSuggestions(string query)
+        public List<string> FilterSkillSuggestions(string searchTextQuery)
         {
-            if (string.IsNullOrWhiteSpace(query))
+            if (string.IsNullOrWhiteSpace(searchTextQuery))
             {
                 return new List<string>();
             }
 
-            var searchText = query.ToLower();
+            var searchText = searchTextQuery.ToLower();
             var results = new List<string>();
             foreach (string skill in ProfileFormData.SkillSuggestions)
             {

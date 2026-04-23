@@ -23,7 +23,7 @@ namespace PussyCatsApp.ViewModels
         private ICompletenessService completenessService;
 
         // Nested Export ViewModel
-        public ExportCVViewModel ExportVM { get; }
+        public ExportCVViewModel ExportCvViewModel { get; }
 
         private UserProfile? userProfile;
         public UserProfile? UserProfile
@@ -38,7 +38,7 @@ namespace PussyCatsApp.ViewModels
         public List<string> MissingFieldWarnings { get; set; } = new List<string>();
         public string ErrorMessage { get; set; } = string.Empty;
         public string FreshnessText { get; set; } = string.Empty;
-        public int TotalXP { get; private set; } = 0;
+        public int TotalExperiencePoints { get; private set; } = 0;
 
         public UserProfileViewModel(IUserProfileService userProfileService, IImageStorageService imageStorageService, ICompletenessService completenessService)
         {
@@ -57,12 +57,12 @@ namespace PussyCatsApp.ViewModels
 
             try
             {
-                TotalXP = profileService.RecalculateLevel(UserProfile);
+                TotalExperiencePoints = profileService.RecalculateLevel(UserProfile);
                 OnLevelUpdated?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error recalculating user level: {ex.Message}";
+                ErrorMessage = $"Error recalculating user level: {exception.Message}";
             }
         }
         public async Task LoadUserAsync(int userId)
@@ -81,9 +81,9 @@ namespace PussyCatsApp.ViewModels
                     NextEmptyFieldPrompt = completenessService.GetNextEmptyFieldPrompt(UserProfile);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error loading user profile: {ex.Message}";
+                ErrorMessage = $"Error loading user profile: {exception.Message}";
             }
             finally
             {
@@ -97,8 +97,8 @@ namespace PussyCatsApp.ViewModels
             {
                 return;
             }
-            string currentStatusStr = UserProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
-            profileService.ToggleAccountStatus(UserProfile.UserId, currentStatusStr);
+            string currentStatusString = UserProfile.ActiveAccount ? "ACTIVE" : "INACTIVE";
+            profileService.ToggleAccountStatus(UserProfile.UserId, currentStatusString);
             UserProfile.ActiveAccount = !UserProfile.ActiveAccount;
         }
 
@@ -114,9 +114,9 @@ namespace PussyCatsApp.ViewModels
                 profileService.UpdateAvatarPath(UserProfile.UserId, newPath);
                 UserProfile.ProfilePicture = newPath;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = $"Error uploading avatar: {ex.Message}";
+                ErrorMessage = $"Error uploading avatar: {exception.Message}";
                 return;
             }
         }
