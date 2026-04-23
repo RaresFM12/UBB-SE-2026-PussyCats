@@ -19,9 +19,9 @@ namespace PussyCatsApp.ViewModels
 
         private const int MaximumJobRolesAllowed = 3;
 
-        public PreferencesViewModel(int userId)
+        public PreferencesViewModel(IPreferenceService preferenceService, int userId)
         {
-            this.preferencesService = new PreferenceService(new PreferenceRepository(DatabaseConfiguration.GetConnectionString()));
+            this.preferencesService = preferenceService;
             currentUserId = userId;
             selectedJobRoles = new List<JobRole>();
             locationSuggestions = new List<string>();
