@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
-using PussyCatsApp.Storage;
 
 namespace PussyCatsApp.Services
 {
     public class DocumentService : IDocumentService
     {
         private readonly IDocumentRepository documentRepository;
-        private readonly LocalFileStorageService fileStorage;
+        private readonly ILocalFileStorageService fileStorage;
 
-        public DocumentService(IDocumentRepository documentRepository, LocalFileStorageService fileStorage)
+        public DocumentService(IDocumentRepository documentRepository, ILocalFileStorageService fileStorage)
         {
             this.documentRepository = documentRepository;
             this.fileStorage = fileStorage;
@@ -21,8 +20,8 @@ namespace PussyCatsApp.Services
         private bool ValidateFileType(string extension)
         {
             // ".pdf" => "PDF"
-            string normalised = extension.TrimStart('.').ToUpperInvariant();
-            return Enum.TryParse<AllowedFileType>(normalised, out _);
+            string normalisedExtension = extension.TrimStart('.').ToUpperInvariant();
+            return Enum.TryParse<AllowedFileType>(normalisedExtension, out _);
         }
 
         public List<Document> GetDocumentsByUserId(int userId)

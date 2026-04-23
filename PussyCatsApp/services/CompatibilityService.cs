@@ -7,6 +7,15 @@ namespace PussyCatsApp.Services
 {
     public class CompatibilityService : ICompatibilityService
     {
+        private const int SkillsLineIndex = 2;
+        private const char SkillDelimiter = ',';
+        private const double UnverifiedSkillScore = 0.5;
+        private const double ScoreNormalizationFactor = 100.0;
+        private const double GapThreshold = 0.5;
+        private const double TargetGroupScore = 0.8;
+        private const int MaxSuggestions = 3;
+        private const int InvalidScore = -1;
+
         private IUserSkillRepository userSkillRepository;
         private ISkillGroupRepository skillGroupRepository;
 
@@ -20,9 +29,7 @@ namespace PussyCatsApp.Services
         {
             List<UserSkill> verifiedSkills = userSkillRepository.GetVerifiedSkillsByUserId(userId);
             string parsedCv = userSkillRepository.GetParsedCvByUserId(userId);
-
             List<string> cvSkills = ExtractSkillsFromParsedCv(parsedCv);
-
             return MergeVerifiedAndUnverifiedSkills(verifiedSkills, cvSkills);
         }
 
@@ -37,19 +44,19 @@ namespace PussyCatsApp.Services
 
             string[] lines = parsedCv.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
 
-            if (lines.Length < 3)
+            if (lines.Length <= SkillsLineIndex)
             {
                 return extractedSkills;
             }
 
-            string skillsLine = lines[2].Trim();
+            string skillsLine = lines[SkillsLineIndex].Trim();
 
             if (string.IsNullOrWhiteSpace(skillsLine))
             {
                 return extractedSkills;
             }
 
-            string[] cvSkills = skillsLine.Split(',');
+            string[] cvSkills = skillsLine.Split(SkillDelimiter);
 
             foreach (string cvSkill in cvSkills)
             {
@@ -113,11 +120,11 @@ namespace PussyCatsApp.Services
                     {
                         if (userSkill.IsVerified)
                         {
-                            ci = userSkill.Score / 100.0;
+                            ci = userSkill.Score / ScoreNormalizationFactor;
                         }
                         else
                         {
-                            ci = 0.5;
+                            ci = UnverifiedSkillScore;
                         }
 
                         break;
@@ -143,7 +150,7 @@ namespace PussyCatsApp.Services
 
             if (totalWeight == 0)
             {
-                return -1;
+                return InvalidScore;
             }
 
             double weightedSum = 0;
@@ -152,12 +159,12 @@ namespace PussyCatsApp.Services
                 weightedSum += groups[i].Weight * groupScores[i];
             }
 
-            return weightedSum * 100 / totalWeight;
+            return weightedSum * ScoreNormalizationFactor / totalWeight;
         }
 
-        private double ComputeGain(SkillGroup group, double gj, int totalWeight)
+        private double ComputeGain(SkillGroup group, double groupScore, int totalWeight)
         {
-            return 100.0 * group.Weight * (0.8 - gj) / totalWeight;
+            return ScoreNormalizationFactor * group.Weight * (TargetGroupScore - groupScore) / totalWeight;
         }
 
         private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
@@ -167,7 +174,7 @@ namespace PussyCatsApp.Services
             foreach (SkillGroup group in groups)
             {
                 double groupScore = ComputeGroupScore(group, userSkills);
-                if (groupScore > 0.5)
+                if (groupScore > GapThreshold)
                 {
                     continue;
                 }
@@ -226,9 +233,9 @@ namespace PussyCatsApp.Services
 
             suggestions.Sort((a, b) => b.GainScore.CompareTo(a.GainScore));
 
-            if (suggestions.Count > 3)
+            if (suggestions.Count > MaxSuggestions)
             {
-                suggestions = suggestions.GetRange(0, 3);
+                suggestions = suggestions.GetRange(0, MaxSuggestions);
             }
 
             return suggestions;
@@ -256,9 +263,9 @@ namespace PussyCatsApp.Services
             RoleResult result = new RoleResult();
             result.JobRole = role;
 
-            if (matchScore == -1)
+            if (matchScore == InvalidScore)
             {
-                result.MatchScore = -1;
+                result.MatchScore = InvalidScore;
                 result.Suggestions = new List<Suggestion>();
                 return result;
             }

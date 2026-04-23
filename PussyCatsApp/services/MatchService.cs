@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 
@@ -10,6 +7,10 @@ namespace PussyCatsApp.Services
 {
     public class MatchService : IMatchService
     {
+        private const int LastMonth = 1;
+        private const int LastSixMonths = 6;
+        private const int LastYear = 12;
+
         private readonly IMatchRepository matchRepository;
 
         public MatchService(IMatchRepository matchRepository)
@@ -63,9 +64,9 @@ namespace PussyCatsApp.Services
             var stats = new MatchStatistics();
 
             stats.TotalMatches = matches.Count;
-            stats.MatchesLastMonth = CountMatchesInLastMonths(matches, 1);
-            stats.MatchesLastSixMonths = CountMatchesInLastMonths(matches, 6);
-            stats.MatchesLastYear = CountMatchesInLastMonths(matches, 12);
+            stats.MatchesLastMonth = CountMatchesInLastMonths(matches, LastMonth);
+            stats.MatchesLastSixMonths = CountMatchesInLastMonths(matches, LastSixMonths);
+            stats.MatchesLastYear = CountMatchesInLastMonths(matches, LastYear);
             stats.MatchesPerPosition = GroupMatchesByPosition(matches);
 
             return stats;

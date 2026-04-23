@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories.PersonalityTestRepo;
-using Windows.System;
-using static System.Formats.Asn1.AsnWriter;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace PussyCatsApp.Services
 {
     public class PersonalityTestService : IPersonalityTestService
@@ -61,9 +52,10 @@ namespace PussyCatsApp.Services
                 new (23, "I am comfortable working with data, probabilities, and logical frameworks.", TraitType.ABSTRACTION,  23),
                 new (24, "I prefer to understand the logic and first principles of a system rather than just knowing how to operate it.", TraitType.ABSTRACTION,  24),
             ];
-
-            // return questions.OrderBy(_ => Random.Shared.Next()).ToList
-            // TODO see what is the best way to shuffle a list in C#
+        }
+        private int CompareRoleScores(KeyValuePair<JobRole, double> a, KeyValuePair<JobRole, double> b)
+        {
+            return b.Value.CompareTo(a.Value);
         }
 
         public Dictionary<TraitType, double> CalculateTraitScores(Dictionary<Question, AnswerValue> answers)
@@ -86,8 +78,7 @@ namespace PussyCatsApp.Services
                     AnswerValue.DISAGREE => 2,
                     AnswerValue.NEUTRAL => 3,
                     AnswerValue.AGREE => 4,
-                    AnswerValue.STRONGLY_AGREE => 5,
-                    _ => 0
+                    AnswerValue.STRONGLY_AGREE => 5
                 };
 
                 ++traitQuestionCounts[trait];
@@ -100,73 +91,101 @@ namespace PussyCatsApp.Services
 
             return traitScores;
         }
-
+        private double CalculateFrontend(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.VISIBILITY] * 2) +
+                   (t[TraitType.CREATIVITY] * 2) +
+                   t[TraitType.PACE];
+        }
+        private double CalculateBackend(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.DEPTH] * 2) +
+                   ((5 - t[TraitType.VISIBILITY]) * 2) +
+                   t[TraitType.PACE];
+        }
+        private double CalculateUIUX(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.VISIBILITY] * 3) +
+                   (t[TraitType.CREATIVITY] * 2) +
+                   t[TraitType.INTERACTION];
+        }
+        private double CalculateDevOps(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.DEPTH] * 2) +
+                   (t[TraitType.PACE] * 2) +
+                   (5 - t[TraitType.INTERACTION]);
+        }
+        private double CalculateProjectManager(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.INTERACTION] * 3) +
+                   t[TraitType.CREATIVITY] +
+                   (5 - t[TraitType.DEPTH]);
+        }
+        private double CalculateDataAnalyst(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.DEPTH] * 2) +
+                   (t[TraitType.ABSTRACTION] * 2) +
+                   (5 - t[TraitType.INTERACTION]);
+        }
+        private double CalculateCyberSecurity(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.DEPTH] * 3) +
+                   (6 - t[TraitType.INTERACTION]) +
+                   (6 - t[TraitType.PACE]);
+        }
+        private double CalculateAIEngineer(Dictionary<TraitType, double> t)
+        {
+            return (t[TraitType.DEPTH] * 3) +
+                   t[TraitType.CREATIVITY] +
+                   (t[TraitType.ABSTRACTION] * 2);
+        }
         public Dictionary<JobRole, double> CalculateRoleScores(Dictionary<TraitType, double> traitScores)
         {
             var roleScores = new Dictionary<JobRole, double>();
 
-            // Frontend Developer  V×2 + C×2 + P
-            roleScores.Add(JobRole.FrontendDeveloper,
-                (traitScores[TraitType.VISIBILITY] * 2) +
-                (traitScores[TraitType.CREATIVITY] * 2) +
-                traitScores[TraitType.PACE]);
-
-            // Backend Developer   D×2 + (5−V)×2 + P
-            roleScores.Add(JobRole.BackendDeveloper,
-                (traitScores[TraitType.DEPTH] * 2) +
-                ((5 - traitScores[TraitType.VISIBILITY]) * 2) +
-                traitScores[TraitType.PACE]);
-
-            // UI / UX Designer V×3 + C×2 + I
-            roleScores.Add(JobRole.UIUXDesigner,
-                (traitScores[TraitType.VISIBILITY] * 3) +
-                (traitScores[TraitType.CREATIVITY] * 2) +
-                traitScores[TraitType.INTERACTION]);
-
-            // DevOps Engineer D×2 + P×2 + (5−I)
-            roleScores.Add(JobRole.DevOpsEngineer,
-                (traitScores[TraitType.DEPTH] * 2) +
-                (traitScores[TraitType.PACE] * 2) +
-                (5 - traitScores[TraitType.INTERACTION]));
-
-            // Project Manager I×3 + C + (5−D)
-            roleScores.Add(JobRole.ProjectManager,
-                (traitScores[TraitType.INTERACTION] * 3) +
-                traitScores[TraitType.CREATIVITY] +
-                (5 - traitScores[TraitType.DEPTH]));
-
-            // Data Analyst    D×2 + A×2 + (5−I)
-            roleScores.Add(JobRole.DataAnalyst,
-                (traitScores[TraitType.DEPTH] * 2) +
-                (traitScores[TraitType.ABSTRACTION] * 2) +
-                (5 - traitScores[TraitType.INTERACTION]));
-
-            // Cybersecurity Specialist D×3 + (6−I) +(6−P)
-            roleScores.Add(JobRole.CybersecuritySpecialist,
-                (traitScores[TraitType.DEPTH] * 3) +
-                (6 - traitScores[TraitType.INTERACTION]) +
-                (6 - traitScores[TraitType.PACE]));
-
-            // AI / ML Engineer D×3 + C + A×2
-            roleScores.Add(JobRole.AIMLEngineer,
-                (traitScores[TraitType.DEPTH] * 3) +
-                traitScores[TraitType.CREATIVITY] +
-                (traitScores[TraitType.ABSTRACTION] * 2));
+            roleScores.Add(JobRole.FrontendDeveloper, CalculateFrontend(traitScores));
+            roleScores.Add(JobRole.BackendDeveloper, CalculateBackend(traitScores));
+            roleScores.Add(JobRole.UIUXDesigner, CalculateUIUX(traitScores));
+            roleScores.Add(JobRole.DevOpsEngineer, CalculateDevOps(traitScores));
+            roleScores.Add(JobRole.ProjectManager, CalculateProjectManager(traitScores));
+            roleScores.Add(JobRole.DataAnalyst, CalculateDataAnalyst(traitScores));
+            roleScores.Add(JobRole.CybersecuritySpecialist, CalculateCyberSecurity(traitScores));
+            roleScores.Add(JobRole.AIMLEngineer, CalculateAIEngineer(traitScores));
 
             return roleScores;
         }
 
         public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
         {
-            return roleScores
-                .OrderByDescending(kvp => kvp.Value)
-                .Take(length)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
+            var list = new List<KeyValuePair<JobRole, double>>();
 
+            foreach (var roleScorePair in roleScores)
+            {
+                list.Add(roleScorePair);
+            }
+
+            list.Sort(CompareRoleScores);
+
+            var result = new Dictionary<JobRole, double>();
+
+            int count = 0;
+            foreach (var roleScorePair in list)
+            {
+                if (count >= length)
+                {
+                    break;
+                }
+
+                result.Add(roleScorePair.Key, roleScorePair.Value);
+                count++;
+            }
+
+            return result;
+        }
         public void SaveResult(int userId, string personalityTestResult)
         {
             personalityTestRepository.Save(userId, personalityTestResult);
         }
+        
     }
 }

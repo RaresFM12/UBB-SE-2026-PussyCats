@@ -8,7 +8,6 @@ using PussyCatsApp.Configuration;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 using PussyCatsApp.Services;
-using PussyCatsApp.Storage;
 using PussyCatsApp.ViewModels;
 using Windows.Storage.Pickers;
 

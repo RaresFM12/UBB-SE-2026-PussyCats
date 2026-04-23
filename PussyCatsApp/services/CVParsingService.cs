@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -11,41 +10,93 @@ namespace PussyCatsApp.Services
 {
     public class CVParsingService : ICVParsingService
     {
+        private const string JsonExtension = ".json";
+        private const string XmlExtension = ".xml";
+        private const string ParseErrorMessage = "Failed to parse CV file: ";
+        private const string UnsupportedTypeMessage = "Unsupported file type. Only JSON and XML are supported.";
+
+        private const int MaxSkills = 30;
+        private const int MaxSkillLength = 60;
+        private const int MaxWorkExperiences = 10;
+        private const int MaxProjects = 10;
+        private const int MaxActivities = 10;
+        private const int MaxTechnologiesPerProject = 10;
+
+        private const int MaxFirstNameLength = 50;
+        private const int MaxLastNameLength = 60;
+        private const int MaxCountryLength = 100;
+        private const int MaxCityLength = 100;
+        private const int MaxUniversityLength = 200;
+        private const int MaxGitHubLength = 200;
+        private const int MaxLinkedInLength = 200;
+        private const int MaxAddressLength = 500;
+        private const int MaxMotivationLength = 1000;
+        private const int MaxEmailLength = 254;
+        private const int MaxPhoneLength = 15;
+        private const int MaxCompanyLength = 150;
+        private const int MaxJobTitleLength = 100;
+        private const int MaxWorkDescriptionLength = 500;
+        private const int MaxProjectNameLength = 100;
+        private const int MaxProjectDescriptionLength = 600;
+        private const int MaxProjectUrlLength = 200;
+        private const int MaxActivityNameLength = 150;
+        private const int MaxOrganizationLength = 100;
+        private const int MaxRoleLength = 80;
+        private const int MaxPeriodLength = 60;
+        private const int MaxActivityDescriptionLength = 300;
+
+        private const int MinAge = 16;
+        private const int MaxAge = 60;
+        private const int InvalidAge = 0;
+        private const int InvalidYear = 0;
+        private const int MaxYearsAheadForGraduation = 10;
+
+        private const string GenderMale = "Male";
+        private const string GenderFemale = "Female";
+        private const string GenderMaleShort = "M";
+        private const string GenderFemaleShort = "F";
+
+        private static readonly DateTime MinValidDate = new DateTime(1980, 1, 1);
+        private const int MaxYearsAheadForDate = 1;
+
         /// <summary>
         /// Parses a CV file (JSON or XML) and returns a UserProfile object
         /// </summary>
         public UserProfile ParseCVFile(string content, string fileType)
         {
-            UserProfile profile = new UserProfile();
-
             try
             {
-                if (fileType.ToLower() == ".json")
+                if (string.Equals(fileType, JsonExtension, StringComparison.OrdinalIgnoreCase))
                 {
                     var cvData = JsonSerializer.Deserialize<CVData>(content, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });
+
                     return MapCVDataToProfile(cvData);
                 }
-                else if (fileType.ToLower() == ".xml")
+
+                if (string.Equals(fileType, XmlExtension, StringComparison.OrdinalIgnoreCase))
                 {
-                    var xDoc = XDocument.Parse(content);
-                    var rootName = xDoc.Root?.Name.LocalName ?? "CVData";
-                    using (var reader = new StringReader(content))
-                    {
-                        var serializer = new XmlSerializer(typeof(CVData), new XmlRootAttribute(rootName));
-                        var cvData = (CVData)serializer.Deserialize(reader);
-                        return MapCVDataToProfile(cvData);
-                    }
+                    var xmlDocument = XDocument.Parse(content);
+                    var rootName = xmlDocument.Root?.Name.LocalName ?? "CVData";
+
+                    using var reader = new StringReader(content);
+
+                    var serializer = new XmlSerializer(typeof(CVData), new XmlRootAttribute(rootName));
+                    var cvData = (CVData)serializer.Deserialize(reader);
+
+                    return MapCVDataToProfile(cvData);
                 }
+
+                throw new Exception(UnsupportedTypeMessage);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to parse CV file: {ex.InnerException?.Message ?? ex.Message}", ex);
+                throw new Exception(ParseErrorMessage + ex.Message, ex);
             }
 
-            return profile;
+            // return new UserProfile();
         }
 
         /// <summary>
@@ -58,34 +109,29 @@ namespace PussyCatsApp.Services
                 return new UserProfile();
             }
 
-            var profile = new UserProfile
+            return new UserProfile
             {
-                // Map required fields
-                FirstName = SanitizeString(cvData.FirstName, 50),
-                LastName = SanitizeString(cvData.LastName, 60),
+                FirstName = SanitizeString(cvData.FirstName, MaxFirstNameLength),
+                LastName = SanitizeString(cvData.LastName, MaxLastNameLength),
                 Age = ValidateAge(cvData.Age),
                 Gender = ValidateGender(cvData.Gender),
                 Email = SanitizeEmail(cvData.Email),
                 PhoneNumber = FormatPhoneNumber(cvData.PhoneNumber),
-                Country = SanitizeString(cvData.Country, 100),
-                City = SanitizeString(cvData.City, 100),
-                University = SanitizeString(cvData.University, 200),
+                Country = SanitizeString(cvData.Country, MaxCountryLength),
+                City = SanitizeString(cvData.City, MaxCityLength),
+                University = SanitizeString(cvData.University, MaxUniversityLength),
                 ExpectedGraduationYear = ValidateGraduationYear(cvData.ExpectedGraduationYear),
 
-                // Map optional fields
-                GitHub = SanitizeString(cvData.GitHub, 200),
-                LinkedIn = SanitizeString(cvData.LinkedIn, 200),
-                Address = SanitizeString(cvData.Address, 500),
-                Motivation = SanitizeString(cvData.Motivation, 1000),
+                GitHub = SanitizeString(cvData.GitHub, MaxGitHubLength),
+                LinkedIn = SanitizeString(cvData.LinkedIn, MaxLinkedInLength),
+                Address = SanitizeString(cvData.Address, MaxAddressLength),
+                Motivation = SanitizeString(cvData.Motivation, MaxMotivationLength),
 
-                // Map collections with validation
                 Skills = ProcessSkills(cvData.Skills),
                 WorkExperiences = ProcessWorkExperiences(cvData.WorkExperiences),
                 Projects = ProcessProjects(cvData.Projects),
                 ExtraCurricularActivities = ProcessActivities(cvData.ExtraCurricularActivities)
             };
-
-            return profile;
         }
 
         /// <summary>
@@ -93,30 +139,78 @@ namespace PussyCatsApp.Services
         /// </summary>
         private List<string> ProcessSkills(List<string> skills)
         {
-            if (skills == null || !skills.Any())
+            var result = new List<string>();
+
+            if (skills == null)
             {
-                return new List<string>();
+                return result;
             }
 
-            // Max 30 skills
-            var processedSkills = new List<string>();
             var addedSkills = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var skill in skills.Take(30))
+            int count = 0;
+
+            foreach (var skill in skills)
             {
-                var sanitized = SanitizeString(skill, 60);
+                if (count >= MaxSkills)
+                {
+                    break;
+                }
+
+                var sanitized = SanitizeString(skill, MaxSkillLength);
+
                 if (!string.IsNullOrWhiteSpace(sanitized) && addedSkills.Add(sanitized))
                 {
-                    processedSkills.Add(sanitized);
+                    result.Add(sanitized);
+                    count++;
                 }
             }
 
-            return processedSkills;
+            return result;
         }
 
         /// <summary>
         /// Processes work experiences with validation
         /// </summary>
+        private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
+        {
+            var result = new List<WorkExperience>();
+
+            if (experiences == null)
+            {
+                return result;
+            }
+
+            int count = 0;
+
+            foreach (var workExperience in experiences)
+            {
+                if (count >= MaxWorkExperiences)
+                {
+                    break;
+                }
+
+                var processed = new WorkExperience
+                {
+                    Company = SanitizeString(workExperience.Company, MaxCompanyLength),
+                    JobTitle = SanitizeString(workExperience.JobTitle, MaxJobTitleLength),
+                    StartDate = ValidateDate(workExperience.StartDate),
+                    EndDate = workExperience.CurrentlyWorking ? null : ValidateDate(workExperience.EndDate),
+                    CurrentlyWorking = workExperience.CurrentlyWorking,
+                    Description = SanitizeString(workExperience.Description, MaxWorkDescriptionLength)
+                };
+
+                if (!string.IsNullOrEmpty(processed.Company) &&
+                    !string.IsNullOrEmpty(processed.JobTitle))
+                {
+                    result.Add(processed);
+                    count++;
+                }
+            }
+
+            return result;
+        }
+        /*
         private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
         {
             if (experiences == null || !experiences.Any())
@@ -137,50 +231,96 @@ namespace PussyCatsApp.Services
                 .Where(we => !string.IsNullOrEmpty(we.Company) && !string.IsNullOrEmpty(we.JobTitle))
                 .ToList();
         }
+        */
 
         /// <summary>
         /// Processes projects with validation
         /// </summary>
         private List<Project> ProcessProjects(List<Project> projects)
         {
-            if (projects == null || !projects.Any())
+            var result = new List<Project>();
+
+            if (projects == null)
             {
-                return new List<Project>();
+                return result;
             }
 
-            return projects.Take(10) // Max 10 projects
-                .Select(p => new Project
-                {
-                    Name = SanitizeString(p.Name, 100),
-                    Description = SanitizeString(p.Description, 600),
-                    Technologies = p.Technologies?.Take(10).Select(t => SanitizeString(t, 60)).ToList() ?? new List<string>(),
-                    Url = SanitizeString(p.Url, 200)
-                })
-                .Where(p => !string.IsNullOrEmpty(p.Name))
-                .ToList();
-        }
+            int count = 0;
 
-        /// <summary>
-        /// Processes extracurricular activities with validation
-        /// </summary>
+            foreach (var p in projects)
+            {
+                if (count >= MaxProjects)
+                {
+                    break;
+                }
+
+                var proj = new Project
+                {
+                    Name = SanitizeString(p.Name, MaxProjectNameLength),
+                    Description = SanitizeString(p.Description, MaxProjectDescriptionLength),
+                    Url = SanitizeString(p.Url, MaxProjectUrlLength),
+                    Technologies = new List<string>()
+                };
+
+                if (p.Technologies != null)
+                {
+                    int techCount = 0;
+                    foreach (var t in p.Technologies)
+                    {
+                        if (techCount >= MaxTechnologiesPerProject)
+                        {
+                            break;
+                        }
+
+                        proj.Technologies.Add(SanitizeString(t, MaxSkillLength));
+                        techCount++;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(proj.Name))
+                {
+                    result.Add(proj);
+                    count++;
+                }
+            }
+
+            return result;
+        }
         private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
         {
-            if (activities == null || !activities.Any())
+            var result = new List<ExtraCurricularActivity>();
+
+            if (activities == null)
             {
-                return new List<ExtraCurricularActivity>();
+                return result;
             }
 
-            return activities.Take(10) // Max 10 activities
-                .Select(a => new ExtraCurricularActivity
+            int count = 0;
+
+            foreach (var a in activities)
+            {
+                if (count >= MaxActivities)
                 {
-                    ActivityName = SanitizeString(a.ActivityName, 150),
-                    Organization = SanitizeString(a.Organization, 100),
-                    Role = SanitizeString(a.Role, 80),
-                    Period = SanitizeString(a.Period, 60),
-                    Description = SanitizeString(a.Description, 300)
-                })
-                .Where(a => !string.IsNullOrEmpty(a.ActivityName))
-                .ToList();
+                    break;
+                }
+
+                var activity = new ExtraCurricularActivity
+                {
+                    ActivityName = SanitizeString(a.ActivityName, MaxActivityNameLength),
+                    Organization = SanitizeString(a.Organization, MaxOrganizationLength),
+                    Role = SanitizeString(a.Role, MaxRoleLength),
+                    Period = SanitizeString(a.Period, MaxPeriodLength),
+                    Description = SanitizeString(a.Description, MaxActivityDescriptionLength)
+                };
+
+                if (!string.IsNullOrEmpty(activity.ActivityName))
+                {
+                    result.Add(activity);
+                    count++;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -215,7 +355,7 @@ namespace PussyCatsApp.Services
 
             email = email.Trim().ToLowerInvariant();
 
-            if (email.Length > 254)
+            if (email.Length > MaxEmailLength)
             {
                 return string.Empty;
             }
@@ -234,9 +374,9 @@ namespace PussyCatsApp.Services
         /// </summary>
         private int ValidateAge(int age)
         {
-            if (age < 16 || age > 60)
+            if (age < MinAge || age > MaxAge)
             {
-                return 0;
+                return InvalidAge;
             }
             return age;
         }
@@ -253,16 +393,16 @@ namespace PussyCatsApp.Services
 
             gender = gender.Trim();
 
-            if (gender.Equals("Male", StringComparison.OrdinalIgnoreCase) ||
-                gender.Equals("M", StringComparison.OrdinalIgnoreCase))
+            if (gender.Equals(GenderMale, StringComparison.OrdinalIgnoreCase) ||
+        gender.Equals(GenderMaleShort, StringComparison.OrdinalIgnoreCase))
             {
-                return "Male";
+                return GenderMale;
             }
 
-            if (gender.Equals("Female", StringComparison.OrdinalIgnoreCase) ||
-                gender.Equals("F", StringComparison.OrdinalIgnoreCase))
+            if (gender.Equals(GenderFemale, StringComparison.OrdinalIgnoreCase) ||
+                gender.Equals(GenderFemaleShort, StringComparison.OrdinalIgnoreCase))
             {
-                return "Female";
+                return GenderFemale;
             }
 
             return string.Empty;
@@ -280,8 +420,8 @@ namespace PussyCatsApp.Services
 
             // Remove all non-digit characters except + at the beginning
             phoneNumber = phoneNumber.Trim();
-
-            if (phoneNumber.Length > 15)
+            phoneNumber = System.Text.RegularExpressions.Regex.Replace(phoneNumber, @"[^\d+]", string.Empty);
+            if (phoneNumber.Length > MaxPhoneLength)
             {
                 return string.Empty;
             }
@@ -296,7 +436,7 @@ namespace PussyCatsApp.Services
         {
             int currentYear = DateTime.Now.Year;
 
-            if (year < currentYear || year > currentYear + 10)
+            if (year < currentYear || year > currentYear + MaxYearsAheadForGraduation)
             {
                 return 0;
             }
@@ -314,8 +454,8 @@ namespace PussyCatsApp.Services
                 return DateTimeOffset.Now;
             }
 
-            var minDate = new DateTimeOffset(new DateTime(1980, 1, 1));
-            var maxDate = DateTimeOffset.Now.AddYears(1);
+            var minDate = new DateTimeOffset(MinValidDate);
+            var maxDate = DateTimeOffset.Now.AddYears(MaxYearsAheadForDate);
 
             if (date < minDate || date > maxDate)
             {

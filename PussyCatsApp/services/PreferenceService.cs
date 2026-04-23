@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 namespace PussyCatsApp.Services
 {
     public class PreferenceService : IPreferenceService
     {
+        private const string PreferenceTypeJobRole = "JobRole";
+        private const string PreferenceTypeWorkMode = "WorkMode";
+        private const string PreferenceTypeLocation = "Location";
+        private const int MinRoles = 1;
+        private const int MaxRoles = 3;
+
         private readonly IPreferenceRepository preferencesRepository;
         private List<string> predefinedLocations = new List<string>();
 
@@ -140,7 +143,7 @@ namespace PussyCatsApp.Services
             {
                 return false;
             }
-            return roles.Count >= 1 && roles.Count <= 3;
+            return roles.Count >= MinRoles && roles.Count <= MaxRoles;
         }
 
         private List<Preference> BuildPreferenceRows(int userId, List<JobRole> roles, WorkMode workMode, string location)
@@ -152,7 +155,7 @@ namespace PussyCatsApp.Services
                 rows.Add(new Preference
                 {
                     UserId = userId,
-                    PreferenceType = "JobRole",
+                    PreferenceType = PreferenceTypeJobRole,
                     Value = role.ToString()
                 });
             }
@@ -160,14 +163,14 @@ namespace PussyCatsApp.Services
             rows.Add(new Preference
             {
                 UserId = userId,
-                PreferenceType = "WorkMode",
+                PreferenceType = PreferenceTypeWorkMode,
                 Value = workMode.ToString()
             });
 
             rows.Add(new Preference
             {
                 UserId = userId,
-                PreferenceType = "Location",
+                PreferenceType = PreferenceTypeLocation,
                 Value = location
             });
 
@@ -195,17 +198,24 @@ namespace PussyCatsApp.Services
                 preferencesRepository.AddPreference(row);
             }
         }
-
-        public List<string> SearchLocations(string query)
+        public List<string> SearchLocations(string locationQuery)
         {
-            if (string.IsNullOrWhiteSpace(query))
+            var result = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(locationQuery))
             {
-                return new List<string>();
+                return result;
             }
 
-            return predefinedLocations
-                .Where(loc => loc.Contains(query, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            foreach (var loc in predefinedLocations)
+            {
+                if (loc.Contains(locationQuery, StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(loc);
+                }
+            }
+
+            return result;
         }
     }
 }

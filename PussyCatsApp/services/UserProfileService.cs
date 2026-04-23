@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 
@@ -43,7 +41,16 @@ namespace PussyCatsApp.Services
 
         public void ToggleAccountStatus(int userId, string currentStatus)
         {
-            string newStatus = currentStatus == "ACTIVE" ? "INACTIVE" : "ACTIVE";
+            string newStatus;
+
+            if (currentStatus == AccountStatus.Active.ToString().ToUpper())
+            {
+                newStatus = AccountStatus.Inactive.ToString().ToUpper();
+            }
+            else
+            {
+                newStatus = AccountStatus.Active.ToString().ToUpper();
+            }
             userProfileRepository.UpdateAccountStatus(userId, newStatus);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
