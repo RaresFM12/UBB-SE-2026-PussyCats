@@ -6,21 +6,31 @@ namespace PussyCatsApp.Tests.Services
     [TestClass]
     public class CompletenessServiceTest
     {
+        private CompletenessService service;
+        
+        [TestInitialize]
+        public void Initialize()
+        {
+            service = new CompletenessService();
+        }
+        /// <summary>
+        /// Verifies that CalculateCompleteness returns 0 for a null profile.
+        /// </summary>
         [TestMethod]
         public void CalculateCompleteness_NullProfile_ReturnsZero()
         {
-            var service = new CompletenessService();
-
+            //Act
             var result = service.CalculateCompleteness(null);
-
+            //Assert
             Assert.AreEqual(0, result);
         }
-
+        /// <summary>
+        /// Verifies that CalculateCompleteness returns 100 for a fully populated UserProfile.
+        /// </summary>
         [TestMethod]
         public void CalculateCompleteness_FullProfile_Returns100()
         {
-            var service = new CompletenessService();
-
+            //Arrange
             var profile = new UserProfile
             {
                 FirstName = "Ana",
@@ -45,26 +55,31 @@ namespace PussyCatsApp.Tests.Services
                 WorkModePreference = "Remote",
                 LocationPreference = "Bucuresti"
             };
-
+            //Act
             var result = service.CalculateCompleteness(profile);
-
+            //Assert
             Assert.AreEqual(100, result);
         }
+        /// <summary>
+        /// Verifies GetNextEmptyFieldPrompt returns an empty string when given a null profile.
+        /// </summary>
         [TestMethod]
         public void GetNextEmptyFieldPrompt_NullProfile_ReturnsEmpty()
         {
-            var service = new CompletenessService();
-
+            //Act
             var result = service.GetNextEmptyFieldPrompt(null);
-
+            //Assert
             Assert.AreEqual(string.Empty, result);
         }
-
+        /// <summary>
+        /// Verifies that GetNextEmptyFieldPrompt returns the completion message when all UserProfile fields are
+        /// populated.
+        /// </summary>
         [TestMethod]
         public void GetNextEmptyFieldPrompt_AllFilled_ReturnsCompleteMessage()
         {
-            var service = new CompletenessService();
-
+            
+            //Arrange
             var profile = new UserProfile
             {
                 FirstName = "Ana",
@@ -89,25 +104,28 @@ namespace PussyCatsApp.Tests.Services
                 WorkModePreference = "Remote",
                 LocationPreference = "Bucuresti"
             };
-
+            //Act
             var result = service.GetNextEmptyFieldPrompt(profile);
-
+            //Assert
             Assert.AreEqual("Your profile is 100% complete!", result);
         }
+        /// <summary>
+        /// Verifies GetNextEmptyFieldPrompt returns a prompt that indicates a missing profile field and includes a completeness percentage.
+        /// </summary>
         [TestMethod]
         public void GetNextEmptyFieldPrompt_MissingField_ReturnsPromptWithPercentage()
         {
-            var service = new CompletenessService();
-
+            //Arrange
             var profile = new UserProfile
             {
                 FirstName = "Ana",
                 LastName = "Pop"
             };
-
+            //Act
             var result = service.GetNextEmptyFieldPrompt(profile);
+            //Assert
             Assert.IsTrue(result.StartsWith("Add your"));
-            Assert.IsTrue(result.EndsWith("completeness!"));
+            Assert.IsTrue(result.EndsWith("14% completeness!"));
         }
     }
 }
