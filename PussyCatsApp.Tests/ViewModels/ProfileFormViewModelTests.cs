@@ -305,5 +305,13 @@ namespace PussyCatsApp.Tests.ViewModels
             Assert.AreEqual(userProfile.Projects.Count, viewModel.Projects.Count);
             Assert.AreEqual(userProfile.ExtraCurricularActivities.Count, viewModel.ExtraCurricularActivities.Count);
         }
+
+        [TestMethod]
+        public void TestIsDuplicateSkillReturnsTrueForExistingSkill()
+        {
+            string skill = "C#";
+            viewModel.AddSkill(skill);
+            Assert.IsTrue(viewModel.IsDuplicateSkill(skill));
+        }
     }
 }

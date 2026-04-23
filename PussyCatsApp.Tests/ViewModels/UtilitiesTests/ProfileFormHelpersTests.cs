@@ -27,5 +27,29 @@ namespace PussyCatsApp.Tests.ViewModels.UtilitiesTests
             bool result = ProfileFormHelpers.UniversityMatchesAllWords(university, words);
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void TestFilterUniversitiesHelperReturnsMatchingUniversity()
+        {
+            string query = "Babes University";
+            List<string> results = ProfileFormHelpers.FilterUniversitiesHelper(query);
+            Assert.IsTrue(results.Contains("Babes-Bolyai University"));
+        }
+
+        [TestMethod]
+        public void TestFilterUniversitiesHelperReturnsEmptyListForEmptyQuery()
+        {
+            string query = string.Empty;
+            List<string> results = ProfileFormHelpers.FilterUniversitiesHelper(query);
+            Assert.AreEqual(0, results.Count);
+        }
+
+        [TestMethod]
+        public void TestFilterUniversitiesHelperReturnsEmptyListForNoMatches()
+        {
+            string query = "Nonexistent University";
+            List<string> results = ProfileFormHelpers.FilterUniversitiesHelper(query);
+            Assert.AreEqual(0, results.Count);
+        }
     }
 }
