@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PussyCatsApp.Models;
 using PussyCatsApp.Repositories;
 namespace PussyCatsApp.Services
@@ -201,18 +198,18 @@ namespace PussyCatsApp.Services
                 preferencesRepository.AddPreference(row);
             }
         }
-        public List<string> SearchLocations(string query)
+        public List<string> SearchLocations(string locationQuery)
         {
             var result = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(query))
+            if (string.IsNullOrWhiteSpace(locationQuery))
             {
                 return result;
             }
 
             foreach (var loc in predefinedLocations)
             {
-                if (loc.Contains(query, StringComparison.OrdinalIgnoreCase))
+                if (loc.Contains(locationQuery, StringComparison.OrdinalIgnoreCase))
                 {
                     result.Add(loc);
                 }
@@ -220,17 +217,5 @@ namespace PussyCatsApp.Services
 
             return result;
         }
-        /*
-        public List<string> SearchLocations(string query)
-        {
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                return new List<string>();
-            }
-
-            return predefinedLocations
-                .Where(loc => loc.Contains(query, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-        }*/
     }
 }
