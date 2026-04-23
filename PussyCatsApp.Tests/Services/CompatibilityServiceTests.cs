@@ -18,7 +18,6 @@ public class CompatibilityServiceTest
         service = new CompatibilityService(mockUserSkillRepo.Object, mockSkillGroupRepo.Object);
     }
 
-    // CalculateForRole — no skills, no cv → score 0
     [TestMethod]
     public void CalculateForRole_NoSkills_ReturnsZeroScore()
     {
@@ -34,7 +33,6 @@ public class CompatibilityServiceTest
         Assert.AreEqual(0, result.MatchScore);
     }
 
-    // CalculateForRole — all skills verified with high scores → high score
     [TestMethod]
     public void CalculateForRole_AllSkillsVerified_ReturnsHighScore()
     {
@@ -53,7 +51,7 @@ public class CompatibilityServiceTest
         Assert.IsTrue(result.MatchScore > 50);
     }
 
-    // CalculateForRole — no groups → totalWeight 0 → matchScore -1
+    //CalculateForRole — no groups => totalWeight 0 => matchScore -1
     [TestMethod]
     public void CalculateForRole_NoGroups_ReturnsInvalidScore()
     {
@@ -66,7 +64,7 @@ public class CompatibilityServiceTest
         Assert.AreEqual(-1, result.MatchScore);
     }
 
-    // CalculateForRole — skills din CV (parsedCv cu 3 linii)
+    //CalculateForRole — skills din CV (parsedCv cu 3 linii)
     [TestMethod]
     public void CalculateForRole_WithCvSkills_ReturnsNonZeroScore()
     {
@@ -82,7 +80,7 @@ public class CompatibilityServiceTest
         Assert.IsTrue(result.MatchScore > 0);
     }
 
-    // CalculateForRole — cv cu mai putin de 3 linii
+    //CalculateForRole- cv cu mai putin de 3 linii
     [TestMethod]
     public void CalculateForRole_CvLessThan3Lines_ReturnsZeroScore()
     {
@@ -98,7 +96,6 @@ public class CompatibilityServiceTest
         Assert.AreEqual(0, result.MatchScore);
     }
 
-    // CalculateForRole — linia 3 din cv e whitespace
     [TestMethod]
     public void CalculateForRole_CvThirdLineEmpty_ReturnsZeroScore()
     {
@@ -114,7 +111,7 @@ public class CompatibilityServiceTest
         Assert.AreEqual(0, result.MatchScore);
     }
 
-    // CalculateForRole — skill verified → groupScore > 0.5 → IdentifyGaps skip
+    // skill verified, groupScore > 0.5 so IdentifyGaps skip
     [TestMethod]
     public void CalculateForRole_HighGroupScore_ReturnsEmptySuggestions()
     {
@@ -133,7 +130,7 @@ public class CompatibilityServiceTest
         Assert.AreEqual(0, result.Suggestions.Count);
     }
 
-    // CalculateForRole — mai mult de 3 suggestions → GetRange(0, 3)
+    //CalculateForRole-mai mult de 3 suggestions - GetRange(0, 3)
     [TestMethod]
     public void CalculateForRole_MoreThan3Gaps_Returns3Suggestions()
     {
@@ -152,7 +149,6 @@ public class CompatibilityServiceTest
         Assert.AreEqual(3, result.Suggestions.Count);
     }
 
-    // CalculateAll — returnează rezultat pentru fiecare JobRole
     [TestMethod]
     public void CalculateAll_ReturnsResultForEachRole()
     {
