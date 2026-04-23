@@ -59,7 +59,14 @@ namespace PussyCatsApp.Tests.Models
             Assert.AreEqual(expectedPercentage, progressPercent);
         }
 
-        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetLevelProgressPercent_GivenNegativeXp_ThrowsArgumentException()
+        {
+            UserLevel level = new UserLevel();
+            level.GetLevelProgressPercent(-23);
+        }
+
         [TestMethod]
         [DataRow(0, 100)]
         [DataRow(27, 73)]
