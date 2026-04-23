@@ -54,7 +54,7 @@ namespace PussyCatsApp.views
 
             IPdfExportService pdfExportService = new PdfExportService(CvWebView);
             ISkillTestRepository skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
-            IUserProfileRepository userProfileRepository = new UserProfileRepository();
+            IUserProfileRepository userProfileRepository = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
             IUserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
 
             ViewModel = new ExportCVViewModel(pdfExportService, userProfileService);

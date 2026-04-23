@@ -9,13 +9,13 @@ namespace PussyCatsApp.Tests.Repositories
     [TestClass]
     public class PreferenceRepositoryIntegrationTests
     {
-        private PreferenceRepository _repository;
+        private PreferenceRepository Repository;
 
         [TestInitialize]
         public void SetUp()
         {
             TestDatabaseHelper.ClearAllTables();
-            _repository = new PreferenceRepository(TestDatabaseHelper.ConnectionString);
+            Repository = new PreferenceRepository(TestDatabaseHelper.ConnectionString);
         }
 
 
@@ -24,7 +24,7 @@ namespace PussyCatsApp.Tests.Repositories
         {
             int userId = TestDatabaseHelper.InsertUser();
 
-            var result = _repository.GetPreferencesByUserId(userId);
+            var result = Repository.GetPreferencesByUserId(userId);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -36,7 +36,7 @@ namespace PussyCatsApp.Tests.Repositories
             TestDatabaseHelper.InsertPreference(userId, "Theme", "Dark");
             TestDatabaseHelper.InsertPreference(userId, "Notifications", "Enabled");
 
-            var result = _repository.GetPreferencesByUserId(userId);
+            var result = Repository.GetPreferencesByUserId(userId);
 
             Assert.AreEqual(2, result.Count);
         }
@@ -52,9 +52,9 @@ namespace PussyCatsApp.Tests.Repositories
                 Value = "English"
             };
 
-            _repository.AddPreference(newPref);
+            Repository.AddPreference(newPref);
 
-            var result = _repository.GetPreferencesByUserId(userId);
+            var result = Repository.GetPreferencesByUserId(userId);
             Assert.AreEqual("Language", result[0].PreferenceType);
    
         }
@@ -68,9 +68,9 @@ namespace PussyCatsApp.Tests.Repositories
             int prefId1 = TestDatabaseHelper.InsertPreference(userId, "A", "1");
             int prefId2 = TestDatabaseHelper.InsertPreference(userId, "B", "2");
 
-            _repository.RemovePreference(prefId1);
+            Repository.RemovePreference(prefId1);
 
-            var result = _repository.GetPreferencesByUserId(userId);
+            var result = Repository.GetPreferencesByUserId(userId);
             Assert.AreEqual("B", result[0].PreferenceType, "The wrong preference was deleted.");
         }
 
@@ -84,9 +84,9 @@ namespace PussyCatsApp.Tests.Repositories
             TestDatabaseHelper.InsertPreference(userId1, "Color", "Red");
             TestDatabaseHelper.InsertPreference(userId1, "Font", "Arial");
 
-            _repository.DeleteAllByUserId(userId1);
+            Repository.DeleteAllByUserId(userId1);
 
-            Assert.AreEqual(0, _repository.GetPreferencesByUserId(userId1).Count, "User 1 should have 0 prefs.");
+            Assert.AreEqual(0, Repository.GetPreferencesByUserId(userId1).Count, "User 1 should have 0 prefs.");
         }
     }
 }

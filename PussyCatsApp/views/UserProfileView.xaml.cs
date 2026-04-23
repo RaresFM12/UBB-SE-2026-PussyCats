@@ -22,7 +22,7 @@ namespace PussyCatsApp.views
         {
             this.InitializeComponent();
             ISkillTestRepository skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
-            IUserProfileRepository userProfileRepository = new UserProfileRepository();
+            IUserProfileRepository userProfileRepository = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
             UserProfileService userProfileService = new UserProfileService(skillTestRepository, userProfileRepository);
             IImageStorageService imageStorageService = new ImageStorageService();
             ICompletenessService completenessService = new CompletenessService();

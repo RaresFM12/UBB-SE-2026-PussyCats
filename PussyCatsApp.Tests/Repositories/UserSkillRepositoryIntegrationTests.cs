@@ -8,13 +8,13 @@ namespace PussyCatsApp.Tests.Repositories
     [TestClass]
     public class UserSkillRepositoryIntegrationTests
     {
-        private UserSkillRepository _repository;
+        private UserSkillRepository Repository;
 
         [TestInitialize]
         public void SetUp()
         {
             TestDatabaseHelper.ClearAllTables();
-            _repository = new UserSkillRepository(TestDatabaseHelper.ConnectionString);
+            Repository = new UserSkillRepository(TestDatabaseHelper.ConnectionString);
         }
 
 
@@ -23,7 +23,7 @@ namespace PussyCatsApp.Tests.Repositories
         {
             int userId = TestDatabaseHelper.InsertUser();
 
-            var result = _repository.GetVerifiedSkillsByUserId(userId);
+            var result = Repository.GetVerifiedSkillsByUserId(userId);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -34,7 +34,7 @@ namespace PussyCatsApp.Tests.Repositories
             int userId = TestDatabaseHelper.InsertUser();
             TestDatabaseHelper.InsertSkill(userId, "C#", 90);
 
-            var result = _repository.GetVerifiedSkillsByUserId(userId);
+            var result = Repository.GetVerifiedSkillsByUserId(userId);
 
             Assert.AreEqual(1, result.Count);
         }
@@ -45,7 +45,7 @@ namespace PussyCatsApp.Tests.Repositories
             int userId = TestDatabaseHelper.InsertUser();
             TestDatabaseHelper.InsertSkill(userId, "SQL", 80);
 
-            var result = _repository.GetVerifiedSkillsByUserId(userId);
+            var result = Repository.GetVerifiedSkillsByUserId(userId);
 
             Assert.AreEqual("SQL", result[0].SkillName);
         }
@@ -56,7 +56,7 @@ namespace PussyCatsApp.Tests.Repositories
             int userId = TestDatabaseHelper.InsertUser();
             TestDatabaseHelper.InsertSkill(userId, "Git", 50);
 
-            var result = _repository.GetVerifiedSkillsByUserId(userId);
+            var result = Repository.GetVerifiedSkillsByUserId(userId);
 
             Assert.IsTrue(result[0].IsVerified);
         }
@@ -69,7 +69,7 @@ namespace PussyCatsApp.Tests.Repositories
             TestDatabaseHelper.InsertSkill(targetUser, "TargetSkill", 10);
             TestDatabaseHelper.InsertSkill(otherUser, "OtherSkill", 10);
 
-            var result = _repository.GetVerifiedSkillsByUserId(targetUser);
+            var result = Repository.GetVerifiedSkillsByUserId(targetUser);
 
             Assert.IsFalse(result.Any(s => s.SkillName == "OtherSkill"));
         }
@@ -78,7 +78,7 @@ namespace PussyCatsApp.Tests.Repositories
         [TestMethod]
         public void GetParsedCvByUserId_UserDoesNotExist_ExpectsNull()
         {
-            var result = _repository.GetParsedCvByUserId(9999);
+            var result = Repository.GetParsedCvByUserId(9999);
             Assert.IsNull(result);
         }
 
@@ -86,7 +86,7 @@ namespace PussyCatsApp.Tests.Repositories
         public void GetParsedCvByUserId_CvFieldIsNull_ExpectsNull()
         {
             int userId = TestDatabaseHelper.InsertUser(parsedCv: null);
-            var result = _repository.GetParsedCvByUserId(userId);
+            var result = Repository.GetParsedCvByUserId(userId);
             Assert.IsNull(result);
         }
 
@@ -96,7 +96,7 @@ namespace PussyCatsApp.Tests.Repositories
             string expectedCv = "Experience with .NET and SQL";
             int userId = TestDatabaseHelper.InsertUser(parsedCv: expectedCv);
 
-            var result = _repository.GetParsedCvByUserId(userId);
+            var result = Repository.GetParsedCvByUserId(userId);
 
             Assert.AreEqual(expectedCv, result);
         }

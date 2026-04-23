@@ -34,7 +34,7 @@ namespace PussyCatsApp.views
             this.InitializeComponent();
 
             var skillTestRepo = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
-            var userProfileRepo = new UserProfileRepository();
+            var userProfileRepo = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
             var userProfileService = new UserProfileService(skillTestRepo, userProfileRepo);
             viewModel = new PublicProfileViewModel(userProfileService);
         }

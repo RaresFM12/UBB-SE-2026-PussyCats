@@ -30,10 +30,10 @@ namespace PussyCatsApp.views
     {
         private TestDashboardViewModel testDashboardViewModel;
 
-        public TestDashboardView()
+        public TestDashboardView()  
         {
             this.InitializeComponent();
-            var userProfileRepository = new UserProfileRepository();
+            var userProfileRepository = new UserProfileRepository(DatabaseConfiguration.GetConnectionString());
             var skillTestRepository = new SkillTestRepository(DatabaseConfiguration.GetConnectionString());
             var skillTestService = new SkillTestService(skillTestRepository);
 
