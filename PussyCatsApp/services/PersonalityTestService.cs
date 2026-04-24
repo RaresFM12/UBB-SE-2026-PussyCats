@@ -18,10 +18,10 @@ namespace PussyCatsApp.Services
         {
             return
             [
-                new (1, "I notice design details...", TraitType.VISIBILITY, 1),
-                new (2, "I believe a seamless...", TraitType.VISIBILITY, 2),
-                new (3, "I believe that a project...", TraitType.VISIBILITY, 3),
-                new (4, "I find myself drawn...", TraitType.VISIBILITY, 4)
+                new (1, "I notice design details in apps and websites that most people would overlook.", TraitType.VISIBILITY, 1),
+                new (2, "I believe a seamless, high-quality user interface is just as critical to a project's success as the underlying code.", TraitType.VISIBILITY, 2),
+                new (3, "I believe that a project isn't truly 'finished' until the visual polish matches the technical quality.", TraitType.VISIBILITY, 3),
+                new (4, "I find myself drawn to tools and interfaces that are clean and well-designed.", TraitType.VISIBILITY, 4)
             ];
         }
         private static List<Question> GetInteractionTraitQuestions()
