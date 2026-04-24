@@ -88,17 +88,17 @@ namespace PussyCatsApp.Services
                 return 0;
             }
 
-            int totalXP = 0;
+            int totalExperiencePoints = 0;
 
             List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
             foreach (SkillTest test in tests)
             {
-                totalXP += test.GetExperiencePoints();
+                totalExperiencePoints += test.GetExperiencePoints();
             }
 
-            profile.UserLevel = UserLevel.CalculateLevel(totalXP);
+            profile.UserLevel = UserLevel.CalculateLevel(totalExperiencePoints);
 
-            return totalXP;
+            return totalExperiencePoints;
         }
     }
 }
