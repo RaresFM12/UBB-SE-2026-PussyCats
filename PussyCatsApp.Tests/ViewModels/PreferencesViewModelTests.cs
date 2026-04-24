@@ -81,5 +81,42 @@ namespace PussyCatsApp.Tests.ViewModels
             Assert.AreEqual(location, viewModel.GetPreferredLocation());
         }
 
+        [TestMethod]
+        public void ToggleJobRole_AddsRole_WhenNotSelected()
+        {
+            viewModel.ToggleJobRole(JobRole.DataAnalyst);
+            Assert.IsTrue(viewModel.GetSelectedJobRoles().Contains(JobRole.DataAnalyst));
+        }
+
+        [TestMethod]
+        public void ToggleJobRole_RemovesRole_WhenAlreadySelected()
+        {
+            viewModel.ToggleJobRole(JobRole.DataAnalyst);
+            viewModel.ToggleJobRole(JobRole.DataAnalyst);
+            Assert.IsFalse(viewModel.GetSelectedJobRoles().Contains(JobRole.DataAnalyst));
+        }
+
+        [TestMethod]
+        public void ToggleJobRole_FailsToAdd_WhenMaximumRolesSelected()
+        {
+            viewModel.ToggleJobRole(JobRole.BackendDeveloper);
+            viewModel.ToggleJobRole(JobRole.FrontendDeveloper);
+            viewModel.ToggleJobRole(JobRole.DataAnalyst);
+            viewModel.ToggleJobRole(JobRole.AIMLEngineer);
+            Assert.IsFalse(viewModel.GetSelectedJobRoles().Contains(JobRole.AIMLEngineer));
+        }
+
+
+        [TestMethod]
+        public void ToggleJobRole_UpdatesErrorMessage_WhenMaximumRolesExceeded()
+        {
+            int MaximumJobRolesAllowed = 3;
+
+            viewModel.ToggleJobRole(JobRole.BackendDeveloper);
+            viewModel.ToggleJobRole(JobRole.FrontendDeveloper);
+            viewModel.ToggleJobRole(JobRole.DataAnalyst);
+            viewModel.ToggleJobRole(JobRole.AIMLEngineer);
+            Assert.AreEqual($"You can select a maximum of {MaximumJobRolesAllowed} job roles.", viewModel.GetErrorMessage());
+        }
     }
 }
