@@ -61,14 +61,14 @@ namespace PussyCatsApp.Services
 
         public bool CanRetakeTest(int skillId)
         {
-            SkillTest skill = skillTestRepository.Load(skillId);
+            SkillTest skillTest = skillTestRepository.Load(skillId);
 
-            if (skill == null)
+            if (skillTest == null)
             {
                 throw new Exception($"No test found for ID {skillId}");
             }
 
-            return IsRetakeEligible(skill);
+            return IsRetakeEligible(skillTest);
         }
 
         public static bool IsRetakeEligible(SkillTest skillTest)

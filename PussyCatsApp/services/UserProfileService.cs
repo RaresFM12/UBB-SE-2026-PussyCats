@@ -50,54 +50,54 @@ namespace PussyCatsApp.Services
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
-        public void UpdateAvatarPath(int userId, string newPath)
+        public void UpdateProfilePicturePath(int userId, string newProfilePicturePath)
         {
-            userProfileRepository.UpdateProfilePicture(userId, newPath);
+            userProfileRepository.UpdateProfilePicture(userId, newProfilePicturePath);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
-        public void RemoveAvatarPath(int userId)
+        public void RemoveProfilePicturePath(int userId)
         {
             userProfileRepository.UpdateProfilePicture(userId, null);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
-        public string GenerateParsedCVText(UserProfile profile)
+        public string GenerateParsedCVText(UserProfile userProfile)
         {
-            if (profile == null)
+            if (userProfile == null)
             {
                 return string.Empty;
             }
 
             var parsedCvTextBuilder = new StringBuilder();
-            parsedCvTextBuilder.AppendLine($"{profile.FirstName} {profile.LastName}".Trim());
-            parsedCvTextBuilder.AppendLine(profile.University ?? string.Empty);
-            parsedCvTextBuilder.AppendLine(string.Join(", ", profile.Skills ?? new List<string>()));
+            parsedCvTextBuilder.AppendLine($"{userProfile.FirstName} {userProfile.LastName}".Trim());
+            parsedCvTextBuilder.AppendLine(userProfile.University ?? string.Empty);
+            parsedCvTextBuilder.AppendLine(string.Join(", ", userProfile.Skills ?? new List<string>()));
             return parsedCvTextBuilder.ToString().TrimEnd();
         }
-        public void SaveProfile(int userId, UserProfile profile)
+        public void SaveProfile(int userId, UserProfile userProfile)
         {
-            profile.ParsedCV = GenerateParsedCVText(profile);
-            userProfileRepository.Save(userId, profile);
+            userProfile.ParsedCV = GenerateParsedCVText(userProfile);
+            userProfileRepository.Save(userId, userProfile);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
-        public int RecalculateLevel(UserProfile profile)
+        public int RecalculateLevel(UserProfile userProfile)
         {
-            if (profile == null)
+            if (userProfile == null)
             {
                 return 0;
             }
 
             int totalExperiencePoints = 0;
 
-            List<SkillTest> skillTests = GetSkillTestsForUser(profile.UserId);
+            List<SkillTest> skillTests = GetSkillTestsForUser(userProfile.UserId);
             foreach (SkillTest skillTest in skillTests)
             {
                 totalExperiencePoints += SkillTestService.GetExperiencePoints(skillTest);
             }
 
-            profile.UserLevel = UserLevelService.CalculateLevel(totalExperiencePoints);
+            userProfile.UserLevel = UserLevelService.CalculateLevel(totalExperiencePoints);
 
             return totalExperiencePoints;
         }
