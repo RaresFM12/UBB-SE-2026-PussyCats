@@ -55,10 +55,10 @@ namespace PussyCatsApp.Services
                 new (24, "I prefer to understand the logic and first principles of a system rather than just knowing how to operate it.", TraitType.ABSTRACTION,  24),
             ];
         }
-        private int CompareRoleScores(KeyValuePair<JobRole, double> firstRoleScore, KeyValuePair<JobRole, double> secondRoleScore)
+        /*private int CompareRoleScores(KeyValuePair<JobRole, double> firstRoleScore, KeyValuePair<JobRole, double> secondRoleScore)
         {
             return secondRoleScore.Value.CompareTo(firstRoleScore.Value);
-        }
+        }*/
 
         public Dictionary<TraitType, double> CalculateTraitScores(Dictionary<Question, AnswerValue> answers)
         {

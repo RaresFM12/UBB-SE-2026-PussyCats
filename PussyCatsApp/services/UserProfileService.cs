@@ -40,13 +40,13 @@ namespace PussyCatsApp.Services
             return userProfile.ActiveAccount;
         }
 
-        public void ToggleAccountStatus(int userId, string currentStatus)
+        public void ToggleAccountStatus(int userId, string currentAccountStatus)
         {
-            string toggleStatus = currentStatus == AccountStatus.Active.ToString().ToUpper()
+            string newAccountStatus = currentAccountStatus == AccountStatus.Active.ToString().ToUpper()
                 ? AccountStatus.Inactive.ToString().ToUpper()
                 : AccountStatus.Active.ToString().ToUpper();
 
-            userProfileRepository.UpdateAccountStatus(userId, toggleStatus);
+            userProfileRepository.UpdateAccountStatus(userId, newAccountStatus);
             userProfileRepository.UpdateProfileLastModified(userId, DateTime.Now);
         }
 
@@ -69,11 +69,11 @@ namespace PussyCatsApp.Services
                 return string.Empty;
             }
 
-            var parsedCvBuilder = new StringBuilder();
-            parsedCvBuilder.AppendLine($"{profile.FirstName} {profile.LastName}".Trim());
-            parsedCvBuilder.AppendLine(profile.University ?? string.Empty);
-            parsedCvBuilder.AppendLine(string.Join(", ", profile.Skills ?? new List<string>()));
-            return parsedCvBuilder.ToString().TrimEnd();
+            var parsedCvTextBuilder = new StringBuilder();
+            parsedCvTextBuilder.AppendLine($"{profile.FirstName} {profile.LastName}".Trim());
+            parsedCvTextBuilder.AppendLine(profile.University ?? string.Empty);
+            parsedCvTextBuilder.AppendLine(string.Join(", ", profile.Skills ?? new List<string>()));
+            return parsedCvTextBuilder.ToString().TrimEnd();
         }
         public void SaveProfile(int userId, UserProfile profile)
         {
@@ -91,10 +91,10 @@ namespace PussyCatsApp.Services
 
             int totalExperiencePoints = 0;
 
-            List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
-            foreach (SkillTest test in tests)
+            List<SkillTest> skillTests = GetSkillTestsForUser(profile.UserId);
+            foreach (SkillTest skillTest in skillTests)
             {
-                totalExperiencePoints += SkillTestService.GetExperiencePoints(test);
+                totalExperiencePoints += SkillTestService.GetExperiencePoints(skillTest);
             }
 
             profile.UserLevel = UserLevelService.CalculateLevel(totalExperiencePoints);
