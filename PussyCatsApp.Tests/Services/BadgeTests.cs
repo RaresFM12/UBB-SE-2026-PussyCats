@@ -1,4 +1,5 @@
 ﻿using PussyCatsApp.Models;
+using PussyCatsApp.Models.Enumerators;
 using PussyCatsApp.Services;
 
 namespace PussyCatsApp.Tests.Services
