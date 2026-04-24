@@ -28,10 +28,10 @@ namespace PussyCatsApp.Services
 
         private List<UserSkill> GetUserSkills(int userId)
         {
-            List<UserSkill> verifiedSkills = userSkillRepository.GetVerifiedSkillsByUserId(userId);
-            string parsedCv = userSkillRepository.GetParsedCvByUserId(userId);
-            List<string> cvSkills = ExtractSkillsFromParsedCv(parsedCv);
-            return MergeVerifiedAndUnverifiedSkills(verifiedSkills, cvSkills);
+            List<UserSkill> verifiedSkillsOfUser = userSkillRepository.GetVerifiedSkillsByUserId(userId);
+            string parsedCvText = userSkillRepository.GetParsedCvByUserId(userId);
+            List<string> extractedCvSkills = ExtractSkillsFromParsedCv(parsedCvText);
+            return MergeVerifiedAndUnverifiedSkills(verifiedSkillsOfUser, extractedCvSkills);
         }
 
         private List<string> ExtractSkillsFromParsedCv(string parsedCv)
@@ -109,7 +109,7 @@ namespace PussyCatsApp.Services
 
         private double ComputeGroupScore(SkillGroup group, List<UserSkill> userSkills)
         {
-            double maxSkillScore = 0;
+            double maximumSkillScore = 0;
 
             foreach (string skill in group.Skills)
             {
@@ -127,13 +127,13 @@ namespace PussyCatsApp.Services
                     }
                 }
 
-                if (skillScore > maxSkillScore)
+                if (skillScore > maximumSkillScore)
                 {
-                    maxSkillScore = skillScore;
+                    maximumSkillScore = skillScore;
                 }
             }
 
-            return maxSkillScore;
+            return maximumSkillScore;
         }
 
         private double ComputeMatchScore(List<SkillGroup> groups, List<double> groupScores)
@@ -210,7 +210,7 @@ namespace PussyCatsApp.Services
                     };
 
                     bestSuggestion = suggestion;
-                    break; // alegi prima lipsă relevantă
+                    break;
                 }
 
                 if (bestSuggestion != null)
@@ -228,80 +228,6 @@ namespace PussyCatsApp.Services
 
             return suggestions;
         }
-        /*
-        private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
-        {
-            List<Suggestion> suggestions = new List<Suggestion>();
-
-            foreach (SkillGroup group in groups)
-            {
-                double groupScore = ComputeGroupScore(group, userSkills);
-                if (groupScore > GapThreshold)
-                {
-                    continue;
-                }
-
-                Suggestion bestSuggestionForGroup = null;
-
-                foreach (string skill in group.Skills)
-                {
-                    bool userHasVerified = false;
-                    bool userHasUnverified = false;
-
-                    foreach (UserSkill userSkill in userSkills)
-                    {
-                        if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (userSkill.IsVerified)
-                            {
-                                userHasVerified = true;
-                            }
-                            else
-                            {
-                                userHasUnverified = true;
-                            }
-                        }
-                    }
-
-                    if (userHasVerified)
-                    {
-                        continue;
-                    }
-
-                    double gain = ComputeGain(group, groupScore, totalWeight);
-
-                    Suggestion candidate = new Suggestion
-                    {
-                        SkillName = skill,
-                        GroupName = group.GroupName,
-                        GainScore = gain
-                    };
-
-                    if (bestSuggestionForGroup == null)
-                    {
-                        bestSuggestionForGroup = candidate;
-                    }
-                    else if (userHasUnverified && bestSuggestionForGroup.SkillName != null)
-                    {
-                        continue;
-                    }
-                }
-
-                if (bestSuggestionForGroup != null)
-                {
-                    suggestions.Add(bestSuggestionForGroup);
-                }
-            }
-
-            suggestions.Sort(CompareGains);
-
-            if (suggestions.Count > MaxSuggestions)
-            {
-                suggestions = suggestions.GetRange(0, MaxSuggestions);
-            }
-
-            return suggestions;
-        }*/
 
         public RoleResult CalculateForRole(int userId, JobRole role)
         {
