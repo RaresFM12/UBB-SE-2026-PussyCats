@@ -88,10 +88,10 @@ namespace PussyCatsApp.Services
         private double CalculateFrontend(Dictionary<TraitType, double> traitScores)
         {
             const int visibilityWeight = 2;
-            const int creatitviyWeight = 2;
+            const int creativiyWeight = 2;
 
             return (traitScores[TraitType.VISIBILITY] * visibilityWeight) +
-                   (traitScores[TraitType.CREATIVITY] * creatitviyWeight) +
+                   (traitScores[TraitType.CREATIVITY] * creativiyWeight) +
                    traitScores[TraitType.PACE];
         }
         private double CalculateBackend(Dictionary<TraitType, double> traitScores)
