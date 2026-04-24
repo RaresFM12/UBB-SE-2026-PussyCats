@@ -18,10 +18,6 @@ namespace PussyCatsApp.Services
 
         private const int MaxSkills = 30;
         private const int MaxSkillLength = 60;
-        private const int MaxWorkExperiences = 10;
-        private const int MaxProjects = 10;
-        private const int MaxActivities = 10;
-        private const int MaxTechnologiesPerProject = 10;
 
         private const int MaxFirstNameLength = 50;
         private const int MaxLastNameLength = 60;
@@ -37,14 +33,6 @@ namespace PussyCatsApp.Services
         private const int MaxCompanyNameLength = 150;
         private const int MaxJobTitleLength = 100;
         private const int MaxWorkDescriptionLength = 500;
-        private const int MaxProjectNameLength = 100;
-        private const int MaxProjectDescriptionLength = 600;
-        private const int MaxProjectUrlLength = 200;
-        private const int MaxActivityNameLength = 150;
-        private const int MaxOrganizationLength = 100;
-        private const int MaxRoleLength = 80;
-        private const int MaxPeriodLength = 60;
-        private const int MaxActivityDescriptionLength = 300;
 
         private const int MinAge = 16;
         private const int MaxAge = 60;
@@ -176,8 +164,9 @@ namespace PussyCatsApp.Services
             {
                 return new List<WorkExperience>();
             }
+            const int maximumNumberOfWorkExperiences = 10;
 
-            return experiences.Take(MaxWorkExperiences)
+            return experiences.Take(maximumNumberOfWorkExperiences)
                 .Select(workExperience => new WorkExperience
                 {
                     Company = SanitizeString(workExperience.Company, MaxCompanyNameLength),
@@ -196,89 +185,53 @@ namespace PussyCatsApp.Services
         /// </summary>
         private List<Project> ProcessProjects(List<Project> projects)
         {
-            var result = new List<Project>();
-
-            if (projects == null)
+            if (projects == null || !projects.Any())
             {
-                return result;
+                return new List<Project>();
             }
+            const int maximumNumberOfProjects = 10;
+            const int maximumNumberOfTechnologiesPerProject = 10;
+            const int maximumProjectNameLength = 100;
+            const int maximumProjectDescriptionLength = 600;
+            const int maximumProjectUrlLength = 200;
+            const int maximumTechnologyNameLength = 60;
 
-            int addedProjectsCount = 0;
-
-            foreach (var project in projects)
-            {
-                if (addedProjectsCount >= MaxProjects)
+            return projects.Take(maximumNumberOfProjects)
+                .Select(project => new Project
                 {
-                    break;
-                }
-
-                var newProject = new Project
-                {
-                    Name = SanitizeString(project.Name, MaxProjectNameLength),
-                    Description = SanitizeString(project.Description, MaxProjectDescriptionLength),
-                    Url = SanitizeString(project.Url, MaxProjectUrlLength),
-                    Technologies = new List<string>()
-                };
-
-                if (project.Technologies != null)
-                {
-                    int technologyCount = 0;
-                    foreach (var technology in project.Technologies)
-                    {
-                        if (technologyCount >= MaxTechnologiesPerProject)
-                        {
-                            break;
-                        }
-
-                        newProject.Technologies.Add(SanitizeString(technology, MaxSkillLength));
-                        technologyCount++;
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(newProject.Name))
-                {
-                    result.Add(newProject);
-                    addedProjectsCount++;
-                }
-            }
-
-            return result;
+                    Name = SanitizeString(project.Name, maximumProjectNameLength),
+                    Description = SanitizeString(project.Description, maximumProjectDescriptionLength),
+                    Technologies = project.Technologies?.Take(maximumNumberOfTechnologiesPerProject).Select(technology => SanitizeString(technology, maximumTechnologyNameLength)).ToList() ?? new List<string>(),
+                    Url = SanitizeString(project.Url, maximumProjectUrlLength)
+                })
+                .Where(project => !string.IsNullOrEmpty(project.Name))
+                .ToList();
         }
         private List<ExtraCurricularActivity> ProcessActivities(List<ExtraCurricularActivity> activities)
         {
-            var result = new List<ExtraCurricularActivity>();
-
-            if (activities == null)
+            if (activities == null || !activities.Any())
             {
-                return result;
+                return new List<ExtraCurricularActivity>();
             }
 
-            int addedActivitiesCount = 0;
+            const int maximumNumberOfActivities = 10;
+            const int maximumActivityNameLength = 150;
+            const int maximumOrganizationNameLength = 100;
+            const int maximumRoleNameLength = 80;
+            const int maximumPeriodLength = 60;
+            const int maximumActivityDescriptionLength = 300;
 
-            foreach (var activity in activities)
-            {
-                if (addedActivitiesCount >= MaxActivities)
+            return activities.Take(maximumNumberOfActivities)
+                .Select(activity => new ExtraCurricularActivity
                 {
-                    break;
-                }
-
-                var newActivity = new ExtraCurricularActivity
-                {
-                    ActivityName = SanitizeString(activity.ActivityName, MaxActivityNameLength),
-                    Organization = SanitizeString(activity.Organization, MaxOrganizationLength),
-                    Role = SanitizeString(activity.Role, MaxRoleLength),
-                    Period = SanitizeString(activity.Period, MaxPeriodLength),
-                    Description = SanitizeString(activity.Description, MaxActivityDescriptionLength)
-                };
-
-                if (!string.IsNullOrEmpty(newActivity.ActivityName))
-                {
-                    result.Add(newActivity);
-                    addedActivitiesCount++;
-                }
-            }
-
-            return result;
+                    ActivityName = SanitizeString(activity.ActivityName, maximumActivityNameLength),
+                    Organization = SanitizeString(activity.Organization, maximumOrganizationNameLength),
+                    Role = SanitizeString(activity.Role, maximumRoleNameLength),
+                    Period = SanitizeString(activity.Period, maximumPeriodLength),
+                    Description = SanitizeString(activity.Description, maximumActivityDescriptionLength)
+                })
+                .Where(activity => !string.IsNullOrEmpty(activity.ActivityName))
+                .ToList();
         }
 
         /// <summary>
