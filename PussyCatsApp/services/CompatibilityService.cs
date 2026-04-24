@@ -108,17 +108,17 @@ namespace PussyCatsApp.Services
 
         private double ComputeGroupScore(SkillGroup group, List<UserSkill> userSkills)
         {
-            double maxCi = 0;
+            double maxSkillScore = 0;
 
             foreach (string skill in group.Skills)
             {
-                double ci = 0;
+                double skillScore = 0;
 
                 foreach (UserSkill userSkill in userSkills)
                 {
                     if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
                     {
-                        ci = userSkill.IsVerified
+                        skillScore = userSkill.IsVerified
                             ? userSkill.Score / ScoreNormalizationFactor
                             : UnverifiedSkillScore;
 
@@ -126,13 +126,13 @@ namespace PussyCatsApp.Services
                     }
                 }
 
-                if (ci > maxCi)
+                if (skillScore > maxSkillScore)
                 {
-                    maxCi = ci;
+                    maxSkillScore = skillScore;
                 }
             }
 
-            return maxCi;
+            return maxSkillScore;
         }
 
         private double ComputeMatchScore(List<SkillGroup> groups, List<double> groupScores)
@@ -149,9 +149,9 @@ namespace PussyCatsApp.Services
             }
 
             double weightedSum = 0;
-            for (int i = 0; i < groups.Count; i++)
+            for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)
             {
-                weightedSum += groups[i].Weight * groupScores[i];
+                weightedSum += groups[groupIndex].Weight * groupScores[groupIndex];
             }
 
             return weightedSum * ScoreNormalizationFactor / totalWeight;

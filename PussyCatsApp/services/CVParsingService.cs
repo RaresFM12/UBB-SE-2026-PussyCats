@@ -48,7 +48,6 @@ namespace PussyCatsApp.Services
         private const int MinAge = 16;
         private const int MaxAge = 60;
         private const int InvalidAge = 0;
-        private const int InvalidYear = 0;
         private const int MaxYearsAheadForGraduation = 10;
 
         private const string GenderMale = "Male";

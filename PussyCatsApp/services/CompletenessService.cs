@@ -15,31 +15,31 @@ namespace PussyCatsApp.Services
             "Work Experience", "Projects", "Activities", "Preferred Roles",
             "Work Mode", "Location Preference"
         };
-        private bool IsFieldFilled(int index, UserProfile p)
+        private bool IsFieldFilled(int index, UserProfile userProfile)
         {
             switch (index)
             {
-                case 0: return !string.IsNullOrWhiteSpace(p.FirstName);
-                case 1: return !string.IsNullOrWhiteSpace(p.LastName);
-                case 2: return p.Age > 0;
-                case 3: return !string.IsNullOrWhiteSpace(p.Gender);
-                case 4: return !string.IsNullOrWhiteSpace(p.Country);
-                case 5: return !string.IsNullOrWhiteSpace(p.PhoneNumber);
-                case 6: return !string.IsNullOrWhiteSpace(p.Email);
-                case 7: return !string.IsNullOrWhiteSpace(p.University);
-                case 8: return p.ExpectedGraduationYear > 0;
-                case 9: return !string.IsNullOrWhiteSpace(p.GitHub);
-                case 10: return !string.IsNullOrWhiteSpace(p.LinkedIn);
-                case 11: return !string.IsNullOrWhiteSpace(p.Address);
-                case 12: return !string.IsNullOrWhiteSpace(p.ProfilePicture);
-                case 13: return p.Skills != null && p.Skills.Count > 0;
-                case 14: return !string.IsNullOrWhiteSpace(p.Motivation);
-                case 15: return p.WorkExperiences != null && p.WorkExperiences.Count > 0;
-                case 16: return p.Projects != null && p.Projects.Count > 0;
-                case 17: return p.ExtraCurricularActivities != null && p.ExtraCurricularActivities.Count > 0;
-                case 18: return p.PreferredJobRoles != null && p.PreferredJobRoles.Count > 0;
-                case 19: return !string.IsNullOrWhiteSpace(p.WorkModePreference);
-                case 20: return !string.IsNullOrWhiteSpace(p.LocationPreference);
+                case 0: return !string.IsNullOrWhiteSpace(userProfile.FirstName);
+                case 1: return !string.IsNullOrWhiteSpace(userProfile.LastName);
+                case 2: return userProfile.Age > 0;
+                case 3: return !string.IsNullOrWhiteSpace(userProfile.Gender);
+                case 4: return !string.IsNullOrWhiteSpace(userProfile.Country);
+                case 5: return !string.IsNullOrWhiteSpace(userProfile.PhoneNumber);
+                case 6: return !string.IsNullOrWhiteSpace(userProfile.Email);
+                case 7: return !string.IsNullOrWhiteSpace(userProfile.University);
+                case 8: return userProfile.ExpectedGraduationYear > 0;
+                case 9: return !string.IsNullOrWhiteSpace(userProfile.GitHub);
+                case 10: return !string.IsNullOrWhiteSpace(userProfile.LinkedIn);
+                case 11: return !string.IsNullOrWhiteSpace(userProfile.Address);
+                case 12: return !string.IsNullOrWhiteSpace(userProfile.ProfilePicture);
+                case 13: return userProfile.Skills != null && userProfile.Skills.Count > 0;
+                case 14: return !string.IsNullOrWhiteSpace(userProfile.Motivation);
+                case 15: return userProfile.WorkExperiences != null && userProfile.WorkExperiences.Count > 0;
+                case 16: return userProfile.Projects != null && userProfile.Projects.Count > 0;
+                case 17: return userProfile.ExtraCurricularActivities != null && userProfile.ExtraCurricularActivities.Count > 0;
+                case 18: return userProfile.PreferredJobRoles != null && userProfile.PreferredJobRoles.Count > 0;
+                case 19: return !string.IsNullOrWhiteSpace(userProfile.WorkModePreference);
+                case 20: return !string.IsNullOrWhiteSpace(userProfile.LocationPreference);
                 default: return false;
             }
         }
@@ -62,31 +62,31 @@ namespace PussyCatsApp.Services
             return filledFields;
         }
 
-        public int CalculateCompleteness(UserProfile profile)
+        public int CalculateCompleteness(UserProfile userProfile)
         {
-            if (profile == null)
+            if (userProfile == null)
             {
                 return 0;
             }
-            int filledFields = CountFilledFields(profile);
+            int filledFields = CountFilledFields(userProfile);
             return CalculatePercentage(filledFields);
         }
 
-        public string GetNextEmptyFieldPrompt(UserProfile profile)
+        public string GetNextEmptyFieldPrompt(UserProfile userProfile)
         {
-            if (profile == null)
+            if (userProfile == null)
             {
                 return string.Empty;
             }
 
-            int filledFields = CountFilledFields(profile);
+            int filledFields = CountFilledFields(userProfile);
 
-            for (int i = 0; i < TotalFields; i++)
+            for (int fieldIndex = 0; fieldIndex < TotalFields; fieldIndex++)
             {
-                if (!IsFieldFilled(i, profile))
+                if (!IsFieldFilled(fieldIndex, userProfile))
                 {
                     int nextPercentage = CalculatePercentage(filledFields + 1);
-                    return $"Add your {Labels[i]} to reach {nextPercentage}% completeness!";
+                    return $"Add your {Labels[fieldIndex]} to reach {nextPercentage}% completeness!";
                 }
             }
 
