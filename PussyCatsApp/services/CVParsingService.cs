@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -171,64 +172,24 @@ namespace PussyCatsApp.Services
         /// </summary>
         private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
         {
-            var result = new List<WorkExperience>();
-
-            if (experiences == null)
-            {
-                return result;
-            }
-
-            int addedWorkExperiencesCount = 0;
-
-            foreach (var workExperience in experiences)
-            {
-                if (addedWorkExperiencesCount >= MaxWorkExperiences)
-                {
-                    break;
-                }
-
-                var processed = new WorkExperience
-                {
-                    Company = SanitizeString(workExperience.Company, MaxCompanyLength),
-                    JobTitle = SanitizeString(workExperience.JobTitle, MaxJobTitleLength),
-                    StartDate = ValidateDate(workExperience.StartDate),
-                    EndDate = workExperience.CurrentlyWorking ? null : ValidateDate(workExperience.EndDate),
-                    CurrentlyWorking = workExperience.CurrentlyWorking,
-                    Description = SanitizeString(workExperience.Description, MaxWorkDescriptionLength)
-                };
-
-                if (!string.IsNullOrEmpty(processed.Company) &&
-                    !string.IsNullOrEmpty(processed.JobTitle))
-                {
-                    result.Add(processed);
-                    addedWorkExperiencesCount++;
-                }
-            }
-
-            return result;
-        }
-        /*
-        private List<WorkExperience> ProcessWorkExperiences(List<WorkExperience> experiences)
-        {
             if (experiences == null || !experiences.Any())
             {
                 return new List<WorkExperience>();
             }
 
             return experiences.Take(10) // Max 10 experiences
-                .Select(we => new WorkExperience
+                .Select(workExperience => new WorkExperience
                 {
-                    Company = SanitizeString(we.Company, 150),
-                    JobTitle = SanitizeString(we.JobTitle, 100),
-                    StartDate = ValidateDate(we.StartDate),
-                    EndDate = we.CurrentlyWorking ? null : ValidateDate(we.EndDate),
-                    CurrentlyWorking = we.CurrentlyWorking,
-                    Description = SanitizeString(we.Description, 500)
+                    Company = SanitizeString(workExperience.Company, 150),
+                    JobTitle = SanitizeString(workExperience.JobTitle, 100),
+                    StartDate = ValidateDate(workExperience.StartDate),
+                    EndDate = workExperience.CurrentlyWorking ? null : ValidateDate(workExperience.EndDate),
+                    CurrentlyWorking = workExperience.CurrentlyWorking,
+                    Description = SanitizeString(workExperience.Description, 500)
                 })
-                .Where(we => !string.IsNullOrEmpty(we.Company) && !string.IsNullOrEmpty(we.JobTitle))
+                .Where(workExperience => !string.IsNullOrEmpty(workExperience.Company) && !string.IsNullOrEmpty(workExperience.JobTitle))
                 .ToList();
         }
-        */
 
         /// <summary>
         /// Processes projects with validation

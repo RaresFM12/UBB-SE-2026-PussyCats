@@ -82,18 +82,18 @@ namespace PussyCatsApp.Services
 
             foreach (string cvSkill in cvSkills)
             {
-                bool alreadyExists = false;
+                bool isSkillAlreadyInAllSkills = false;
 
                 foreach (UserSkill existingSkill in allSkills)
                 {
                     if (string.Equals(existingSkill.SkillName, cvSkill, StringComparison.OrdinalIgnoreCase))
                     {
-                        alreadyExists = true;
+                        isSkillAlreadyInAllSkills = true;
                         break;
                     }
                 }
 
-                if (!alreadyExists)
+                if (!isSkillAlreadyInAllSkills)
                 {
                     allSkills.Add(new UserSkill
                     {
@@ -166,7 +166,69 @@ namespace PussyCatsApp.Services
         {
             return secondSuggestion.GainScore.CompareTo(firstSuggestion.GainScore);
         }
+        private bool UserHasSkill(List<UserSkill> userSkills, string skill)
+        {
+            foreach (UserSkill userSkill in userSkills)
+            {
+                if (string.Equals(userSkill.SkillName, skill, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
 
+            return false;
+        }
+        private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
+        {
+            List<Suggestion> suggestions = new List<Suggestion>();
+
+            foreach (SkillGroup group in groups)
+            {
+                double groupScore = ComputeGroupScore(group, userSkills);
+
+                if (groupScore > GapThreshold)
+                {
+                    continue;
+                }
+
+                Suggestion bestSuggestion = null;
+
+                foreach (string skill in group.Skills)
+                {
+                    if (UserHasSkill(userSkills, skill))
+                    {
+                        continue;
+                    }
+
+                    double gain = ComputeGain(group, groupScore, totalWeight);
+
+                    Suggestion suggestion = new Suggestion
+                    {
+                        SkillName = skill,
+                        GroupName = group.GroupName,
+                        GainScore = gain
+                    };
+
+                    bestSuggestion = suggestion;
+                    break; // alegi prima lipsă relevantă
+                }
+
+                if (bestSuggestion != null)
+                {
+                    suggestions.Add(bestSuggestion);
+                }
+            }
+
+            suggestions.Sort(CompareGains);
+
+            if (suggestions.Count > MaxSuggestions)
+            {
+                suggestions = suggestions.GetRange(0, MaxSuggestions);
+            }
+
+            return suggestions;
+        }
+        /*
         private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
         {
             List<Suggestion> suggestions = new List<Suggestion>();
@@ -239,7 +301,7 @@ namespace PussyCatsApp.Services
             }
 
             return suggestions;
-        }
+        }*/
 
         public RoleResult CalculateForRole(int userId, JobRole role)
         {
