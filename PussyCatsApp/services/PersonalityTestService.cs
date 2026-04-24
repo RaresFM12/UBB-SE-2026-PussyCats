@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using PussyCatsApp.Models;
+using PussyCatsApp.Models.Enumerators;
 using PussyCatsApp.Repositories.PersonalityTestRepo;
 namespace PussyCatsApp.Services
 {
@@ -62,26 +64,18 @@ namespace PussyCatsApp.Services
         {
             var traitScores = new Dictionary<TraitType, double>();
             var traitQuestionCounts = new Dictionary<TraitType, int>();
-
             foreach (var answer in answers)
             {
                 var trait = answer.Key.Trait;
+
                 if (!traitScores.ContainsKey(trait))
                 {
                     traitScores[trait] = 0;
                     traitQuestionCounts[trait] = 0;
                 }
 
-                traitScores[trait] += answer.Value switch
-                {
-                    AnswerValue.STRONGLY_DISAGREE => 1,
-                    AnswerValue.DISAGREE => 2,
-                    AnswerValue.NEUTRAL => 3,
-                    AnswerValue.AGREE => 4,
-                    AnswerValue.STRONGLY_AGREE => 5
-                };
-
-                ++traitQuestionCounts[trait];
+                traitScores[trait] += (int)answer.Value;
+                traitQuestionCounts[trait]++;
             }
 
             foreach (var trait in traitScores.Keys)
@@ -95,6 +89,7 @@ namespace PussyCatsApp.Services
         {
             const int visibilityWeight = 2;
             const int creatitviyWeight = 2;
+
             return (traitScores[TraitType.VISIBILITY] * visibilityWeight) +
                    (traitScores[TraitType.CREATIVITY] * creatitviyWeight) +
                    traitScores[TraitType.PACE];
@@ -103,8 +98,10 @@ namespace PussyCatsApp.Services
         {
             const int depthWeight = 2;
             const int visibilityWeight = 2;
+            const int baselineForVisibility = 5;
+
             return (traitScores[TraitType.DEPTH] * depthWeight) +
-                   ((5 - traitScores[TraitType.VISIBILITY]) * visibilityWeight) +
+                   ((baselineForVisibility - traitScores[TraitType.VISIBILITY]) * visibilityWeight) +
                    traitScores[TraitType.PACE];
         }
         private double CalculateUIUX(Dictionary<TraitType, double> traitScores)
@@ -121,6 +118,7 @@ namespace PussyCatsApp.Services
             const int depthWeight = 2;
             const int paceWeight = 2;
             const int baselineForInteraction = 5;
+
             return (traitScores[TraitType.DEPTH] * depthWeight) +
                    (traitScores[TraitType.PACE] * paceWeight) +
                    (baselineForInteraction - traitScores[TraitType.INTERACTION]);
@@ -129,6 +127,7 @@ namespace PussyCatsApp.Services
         {
             const int interactionWeight = 3;
             const int baselineForDepth = 5;
+
             return (traitScores[TraitType.INTERACTION] * interactionWeight) +
                    traitScores[TraitType.CREATIVITY] +
                    (baselineForDepth - traitScores[TraitType.DEPTH]);
@@ -138,6 +137,7 @@ namespace PussyCatsApp.Services
             const int depthWeight = 2;
             const int abstractionWeight = 2;
             const int baselineForInteraction = 5;
+
             return (traitScores[TraitType.DEPTH] * depthWeight) +
                    (traitScores[TraitType.ABSTRACTION] * abstractionWeight) +
                    (baselineForInteraction - traitScores[TraitType.INTERACTION]);
@@ -147,6 +147,7 @@ namespace PussyCatsApp.Services
             const int depthWeight = 3;
             const int baselineForInteraction = 6;
             const int baselineForPace = 6;
+
             return (traitScores[TraitType.DEPTH] * depthWeight) +
                    (baselineForInteraction - traitScores[TraitType.INTERACTION]) +
                    (baselineForPace - traitScores[TraitType.PACE]);
@@ -155,6 +156,7 @@ namespace PussyCatsApp.Services
         {
             const int depthWeight = 3;
             const int abstractionWeight = 2;
+
             return (traitScores[TraitType.DEPTH] * depthWeight) +
                    traitScores[TraitType.CREATIVITY] +
                    (traitScores[TraitType.ABSTRACTION] * abstractionWeight);
@@ -174,7 +176,15 @@ namespace PussyCatsApp.Services
 
             return roleScores;
         }
+        public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
+        {
+            return roleScores
+                .OrderByDescending(roleScorePair => roleScorePair.Value)
+                .Take(length)
+                .ToDictionary(roleScorePair => roleScorePair.Key, roleScorePair => roleScorePair.Value);
+        }
 
+        /*
         public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
         {
             var list = new List<KeyValuePair<JobRole, double>>();
@@ -201,7 +211,7 @@ namespace PussyCatsApp.Services
             }
 
             return result;
-        }
+        }*/
         public void SaveResult(int userId, string personalityTestResult)
         {
             personalityTestRepository.Save(userId, personalityTestResult);

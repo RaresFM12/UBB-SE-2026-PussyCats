@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PussyCatsApp.Models;
+using PussyCatsApp.Models.Enumerators;
 using PussyCatsApp.Repositories;
 namespace PussyCatsApp.Services
 {
