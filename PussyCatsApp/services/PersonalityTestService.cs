@@ -168,16 +168,16 @@ namespace PussyCatsApp.Services
 
             var result = new Dictionary<JobRole, double>();
 
-            int count = 0;
+            int addedRoles = 0;
             foreach (var roleScorePair in list)
             {
-                if (count >= length)
+                if (addedRoles >= length)
                 {
                     break;
                 }
 
                 result.Add(roleScorePair.Key, roleScorePair.Value);
-                count++;
+                addedRoles++;
             }
 
             return result;
