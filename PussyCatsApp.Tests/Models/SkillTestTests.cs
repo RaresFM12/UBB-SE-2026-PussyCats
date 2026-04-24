@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PussyCatsApp.Models;
 using System;
+using PussyCatsApp.Services;
 
 namespace PussyCatsApp.Tests.Models
 {
@@ -33,7 +34,7 @@ namespace PussyCatsApp.Tests.Models
                 testScore: 60,
                 achievedDate: fourMonthsAgo);
 
-            bool isEligible = skillTest.IsRetakeEligible();
+            bool isEligible = SkillTestService.IsRetakeEligible(skillTest);
 
             Assert.IsTrue(isEligible);
         }
@@ -49,7 +50,7 @@ namespace PussyCatsApp.Tests.Models
                 testScore: 60,
                 achievedDate: oneMonthsAgo);
 
-            bool isEligible = skillTest.IsRetakeEligible();
+            bool isEligible = SkillTestService.IsRetakeEligible(skillTest);
 
             Assert.IsFalse(isEligible);
         }
@@ -65,7 +66,7 @@ namespace PussyCatsApp.Tests.Models
                 testScore: 60,
                 achievedDate: exactlyThreeMonthsAgo);
 
-            bool isEligible = skillTest.IsRetakeEligible();
+            bool isEligible = SkillTestService.IsRetakeEligible(skillTest);
 
             Assert.IsTrue(isEligible);
         }
@@ -76,7 +77,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 95);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(100, experiencePoints);
         }
@@ -86,7 +87,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 90);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(100, experiencePoints);
         }
@@ -96,7 +97,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 89);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(60, experiencePoints);
         }
@@ -106,7 +107,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 70);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(60, experiencePoints);
         }
@@ -116,7 +117,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 69);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(30, experiencePoints);
         }
@@ -126,7 +127,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 50);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(30, experiencePoints);
         }
@@ -136,7 +137,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 49);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(10, experiencePoints);
         }
@@ -146,7 +147,7 @@ namespace PussyCatsApp.Tests.Models
         {
             var skillTest = new SkillTest(skillTestId: 1, userId: 10, testName: "React", testScore: 0);
 
-            int experiencePoints = skillTest.GetExperiencePoints();
+            int experiencePoints = SkillTestService.GetExperiencePoints(skillTest);
 
             Assert.AreEqual(10, experiencePoints);
         }

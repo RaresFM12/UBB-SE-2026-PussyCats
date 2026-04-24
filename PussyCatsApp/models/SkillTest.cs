@@ -18,45 +18,6 @@ namespace PussyCatsApp.Models
         /// </summary>
         private const int MaximumScore = 100;
 
-        /// <summary>
-        /// Number of months that must pass before a test can be retaken.
-        /// </summary>
-        private const int RetakeEligibilityMonths = 3;
-
-        /// <summary>
-        /// Score threshold at or above which the gold tier is awarded.
-        /// </summary>
-        private const int GoldScoreThreshold = 90;
-
-        /// <summary>
-        /// Score threshold at or above which the silver tier is awarded.
-        /// </summary>
-        private const int SilverScoreThreshold = 70;
-
-        /// <summary>
-        /// Score threshold at or above which the bronze tier is awarded.
-        /// </summary>
-        private const int BronzeScoreThreshold = 50;
-
-        /// <summary>
-        /// Experience points awarded for a gold-tier score.
-        /// </summary>
-        private const int GoldExperiencePoints = 100;
-
-        /// <summary>
-        /// Experience points awarded for a silver-tier score.
-        /// </summary>
-        private const int SilverExperiencePoints = 60;
-
-        /// <summary>
-        /// Experience points awarded for a bronze-tier score.
-        /// </summary>
-        private const int BronzeExperiencePoints = 30;
-
-        /// <summary>
-        /// Experience points awarded for a participant-tier score.
-        /// </summary>
-        private const int ParticipantExperiencePoints = 10;
         private string name = string.Empty;
         private int score;
 
@@ -160,41 +121,5 @@ namespace PussyCatsApp.Models
         /// Gets the achieved date formatted as dd.MM.yyyy for display purposes.
         /// </summary>
         public string AchievedDateFormatted => AchievedDate.ToString("dd.MM.yyyy");
-
-        /// <summary>
-        /// Determines whether this test is eligible for a retake.
-        /// A test can be retaken if at least <see cref="RetakeEligibilityMonths"/>
-        /// months have passed since the achieved date.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if the test can be retaken; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsRetakeEligible()
-        {
-            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
-            DateOnly eligibilityDate = currentDate.AddMonths(-RetakeEligibilityMonths);
-
-            return eligibilityDate >= AchievedDate;
-        }
-
-        public int GetExperiencePoints()
-        {
-            if (Score >= GoldScoreThreshold)
-            {
-                return GoldExperiencePoints;
-            }
-
-            if (Score >= SilverScoreThreshold)
-            {
-                return SilverExperiencePoints;
-            }
-
-            if (Score >= BronzeScoreThreshold)
-            {
-                return BronzeExperiencePoints;
-            }
-
-            return ParticipantExperiencePoints;
-        }
     }
 }

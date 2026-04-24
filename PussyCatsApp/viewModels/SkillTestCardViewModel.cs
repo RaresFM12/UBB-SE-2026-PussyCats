@@ -44,7 +44,7 @@ namespace PussyCatsApp.ViewModels
             this.userProfileViewModel = userProfileViewModel;
 
             CheckRetakeEligible();
-            badge = Badge.AssignTier(skillTest.Score);
+            badge = SimpleModelOperations.AssignTier(skillTest.Score);
         }
 
         public void LoadCardCommand()
@@ -84,7 +84,7 @@ namespace PussyCatsApp.ViewModels
 
         public void UpdateBadge()
         {
-            badge = Badge.AssignTier(skillTest.Score);
+            badge = SimpleModelOperations.AssignTier(skillTest.Score);
         }
     }
 }
