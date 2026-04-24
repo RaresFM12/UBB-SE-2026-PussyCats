@@ -53,9 +53,9 @@ namespace PussyCatsApp.Services
                 new (24, "I prefer to understand the logic and first principles of a system rather than just knowing how to operate it.", TraitType.ABSTRACTION,  24),
             ];
         }
-        private int CompareRoleScores(KeyValuePair<JobRole, double> a, KeyValuePair<JobRole, double> b)
+        private int CompareRoleScores(KeyValuePair<JobRole, double> firstRoleScore, KeyValuePair<JobRole, double> secondRoleScore)
         {
-            return b.Value.CompareTo(a.Value);
+            return secondRoleScore.Value.CompareTo(firstRoleScore.Value);
         }
 
         public Dictionary<TraitType, double> CalculateTraitScores(Dictionary<Question, AnswerValue> answers)
@@ -93,51 +93,71 @@ namespace PussyCatsApp.Services
         }
         private double CalculateFrontend(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.VISIBILITY] * 2) +
-                   (traitScores[TraitType.CREATIVITY] * 2) +
+            const int visibilityWeight = 2;
+            const int creatitviyWeight = 2;
+            return (traitScores[TraitType.VISIBILITY] * visibilityWeight) +
+                   (traitScores[TraitType.CREATIVITY] * creatitviyWeight) +
                    traitScores[TraitType.PACE];
         }
         private double CalculateBackend(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.DEPTH] * 2) +
-                   ((5 - traitScores[TraitType.VISIBILITY]) * 2) +
+            const int depthWeight = 2;
+            const int visibilityWeight = 2;
+            return (traitScores[TraitType.DEPTH] * depthWeight) +
+                   ((5 - traitScores[TraitType.VISIBILITY]) * visibilityWeight) +
                    traitScores[TraitType.PACE];
         }
         private double CalculateUIUX(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.VISIBILITY] * 3) +
-                   (traitScores[TraitType.CREATIVITY] * 2) +
+            const int visibilityWeight = 3;
+            const int creativityWeight = 2;
+
+            return (traitScores[TraitType.VISIBILITY] * visibilityWeight) +
+                   (traitScores[TraitType.CREATIVITY] * creativityWeight) +
                    traitScores[TraitType.INTERACTION];
         }
         private double CalculateDevOps(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.DEPTH] * 2) +
-                   (traitScores[TraitType.PACE] * 2) +
-                   (5 - traitScores[TraitType.INTERACTION]);
+            const int depthWeight = 2;
+            const int paceWeight = 2;
+            const int baselineForInteraction = 5;
+            return (traitScores[TraitType.DEPTH] * depthWeight) +
+                   (traitScores[TraitType.PACE] * paceWeight) +
+                   (baselineForInteraction - traitScores[TraitType.INTERACTION]);
         }
         private double CalculateProjectManager(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.INTERACTION] * 3) +
+            const int interactionWeight = 3;
+            const int baselineForDepth = 5;
+            return (traitScores[TraitType.INTERACTION] * interactionWeight) +
                    traitScores[TraitType.CREATIVITY] +
-                   (5 - traitScores[TraitType.DEPTH]);
+                   (baselineForDepth - traitScores[TraitType.DEPTH]);
         }
         private double CalculateDataAnalyst(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.DEPTH] * 2) +
-                   (traitScores[TraitType.ABSTRACTION] * 2) +
-                   (5 - traitScores[TraitType.INTERACTION]);
+            const int depthWeight = 2;
+            const int abstractionWeight = 2;
+            const int baselineForInteraction = 5;
+            return (traitScores[TraitType.DEPTH] * depthWeight) +
+                   (traitScores[TraitType.ABSTRACTION] * abstractionWeight) +
+                   (baselineForInteraction - traitScores[TraitType.INTERACTION]);
         }
         private double CalculateCyberSecurity(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.DEPTH] * 3) +
-                   (6 - traitScores[TraitType.INTERACTION]) +
-                   (6 - traitScores[TraitType.PACE]);
+            const int depthWeight = 3;
+            const int baselineForInteraction = 6;
+            const int baselineForPace = 6;
+            return (traitScores[TraitType.DEPTH] * depthWeight) +
+                   (baselineForInteraction - traitScores[TraitType.INTERACTION]) +
+                   (baselineForPace - traitScores[TraitType.PACE]);
         }
         private double CalculateAIEngineer(Dictionary<TraitType, double> traitScores)
         {
-            return (traitScores[TraitType.DEPTH] * 3) +
+            const int depthWeight = 3;
+            const int abstractionWeight = 2;
+            return (traitScores[TraitType.DEPTH] * depthWeight) +
                    traitScores[TraitType.CREATIVITY] +
-                   (traitScores[TraitType.ABSTRACTION] * 2);
+                   (traitScores[TraitType.ABSTRACTION] * abstractionWeight);
         }
         public Dictionary<JobRole, double> CalculateRoleScores(Dictionary<TraitType, double> traitScores)
         {

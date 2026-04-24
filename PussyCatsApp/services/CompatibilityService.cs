@@ -161,9 +161,9 @@ namespace PussyCatsApp.Services
         {
             return ScoreNormalizationFactor * group.Weight * (TargetGroupScore - groupScore) / totalWeight;
         }
-        private int CompareGains(Suggestion a, Suggestion b)
+        private int CompareGains(Suggestion firstSuggestion, Suggestion secondSuggestion)
         {
-            return b.GainScore.CompareTo(a.GainScore);
+            return secondSuggestion.GainScore.CompareTo(firstSuggestion.GainScore);
         }
 
         private List<Suggestion> IdentifyGaps(List<SkillGroup> groups, List<UserSkill> userSkills, int totalWeight)
