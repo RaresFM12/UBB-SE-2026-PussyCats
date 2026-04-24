@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PussyCatsApp.Models;
+using PussyCatsApp.Models.Enumerators;
 using PussyCatsApp.Repositories;
 
 namespace PussyCatsApp.Services
@@ -93,10 +94,10 @@ namespace PussyCatsApp.Services
             List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
             foreach (SkillTest test in tests)
             {
-                totalExperiencePoints += test.GetExperiencePoints();
+               totalExperiencePoints  += SkillTestService.GetExperiencePoints(test);
             }
 
-            profile.UserLevel = UserLevel.CalculateLevel(totalExperiencePoints);
+            profile.UserLevel = UserLevelService.CalculateLevel(totalXP);
 
             return totalExperiencePoints;
         }
