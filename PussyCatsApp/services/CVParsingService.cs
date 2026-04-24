@@ -34,7 +34,7 @@ namespace PussyCatsApp.Services
         private const int MaxMotivationLength = 1000;
         private const int MaxEmailLength = 254;
         private const int MaxPhoneLength = 15;
-        private const int MaxCompanyLength = 150;
+        private const int MaxCompanyNameLength = 150;
         private const int MaxJobTitleLength = 100;
         private const int MaxWorkDescriptionLength = 500;
         private const int MaxProjectNameLength = 100;
@@ -177,15 +177,15 @@ namespace PussyCatsApp.Services
                 return new List<WorkExperience>();
             }
 
-            return experiences.Take(10) // Max 10 experiences
+            return experiences.Take(MaxWorkExperiences)
                 .Select(workExperience => new WorkExperience
                 {
-                    Company = SanitizeString(workExperience.Company, 150),
-                    JobTitle = SanitizeString(workExperience.JobTitle, 100),
+                    Company = SanitizeString(workExperience.Company, MaxCompanyNameLength),
+                    JobTitle = SanitizeString(workExperience.JobTitle, MaxJobTitleLength),
                     StartDate = ValidateDate(workExperience.StartDate),
                     EndDate = workExperience.CurrentlyWorking ? null : ValidateDate(workExperience.EndDate),
                     CurrentlyWorking = workExperience.CurrentlyWorking,
-                    Description = SanitizeString(workExperience.Description, 500)
+                    Description = SanitizeString(workExperience.Description, MaxWorkDescriptionLength)
                 })
                 .Where(workExperience => !string.IsNullOrEmpty(workExperience.Company) && !string.IsNullOrEmpty(workExperience.JobTitle))
                 .ToList();

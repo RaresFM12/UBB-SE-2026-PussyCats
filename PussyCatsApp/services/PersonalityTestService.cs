@@ -176,42 +176,14 @@ namespace PussyCatsApp.Services
 
             return roleScores;
         }
-        public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
+        public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int numberOfTopRoles)
         {
             return roleScores
                 .OrderByDescending(roleScorePair => roleScorePair.Value)
-                .Take(length)
+                .Take(numberOfTopRoles)
                 .ToDictionary(roleScorePair => roleScorePair.Key, roleScorePair => roleScorePair.Value);
         }
 
-        /*
-        public Dictionary<JobRole, double> GetTopRoles(Dictionary<JobRole, double> roleScores, int length)
-        {
-            var list = new List<KeyValuePair<JobRole, double>>();
-
-            foreach (var roleScorePair in roleScores)
-            {
-                list.Add(roleScorePair);
-            }
-
-            list.Sort(CompareRoleScores);
-
-            var result = new Dictionary<JobRole, double>();
-
-            int addedRoles = 0;
-            foreach (var roleScorePair in list)
-            {
-                if (addedRoles >= length)
-                {
-                    break;
-                }
-
-                result.Add(roleScorePair.Key, roleScorePair.Value);
-                addedRoles++;
-            }
-
-            return result;
-        }*/
         public void SaveResult(int userId, string personalityTestResult)
         {
             personalityTestRepository.Save(userId, personalityTestResult);
