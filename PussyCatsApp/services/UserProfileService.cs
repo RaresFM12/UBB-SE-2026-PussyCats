@@ -94,10 +94,10 @@ namespace PussyCatsApp.Services
             List<SkillTest> tests = GetSkillTestsForUser(profile.UserId);
             foreach (SkillTest test in tests)
             {
-               totalExperiencePoints  += SkillTestService.GetExperiencePoints(test);
+               totalExperiencePoints += SkillTestService.GetExperiencePoints(test);
             }
 
-            profile.UserLevel = UserLevelService.CalculateLevel(totalXP);
+            profile.UserLevel = UserLevelService.CalculateLevel(totalExperiencePoints);
 
             return totalExperiencePoints;
         }
