@@ -96,7 +96,7 @@ namespace PussyCatsApp.Services
                 totalXP += SkillTestService.GetExperiencePoints(test);
             }
 
-            profile.UserLevel = UserLevel.CalculateLevel(totalXP);
+            profile.UserLevel = UserLevelService.CalculateLevel(totalXP);
 
             return totalXP;
         }

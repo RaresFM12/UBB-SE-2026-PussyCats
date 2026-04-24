@@ -7,7 +7,6 @@ namespace PussyCatsApp.Services
 {
     public class SkillTestService : ISkillTestService
     {
-
         /// <summary>
         /// Score threshold at or above which the gold tier is awarded.
         /// </summary>
@@ -113,6 +112,15 @@ namespace PussyCatsApp.Services
             }
 
             return ParticipantExperiencePoints;
+        }
+
+        /// <summary>
+        /// Gets the achieved date formatted as dd.MM.yyyy for display purposes.
+        /// </summary>
+        /// <param name="skillTest"></param>
+        public static string AchievedDateFormatted(SkillTest skillTest)
+        {
+            return skillTest.AchievedDate.ToString("dd.MM.yyyy");
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PussyCatsApp.Models;
-using System;
+﻿using PussyCatsApp.Models;
 using PussyCatsApp.Services;
 
-namespace PussyCatsApp.Tests.Models
+namespace PussyCatsApp.Tests.Services
 {
     [TestClass]
     public class SkillTestTests
@@ -18,7 +16,7 @@ namespace PussyCatsApp.Tests.Models
                 testScore: 80,
                 achievedDate: new DateOnly(2025, 3, 15));
 
-            string formatted = skillTest.AchievedDateFormatted;
+            string formatted = SkillTestService.AchievedDateFormatted(skillTest);
 
             Assert.AreEqual("15.03.2025", formatted);
         }

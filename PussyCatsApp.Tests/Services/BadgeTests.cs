@@ -1,7 +1,7 @@
 ﻿using PussyCatsApp.Models;
 using PussyCatsApp.Services;
 
-namespace PussyCatsApp.Tests.Models
+namespace PussyCatsApp.Tests.Services
 {
     [TestClass]
     public class BadgeTests

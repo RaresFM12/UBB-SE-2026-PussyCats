@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Navigation;
 using PussyCatsApp.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using PussyCatsApp.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -42,7 +43,7 @@ namespace PussyCatsApp.Views
             TestNameText.Text = skillTestCardViewModel.SkillTest.Name?.ToUpper() + " TEST" ?? "UNKNOWN TEST";
             string scoreDisplay = $"SCORE: {skillTestCardViewModel.SkillTest.Score}%";
             ScoreText.Text = scoreDisplay;
-            DateText.Text = skillTestCardViewModel.SkillTest.AchievedDateFormatted;
+            DateText.Text = SkillTestService.AchievedDateFormatted(skillTestCardViewModel.SkillTest);
 
             if (skillTestCardViewModel.Badge != null && !string.IsNullOrEmpty(skillTestCardViewModel.Badge.IconPath))
             {

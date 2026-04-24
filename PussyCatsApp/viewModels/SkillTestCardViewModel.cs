@@ -64,9 +64,7 @@ namespace PussyCatsApp.ViewModels
                 return;
             }
 
-            int minimumScore = 0;
-            int maximumScore = 100;
-            int newTestScore = Helpers.GenerateRandomScore(minimumScore, maximumScore);
+            int newTestScore = Helpers.GenerateRandomScore(SkillTest.MinimumScore, SkillTest.MinimumScore);
 
             badge = skillTestService.SubmitRetake(skillTest.SkillTestId, newTestScore);
 
